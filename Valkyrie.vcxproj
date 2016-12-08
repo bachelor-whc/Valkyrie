@@ -42,6 +42,12 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\tool.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\vertex_input.h" />
     <ClInclude Include="Valkyrie\include\wendy.h" />
+    <ClInclude Include="Valkyrie\third_party\imconfig.h" />
+    <ClInclude Include="Valkyrie\third_party\imgui.h" />
+    <ClInclude Include="Valkyrie\third_party\imgui_internal.h" />
+    <ClInclude Include="Valkyrie\third_party\stb_rect_pack.h" />
+    <ClInclude Include="Valkyrie\third_party\stb_textedit.h" />
+    <ClInclude Include="Valkyrie\third_party\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\include\valkyrie\vulkan\surface.cpp" />
@@ -64,6 +70,9 @@
     <ClCompile Include="Valkyrie\source\vertex_input.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan_debug.cpp" />
     <ClCompile Include="Valkyrie\source\wendy.cpp" />
+    <ClCompile Include="Valkyrie\third_party\imgui.cpp" />
+    <ClCompile Include="Valkyrie\third_party\imgui_demo.cpp" />
+    <ClCompile Include="Valkyrie\third_party\imgui_draw.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{56B138DF-ABBC-4FBB-A41D-DBDF69B799AD}</ProjectGuid>

@@ -22,6 +22,18 @@
     <Filter Include="Header Files\valkyrie\UI">
       <UniqueIdentifier>{45e6be82-a420-4bff-8f93-4522063f8a93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\third_party">
+      <UniqueIdentifier>{0daff93c-7bb9-486c-be8a-6f3b03df32ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\third_party\imgui">
+      <UniqueIdentifier>{3cab5a53-2fdd-431d-967d-380212d46db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\third_party">
+      <UniqueIdentifier>{780dea8f-f754-4061-aa35-399e99d0fc5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\third_party\imgui">
+      <UniqueIdentifier>{81a2e7e2-2013-4cca-81ac-e074aa225673}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Valkyrie\include\valkyrie.h">
@@ -93,6 +105,24 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\debug.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\third_party\imconfig.h">
+      <Filter>Header Files\third_party\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\third_party\imgui.h">
+      <Filter>Header Files\third_party\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\third_party\imgui_internal.h">
+      <Filter>Header Files\third_party\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\third_party\stb_rect_pack.h">
+      <Filter>Header Files\third_party\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\third_party\stb_textedit.h">
+      <Filter>Header Files\third_party\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\third_party\stb_truetype.h">
+      <Filter>Header Files\third_party\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\source\valkyrie.cpp">
@@ -154,6 +184,15 @@
     </ClCompile>
     <ClCompile Include="Valkyrie\source\vulkan_debug.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\third_party\imgui.cpp">
+      <Filter>Source Files\third_party\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\third_party\imgui_demo.cpp">
+      <Filter>Source Files\third_party\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\third_party\imgui_draw.cpp">
+      <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
