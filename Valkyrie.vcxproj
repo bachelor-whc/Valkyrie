@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Valkyrie\include\utility.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\texture.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\thread.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\attachment.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_buffer.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\debug.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\depth_buffer.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\descriptor.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\device.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\instance.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\physical_device.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\pipeline.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\queue.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\render_pass.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\shader.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\surface.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\swapchain.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\texture.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\tool.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\vertex_input.h" />
+    <ClInclude Include="Valkyrie\include\wendy.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Valkyrie\include\valkyrie\vulkan\surface.cpp" />
+    <ClCompile Include="Valkyrie\include\valkyrie\vulkan\tool.cpp" />
+    <ClCompile Include="Valkyrie\source\command_buffer.cpp" />
+    <ClCompile Include="Valkyrie\source\depth_buffer.cpp" />
+    <ClCompile Include="Valkyrie\source\descriptor.cpp" />
+    <ClCompile Include="Valkyrie\source\device.cpp" />
+    <ClCompile Include="Valkyrie\source\instance.cpp" />
+    <ClCompile Include="Valkyrie\source\memory_buffer.cpp" />
+    <ClCompile Include="Valkyrie\source\physical_device.cpp" />
+    <ClCompile Include="Valkyrie\source\pipeline.cpp" />
+    <ClCompile Include="Valkyrie\source\queue.cpp" />
+    <ClCompile Include="Valkyrie\source\render_pass.cpp" />
+    <ClCompile Include="Valkyrie\source\shader.cpp" />
+    <ClCompile Include="Valkyrie\source\swapchain.cpp" />
+    <ClCompile Include="Valkyrie\source\texture.cpp" />
+    <ClCompile Include="Valkyrie\source\thread.cpp" />
+    <ClCompile Include="Valkyrie\source\valkyrie.cpp" />
+    <ClCompile Include="Valkyrie\source\vertex_input.cpp" />
+    <ClCompile Include="Valkyrie\source\vulkan_debug.cpp" />
+    <ClCompile Include="Valkyrie\source\wendy.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{56B138DF-ABBC-4FBB-A41D-DBDF69B799AD}</ProjectGuid>
+    <RootNamespace>Valkyrie</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\third_party;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\third_party;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\third_party;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\third_party;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
