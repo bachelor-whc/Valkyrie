@@ -194,5 +194,8 @@
     <ClCompile Include="Valkyrie\third_party\imgui_draw.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Valkyrie\source\png.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

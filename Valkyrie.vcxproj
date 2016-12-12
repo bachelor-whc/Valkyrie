@@ -60,6 +60,7 @@
     <ClCompile Include="Valkyrie\source\memory_buffer.cpp" />
     <ClCompile Include="Valkyrie\source\physical_device.cpp" />
     <ClCompile Include="Valkyrie\source\pipeline.cpp" />
+    <ClCompile Include="Valkyrie\source\png.cpp" />
     <ClCompile Include="Valkyrie\source\queue.cpp" />
     <ClCompile Include="Valkyrie\source\render_pass.cpp" />
     <ClCompile Include="Valkyrie\source\shader.cpp" />

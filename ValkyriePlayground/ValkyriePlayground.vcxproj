@@ -165,9 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="frag.spv" />
-    <None Include="frag.spv.bak" />
+    <None Include="imgui.frag.spv" />
+    <None Include="imgui.vert.spv" />
     <None Include="vert.spv" />
-    <None Include="vert.spv.bak" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="wang.png" />
