@@ -33,6 +33,7 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\physical_device.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\pipeline.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\image_texture.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\queue.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\render_pass.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\shader.h" />
@@ -61,6 +62,7 @@
     <ClCompile Include="Valkyrie\source\physical_device.cpp" />
     <ClCompile Include="Valkyrie\source\pipeline.cpp" />
     <ClCompile Include="Valkyrie\source\png.cpp" />
+    <ClCompile Include="Valkyrie\source\png_texture.cpp" />
     <ClCompile Include="Valkyrie\source\queue.cpp" />
     <ClCompile Include="Valkyrie\source\render_pass.cpp" />
     <ClCompile Include="Valkyrie\source\shader.cpp" />

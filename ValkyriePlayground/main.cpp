@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vulkan/vulkan.h>
 #include <cassert>
+#include <imgui.h>
 
 struct Vertex {
 	float position[3];
@@ -16,6 +17,16 @@ struct ModelViewProjection {
 	glm::mat4 view;
 	glm::mat4 projection;
 };
+
+bool CreateImGuiFontsTexture(Valkyrie& valkyrie, ImGuiIO& imgui_io) {
+	unsigned char* pixels;
+	int tex_width;
+	int tex_height;
+	imgui_io.Fonts->GetTexDataAsRGBA32(&pixels, &tex_width, &tex_height);
+
+	//valkyrie.
+	return true;
+}
 
 int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, int command_show) {
 	const int width = 800;
@@ -48,8 +59,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::MemoryBuffer vertex_buffer;
 	Vulkan::MemoryBuffer index_buffer;
 	Vulkan::MemoryBuffer uniform_buffer;
-	ValkyriePNGPointer png_ptr = std::make_shared<ValkyriePNG>();
-	Vulkan::Texture texture(png_ptr);
+	ValkyrieImageFilePointer png_ptr = std::make_shared<ValkyriePNG>();
+	Vulkan::ImageTexture texture(png_ptr);
 	
 	valkyrie.allocateMemoryBuffer(vertex_buffer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertexs.size() * sizeof(Vertex));
 	valkyrie.allocateMemoryBuffer(index_buffer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indices.size() * sizeof(uint32_t));
@@ -125,6 +136,13 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	render_pass_begin.renderArea.extent.height = height;
 	render_pass_begin.clearValueCount = 2;
 	render_pass_begin.pClearValues = clear_values;
+
+	bool i = true;
+	auto io = ImGui::GetIO();
+	io.DisplaySize.x = 800;
+	io.DisplaySize.y = 600;
+	CreateImGuiFontsTexture(valkyrie, io);
+	//ImGui::ShowTestWindow(&i);
 
 	VkResult result;
 	int render_command_size = valkyrie.renderCommands.size();

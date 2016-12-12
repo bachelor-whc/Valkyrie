@@ -18,6 +18,7 @@
 #include "valkyrie/thread.h"
 #include "valkyrie/texture.h"
 #include "valkyrie/vulkan/texture.h"
+#include "valkyrie/vulkan/image_texture.h"
 #include "wendy.h"
 
 class ValkyrieWindow;

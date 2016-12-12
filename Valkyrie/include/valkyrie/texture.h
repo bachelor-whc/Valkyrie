@@ -3,17 +3,55 @@
 #include <png.h>
 #include "utility.h"
 
-class ValkyriePNG {
+class ValkyrieRGBA32 {
+public:
+	ValkyrieRGBA32() {};
+	~ValkyrieRGBA32() {};
+
+	virtual int getWidth() const = 0;
+	virtual int getHeight() const = 0;
+	virtual void* getDataPointer() = 0;
+	virtual bool available() const = 0;
+	virtual size_t getSize() const = 0;
+};
+
+class ValkyrieRGBA32Memory : public ValkyrieRGBA32 {
+public:
+	ValkyrieRGBA32Memory() {};
+	~ValkyrieRGBA32Memory() {};
+
+	virtual int getWidth() const { return m_width; }
+	virtual int getHeight() const { return m_height; }
+	virtual void* getDataPointer() { return mp_data; }
+	virtual bool available() const { return mp_data != nullptr; }
+	virtual size_t getSize() const { return m_size; }
+
+private:
+	unsigned char* mp_data;
+	int m_width;
+	int m_height;
+	size_t m_size;
+};
+
+class ValkyrieImageFile : 
+	public ValkyrieRGBA32, 
+	public FileSystem {
+public:
+	ValkyrieImageFile() {};
+	~ValkyrieImageFile() {};
+};
+
+class ValkyriePNG : public ValkyrieImageFile {
 public:
 	ValkyriePNG();
 	~ValkyriePNG();
 
-	bool load(const std::string file_path);
-	inline int getWidth() const { return m_width; }
-	inline int getHeight() const { return m_height; }
-	inline png_bytep getDataPointer() { return mp_data; }
-	inline bool available() const { return mp_data != nullptr; }
-	inline size_t getSize() const { return m_size; }
+	virtual bool load(const std::string file_path);
+	virtual int getWidth() const { return m_width; }
+	virtual int getHeight() const { return m_height; }
+	virtual void* getDataPointer() { return mp_data; }
+	virtual bool available() const { return mp_data != nullptr; }
+	virtual size_t getSize() const { return m_size; }
 
 private:
 	png_bytep mp_data;
@@ -24,6 +62,6 @@ private:
 	size_t m_size;
 };
 
-typedef std::shared_ptr<ValkyriePNG> ValkyriePNGPointer;
+typedef std::shared_ptr<ValkyrieImageFile> ValkyrieImageFilePointer;
 
 #endif

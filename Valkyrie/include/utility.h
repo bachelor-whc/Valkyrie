@@ -23,4 +23,11 @@
 #include <set>
 #include <unordered_set>
 #define NEW_NT new(std::nothrow)
+
+class FileSystem {
+public:
+	virtual bool load(const std::string file_path) = 0;
+};
+
+
 #endif
