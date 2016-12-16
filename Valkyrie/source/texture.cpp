@@ -24,8 +24,8 @@ VkResult Vulkan::Texture::initializeSampler(const Device& device) {
 	sampler_create.anisotropyEnable = VK_FALSE;
 	sampler_create.maxAnisotropy = 1;
 	sampler_create.compareOp = VK_COMPARE_OP_NEVER;
-	sampler_create.minLod = 0.0f;
-	sampler_create.maxLod = 0.0f;
+	sampler_create.minLod = -1000.0f;
+	sampler_create.maxLod = 1000.0f;
 	sampler_create.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 	sampler_create.unnormalizedCoordinates = VK_FALSE;
 	return vkCreateSampler(device.handle, &sampler_create, nullptr, &sampler);

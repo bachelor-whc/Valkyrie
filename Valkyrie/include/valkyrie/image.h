@@ -1,5 +1,5 @@
-#ifndef _VALKYRIE_TEXTURE_H 
-#define _VALKYRIE_TEXTURE_H  
+#ifndef _VALKYRIE_IMAGE_H 
+#define _VALKYRIE_IMAGE_H  
 #include <png.h>
 #include "utility.h"
 
@@ -17,8 +17,9 @@ public:
 
 class ValkyrieRGBA32Memory : public ValkyrieRGBA32 {
 public:
-	ValkyrieRGBA32Memory() {};
-	~ValkyrieRGBA32Memory() {};
+	ValkyrieRGBA32Memory() = delete;
+	ValkyrieRGBA32Memory(int width, int height, void* src_data);
+	~ValkyrieRGBA32Memory();
 
 	virtual int getWidth() const { return m_width; }
 	virtual int getHeight() const { return m_height; }
@@ -27,7 +28,7 @@ public:
 	virtual size_t getSize() const { return m_size; }
 
 private:
-	unsigned char* mp_data;
+	unsigned char* mp_data = nullptr;
 	int m_width;
 	int m_height;
 	size_t m_size;
@@ -63,5 +64,6 @@ private:
 };
 
 typedef std::shared_ptr<ValkyrieImageFile> ValkyrieImageFilePointer;
+typedef std::shared_ptr<ValkyrieRGBA32Memory> ValkyrieImageMemoryPointer;
 
 #endif

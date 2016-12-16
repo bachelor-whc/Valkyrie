@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <cstdio>
-#include "valkyrie/texture.h"
+#include "valkyrie/image.h"
 
 ValkyriePNG::ValkyriePNG() :
 	mp_data(nullptr),

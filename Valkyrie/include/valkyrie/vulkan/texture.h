@@ -1,7 +1,7 @@
 #ifndef _VULKAN_TEXTURE_H
 #define _VULKAN_TEXTURE_H
 #include "utility.h"
-#include "valkyrie/texture.h"
+#include "valkyrie/image.h"
 
 namespace Vulkan {
 	struct Device;
