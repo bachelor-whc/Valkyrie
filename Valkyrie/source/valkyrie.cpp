@@ -253,6 +253,10 @@ void Valkyrie::allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBuffer
 	assert(result == VK_SUCCESS);
 }
 
+void Valkyrie::destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer) {
+	vkDestroyBuffer(m_device.handle, buffer.handle, nullptr);
+}
+
 void Valkyrie::writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset) {
 	VkResult result = buffer.write(m_device, data, offset);
 	assert(result == VK_SUCCESS);

@@ -16,9 +16,10 @@
 #include "valkyrie/vulkan/descriptor.h"
 #include "valkyrie/vulkan/shader.h"
 #include "valkyrie/thread.h"
-#include "valkyrie/texture.h"
+#include "valkyrie/image.h"
 #include "valkyrie/vulkan/texture.h"
 #include "valkyrie/vulkan/image_texture.h"
+#include "valkyrie/vulkan/memory_texture.h"
 #include "wendy.h"
 
 class ValkyrieWindow;
@@ -44,6 +45,7 @@ public:
 	void initializePipelineLayout();
 	void initializeDescriptorSetLayout();
 	void allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size);
+	void destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer);
 	void writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset = 0);
 	void initializeShaderModules();
 	void initializePipelines();
