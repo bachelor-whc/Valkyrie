@@ -255,8 +255,10 @@ void Valkyrie::allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBuffer
 }
 
 void Valkyrie::destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer) {
-	vkDestroyBuffer(m_device.handle, buffer.handle, nullptr);
-	vkFreeMemory(m_device.handle, buffer.memory, nullptr);
+	if(buffer.handle != VK_NULL_HANDLE)
+		vkDestroyBuffer(m_device.handle, buffer.handle, nullptr);
+	if(buffer.memory != VK_NULL_HANDLE)
+		vkFreeMemory(m_device.handle, buffer.memory, nullptr);
 }
 
 void Valkyrie::writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset) {
