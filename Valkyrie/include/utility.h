@@ -26,6 +26,8 @@
 
 class FileSystem {
 public:
+	FileSystem() {};
+	~FileSystem() {};
 	virtual bool load(const std::string file_path) = 0;
 };
 

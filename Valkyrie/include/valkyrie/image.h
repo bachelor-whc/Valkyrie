@@ -6,7 +6,7 @@
 class ValkyrieRGBA32 {
 public:
 	ValkyrieRGBA32() {};
-	~ValkyrieRGBA32() {};
+	virtual ~ValkyrieRGBA32() {};
 
 	virtual int getWidth() const = 0;
 	virtual int getHeight() const = 0;
@@ -19,7 +19,7 @@ class ValkyrieRGBA32Memory : public ValkyrieRGBA32 {
 public:
 	ValkyrieRGBA32Memory() = delete;
 	ValkyrieRGBA32Memory(int width, int height, void* src_data);
-	~ValkyrieRGBA32Memory();
+	virtual ~ValkyrieRGBA32Memory();
 
 	virtual int getWidth() const { return m_width; }
 	virtual int getHeight() const { return m_height; }
@@ -39,13 +39,13 @@ class ValkyrieImageFile :
 	public FileSystem {
 public:
 	ValkyrieImageFile() {};
-	~ValkyrieImageFile() {};
+	virtual ~ValkyrieImageFile() {};
 };
 
 class ValkyriePNG : public ValkyrieImageFile {
 public:
 	ValkyriePNG();
-	~ValkyriePNG();
+	virtual ~ValkyriePNG();
 
 	virtual bool load(const std::string file_path);
 	virtual int getWidth() const { return m_width; }

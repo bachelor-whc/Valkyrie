@@ -12,7 +12,7 @@ namespace Vulkan {
 	class Texture {
 	public:
 		Texture();
-		~Texture();
+		virtual ~Texture();
 
 		virtual VkResult initializeImage(const Device& device) = 0;
 		VkResult initializeSampler(const Device& device);
