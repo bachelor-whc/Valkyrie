@@ -87,7 +87,7 @@ SwapChain::SwapChain(const Device& device, const PhysicalDevice& physical_device
 		}
 	}
 
-	uint32_t desired_number_of_swap_chain_images = surface_capabilities.minImageCount > 2 ? surface_capabilities.minImageCount : 2;
+	uint32_t desired_number_of_swap_chain_images = surface_capabilities.minImageCount > VALKYRIE_FRAME_BUFFER_COUNT ? surface_capabilities.minImageCount : VALKYRIE_FRAME_BUFFER_COUNT;
 	if (surface_capabilities.maxImageCount > 0 && desired_number_of_swap_chain_images > surface_capabilities.maxImageCount) {
 		desired_number_of_swap_chain_images = surface_capabilities.maxImageCount;
 	}
@@ -181,7 +181,7 @@ VkResult SwapChain::initializeImages(const Device& device, const Surface& surfac
 }
 
 void SwapChain::initializeFramebuffers(const Device& device, const RenderPass& render_pass, const VkImageView* extended_attachments, int count) {
-	mp_framebuffers = NEW_NT Framebuffers(2, m_buffers);
+	mp_framebuffers = NEW_NT Framebuffers(VALKYRIE_FRAME_BUFFER_COUNT, m_buffers);
 	assert(mp_framebuffers != nullptr && m_images_initialized);
 	mp_framebuffers->extendedAttachments.resize(count);
 	memcpy(mp_framebuffers->extendedAttachments.data(), 

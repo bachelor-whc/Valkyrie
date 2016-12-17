@@ -10,7 +10,8 @@ Valkyrie::Valkyrie(std::string application_name) :
 	mp_window(nullptr),
 	mp_swapchain(nullptr),
 	mp_depth_buffer(nullptr),
-	descriptorPool(8) {
+	descriptorPool(8),
+	m_render_pfns() {
 #ifdef _WIN32
 	
 #endif
@@ -255,6 +256,7 @@ void Valkyrie::allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBuffer
 
 void Valkyrie::destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer) {
 	vkDestroyBuffer(m_device.handle, buffer.handle, nullptr);
+	vkFreeMemory(m_device.handle, buffer.memory, nullptr);
 }
 
 void Valkyrie::writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset) {
@@ -332,4 +334,13 @@ void Valkyrie::initailizeTexture(Vulkan::Texture& texture) {
 	m_setup_command_buffer.end();
 	result = m_setup_command_buffer.submit(m_graphics_queue);
 	assert(result == VK_SUCCESS);
+}
+
+bool Valkyrie::registerRenderFunction(std::string name, ValkyrieRenderPFN pfn) {
+	if(m_render_pfns.find(name) != m_render_pfns.end())
+		return false;
+	else {
+		m_render_pfns[name] = pfn;
+	}
+	return true;
 }

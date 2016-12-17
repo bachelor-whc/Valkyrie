@@ -23,11 +23,12 @@
 #include <set>
 #include <unordered_set>
 #define NEW_NT new(std::nothrow)
+const int VALKYRIE_FRAME_BUFFER_COUNT = 2;
 
 class FileSystem {
 public:
 	FileSystem() {};
-	~FileSystem() {};
+	virtual ~FileSystem() {};
 	virtual bool load(const std::string file_path) = 0;
 };
 

@@ -10,7 +10,7 @@ namespace Vulkan {
 	struct CommandBuffer;
 	struct RenderPass;
 	struct Queue;
-
+	
 	struct SwapChainBuffer {
 		VkImage image = NULL;
 		VkImageView view = NULL;

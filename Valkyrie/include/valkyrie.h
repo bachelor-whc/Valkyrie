@@ -20,6 +20,7 @@
 #include "valkyrie/vulkan/texture.h"
 #include "valkyrie/vulkan/image_texture.h"
 #include "valkyrie/vulkan/memory_texture.h"
+#include "valkyrie/render_function.h"
 #include "wendy.h"
 
 class ValkyrieWindow;
@@ -55,6 +56,7 @@ public:
 	void commandSetViewport(const Vulkan::CommandBuffer& command_buffer);
 	void commandSetScissor(const Vulkan::CommandBuffer& command_buffer);
 	void initailizeTexture(Vulkan::Texture& texture);
+	bool registerRenderFunction(std::string name, ValkyrieRenderPFN pfn);
 
 	inline VkRenderPass getRenderPassHandle() { return m_render_pass.handle; }
 	inline VkFramebuffer getFramebuffer(int index) { return mp_swapchain->getFramebuffers()->handles[index]; }
@@ -97,6 +99,7 @@ private:
 	Vulkan::CommandBuffer m_present_command_buffer;
 	VkViewport m_viewport = {};
 	VkRect2D m_scissor = {};
+	std::map<std::string, ValkyrieRenderPFN> m_render_pfns;
 
 private:
 	State m_state = UNINITIALIZED;
