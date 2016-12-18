@@ -15,13 +15,10 @@ MemoryBuffer::~MemoryBuffer() {
 		delete mp_information;
 }
 
-VkResult MemoryBuffer::allocate(const Device& device, PhysicalDevice& physical_device, const VkBufferUsageFlags usage, uint32_t size) {
+VkResult MemoryBuffer::allocate(const Device& device, PhysicalDevice& physical_device, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create) {
 	VkResult result;
-	VkBufferCreateInfo buffer_create = {};
-	buffer_create.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 	buffer_create.usage = usage;
 	buffer_create.size = size;
-	buffer_create.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
 	result = vkCreateBuffer(device.handle, &buffer_create, nullptr, &handle);
 
@@ -41,7 +38,7 @@ VkResult MemoryBuffer::allocate(const Device& device, PhysicalDevice& physical_d
 }
 
 VkResult MemoryBuffer::write(const Device& device, const void *data, uint32_t offset) {
-	assert(memory != NULL && m_size != 0);
+	assert(memory != NULL && m_size != 0 && !m_writing_state);
 	m_offset = offset;
 	
 	VkResult result;
@@ -52,6 +49,27 @@ VkResult MemoryBuffer::write(const Device& device, const void *data, uint32_t of
 	vkUnmapMemory(device.handle, memory);
 	result = vkBindBufferMemory(device.handle, handle, memory, m_offset);
 
+	return result;
+}
+
+void* MemoryBuffer::startWriting(const Device& device, const void *data, uint32_t offset = 0) {
+	assert(memory != NULL && m_size != 0);
+	m_writing_state = true;
+	m_offset = offset;
+
+	VkResult result;
+	void *destination;
+
+	result = vkMapMemory(device.handle, memory, m_offset, m_size, 0, &destination);
+	assert(result == VK_SUCCESS);
+	return destination;
+}
+
+VkResult MemoryBuffer::endWriting(const Device& device) {
+	VkResult result;
+	vkUnmapMemory(device.handle, memory);
+	result = vkBindBufferMemory(device.handle, handle, memory, m_offset);
+	m_writing_state = false;
 	return result;
 }
 

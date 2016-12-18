@@ -45,9 +45,11 @@ public:
 #endif
 	void initializePipelineLayout();
 	void initializeDescriptorSetLayout();
-	void allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size);
+	void allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create = VK_DEFAULT_BUFFER_CREATE_INFO);
 	void destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer);
 	void writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset = 0);
+	void* startWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer, uint32_t offset = 0);
+	void endWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer);
 	void initializeShaderModules();
 	void initializePipelines();
 	void initializeDescriptorPool();

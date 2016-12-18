@@ -87,17 +87,11 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\vertex_input.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h">
-      <Filter>Header Files\valkyrie\vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\shader.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\descriptor.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\texture.h">
-      <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\texture.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
@@ -126,6 +120,21 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\image_texture.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\image.h">
+      <Filter>Header Files\valkyrie</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_texture.h">
+      <Filter>Header Files\valkyrie\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\render_function.h">
+      <Filter>Header Files\valkyrie</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\default_create_info.h">
+      <Filter>Header Files\valkyrie\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h">
+      <Filter>Header Files\valkyrie\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\source\valkyrie.cpp">
@@ -149,13 +158,7 @@
     <ClCompile Include="Valkyrie\source\swapchain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\include\valkyrie\vulkan\surface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Valkyrie\source\wendy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\include\valkyrie\vulkan\tool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\command_buffer.cpp">
@@ -201,6 +204,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\png_texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\rgba32_memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\memory_texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\include\valkyrie\render_function.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\surface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\tool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
