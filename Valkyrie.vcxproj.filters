@@ -212,13 +212,13 @@
     <ClCompile Include="Valkyrie\source\memory_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\include\valkyrie\render_function.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Valkyrie\source\surface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\tool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\render_function.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

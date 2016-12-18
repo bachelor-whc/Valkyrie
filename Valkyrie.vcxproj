@@ -54,7 +54,6 @@
     <ClInclude Include="Valkyrie\third_party\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Valkyrie\include\valkyrie\render_function.cpp" />
     <ClCompile Include="Valkyrie\source\command_buffer.cpp" />
     <ClCompile Include="Valkyrie\source\depth_buffer.cpp" />
     <ClCompile Include="Valkyrie\source\descriptor.cpp" />
@@ -67,6 +66,7 @@
     <ClCompile Include="Valkyrie\source\png.cpp" />
     <ClCompile Include="Valkyrie\source\png_texture.cpp" />
     <ClCompile Include="Valkyrie\source\queue.cpp" />
+    <ClCompile Include="Valkyrie\source\render_function.cpp" />
     <ClCompile Include="Valkyrie\source\render_pass.cpp" />
     <ClCompile Include="Valkyrie\source\rgba32_memory.cpp" />
     <ClCompile Include="Valkyrie\source\shader.cpp" />

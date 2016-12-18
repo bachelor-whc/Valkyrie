@@ -249,7 +249,7 @@ void Valkyrie::initializeDescriptorSetLayout() {
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create = VK_DEFAULT_BUFFER_CREATE_INFO) {
+void Valkyrie::allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create) {
 	VkResult result = buffer.allocate(m_device, m_physical_device, usage, size, buffer_create);
 	assert(result == VK_SUCCESS);
 }
@@ -266,7 +266,7 @@ void Valkyrie::writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data,
 	assert(result == VK_SUCCESS);
 }
 
-void* Valkyrie::startWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer, uint32_t offset = 0) {
+void* Valkyrie::startWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer, uint32_t offset) {
 	return buffer.startWriting(m_device);
 }
 

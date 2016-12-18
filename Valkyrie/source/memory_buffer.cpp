@@ -52,7 +52,7 @@ VkResult MemoryBuffer::write(const Device& device, const void *data, uint32_t of
 	return result;
 }
 
-void* MemoryBuffer::startWriting(const Device& device, const void *data, uint32_t offset = 0) {
+void* MemoryBuffer::startWriting(const Device& device, uint32_t offset) {
 	assert(memory != NULL && m_size != 0);
 	m_writing_state = true;
 	m_offset = offset;
