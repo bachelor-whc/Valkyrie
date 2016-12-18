@@ -5,6 +5,9 @@
 #include <vulkan/vulkan.h>
 #include <cassert>
 #include <imgui.h>
+#define _CRTDBG_MAP_ALLOC  
+#include <stdlib.h>  
+#include <crtdbg.h> 
 
 struct Vertex {
 	float position[3];
@@ -18,14 +21,132 @@ struct ModelViewProjection {
 	glm::mat4 projection;
 };
 
-bool CreateImGuiFontsTexture(Valkyrie& valkyrie, ImGuiIO& imgui_io) {
-	unsigned char* pixels;
-	int tex_width;
-	int tex_height;
-	imgui_io.Fonts->GetTexDataAsRGBA32(&pixels, &tex_width, &tex_height);
+class ImGuiRenderFunction : public ValkyrieRenderFunction {
+public:
+	ImGuiRenderFunction() :
+		ValkyrieRenderFunction(),
+		mp_vertex_buffer(nullptr),
+		mp_index_buffer(nullptr),
+		m_command_buffer() {
+		mp_vertex_buffer = NEW_NT Vulkan::MemoryBuffer[VALKYRIE_FRAME_BUFFER_COUNT];
+		mp_index_buffer = NEW_NT Vulkan::MemoryBuffer[VALKYRIE_FRAME_BUFFER_COUNT];
+		assert(mp_vertex_buffer != nullptr);
+		assert(mp_index_buffer != nullptr);
+	}
 
-	//valkyrie.
-	return true;
+	~ImGuiRenderFunction() {
+		if (mp_vertex_buffer == nullptr)
+			delete[] mp_vertex_buffer;
+		if (mp_index_buffer == nullptr)
+			delete[] mp_index_buffer;
+	}
+
+private:
+	virtual void implement(const std::vector<void*>& data, uint32_t current_buffer) override {
+		ImGui::NewFrame();
+		ImGui::Text("Hello");
+		ImGui::RadioButton("XXXX", true);
+		ImGui::Render();
+		auto draw_data = ImGui::GetDrawData();
+		ImGuiIO& imgui_io = ImGui::GetIO();
+
+		auto& vertex_buffer = mp_vertex_buffer[current_buffer];
+		auto& index_buffer = mp_index_buffer[current_buffer];
+		Valkyrie& valkyrie = *((Valkyrie*)data[0]);
+		Vulkan::PipelinePointer& p_pipeline = *((Vulkan::PipelinePointer*)data[1]);
+
+		size_t total_vertex_size = draw_data->TotalVtxCount * sizeof(ImDrawVert);
+		if (vertex_buffer.handle == VK_NULL_HANDLE || vertex_buffer.getSize() < total_vertex_size) {
+			if (vertex_buffer.handle != VK_NULL_HANDLE || vertex_buffer.memory != VK_NULL_HANDLE)
+				valkyrie.destroyMemoryBuffer(vertex_buffer);
+			valkyrie.allocateMemoryBuffer(vertex_buffer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, total_vertex_size);
+		}
+
+		size_t total_index_size = draw_data->TotalIdxCount * sizeof(ImDrawIdx);
+		if (index_buffer.handle == VK_NULL_HANDLE || index_buffer.getSize() < total_index_size) {
+			if (index_buffer.handle != VK_NULL_HANDLE || index_buffer.memory != VK_NULL_HANDLE)
+				valkyrie.destroyMemoryBuffer(index_buffer);
+			valkyrie.allocateMemoryBuffer(index_buffer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, total_index_size);
+		}
+
+		ImDrawVert* vertex_memory_destination = (ImDrawVert*)valkyrie.startWritingMemoryBuffer(vertex_buffer);
+		ImDrawIdx* index_memory_destination = (ImDrawIdx*)valkyrie.startWritingMemoryBuffer(index_buffer);
+		for (int n = 0; n < draw_data->CmdListsCount; n++) {
+			const auto command_list = draw_data->CmdLists[n];
+			memcpy(vertex_memory_destination, command_list->VtxBuffer.Data, command_list->VtxBuffer.Size * sizeof(ImDrawVert));
+			memcpy(index_memory_destination, command_list->IdxBuffer.Data, command_list->IdxBuffer.Size * sizeof(ImDrawIdx));
+			vertex_memory_destination += command_list->VtxBuffer.Size;
+			index_memory_destination += command_list->IdxBuffer.Size;
+		}
+
+		if (m_command_buffer.handle == VK_NULL_HANDLE)
+			m_command_buffer = valkyrie.createCommandBuffer();
+
+		m_command_buffer = valkyrie.renderCommands[current_buffer];
+
+		vkCmdBindPipeline(m_command_buffer.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->handle);
+		vkCmdBindDescriptorSets(m_command_buffer.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->layout, 0, 1, &valkyrie.descriptorPool.set, 0, NULL);
+
+		VkDeviceSize vertex_offset[1] = { 0 };
+		vkCmdBindVertexBuffers(m_command_buffer.handle, 0, 1, &vertex_buffer.handle, vertex_offset);
+		vkCmdBindIndexBuffer(m_command_buffer.handle, index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
+
+		VkViewport viewport;
+		viewport.x = 0;
+		viewport.y = 0;
+		viewport.width = ImGui::GetIO().DisplaySize.x;
+		viewport.height = ImGui::GetIO().DisplaySize.y;
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(m_command_buffer.handle, 0, 1, &viewport);
+
+		/*float scale[2];
+		scale[0] = 2.0f / imgui_io.DisplaySize.x;
+		scale[1] = 2.0f / imgui_io.DisplaySize.y;
+		float translate[2];
+		translate[0] = -1.0f;
+		translate[1] = -1.0f;
+		vkCmdPushConstants(m_command_buffer.handle, p_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
+		vkCmdPushConstants(m_command_buffer.handle, p_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);*/
+
+		int vtx_offset = 0;
+		int idx_offset = 0;
+		for (int n = 0; n < draw_data->CmdListsCount; n++) {
+			const ImDrawList* cmd_list = draw_data->CmdLists[n];
+			for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++) {
+				const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[cmd_i];
+				if (pcmd->UserCallback) {
+					pcmd->UserCallback(cmd_list, pcmd);
+				}
+				else {
+					VkRect2D scissor;
+					scissor.offset.x = (int32_t)(pcmd->ClipRect.x);
+					scissor.offset.y = (int32_t)(pcmd->ClipRect.y);
+					scissor.extent.width = (uint32_t)(pcmd->ClipRect.z - pcmd->ClipRect.x);
+					scissor.extent.height = (uint32_t)(pcmd->ClipRect.w - pcmd->ClipRect.y + 1);
+					vkCmdSetScissor(m_command_buffer.handle, 0, 1, &scissor);
+					vkCmdDrawIndexed(m_command_buffer.handle, pcmd->ElemCount, 1, idx_offset, vtx_offset, 0);
+				}
+				idx_offset += pcmd->ElemCount;
+			}
+			vtx_offset += cmd_list->VtxBuffer.Size;
+		}
+	}
+	Vulkan::MemoryBuffer* mp_vertex_buffer;
+	Vulkan::MemoryBuffer* mp_index_buffer;
+	Vulkan::CommandBuffer m_command_buffer;
+};
+
+Vulkan::MemoryTexture CreateImGuiFontsTexture(Valkyrie& valkyrie, ImGuiIO& imgui_io) {
+	unsigned char* pixels;
+	int texture_width;
+	int texture_height;
+	imgui_io.Fonts->GetTexDataAsRGBA32(&pixels, &texture_width, &texture_height);
+
+	ValkyrieImageMemoryPointer p_fonts_image = std::make_shared<ValkyrieRGBA32Memory>(texture_width, texture_height, pixels);
+	Vulkan::MemoryTexture fonts_texture(p_fonts_image);
+	valkyrie.initailizeTexture(fonts_texture);
+	return fonts_texture;
 }
 
 int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, int command_show) {
@@ -38,18 +159,22 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Valkyrie valkyrie("Valkyrie");
 	valkyrie.setWindowPointer(&window);
 	valkyrie.initialize();
+	auto& imgui_io = ImGui::GetIO();
+	imgui_io.DisplaySize.x = 800;
+	imgui_io.DisplaySize.y = 600;
+
 	valkyrie.vertexInput.setBindingDescription(0, sizeof(Vertex));
 	valkyrie.vertexInput.setAttributeDescription(0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0);
 	valkyrie.vertexInput.setAttributeDescription(0, 1, VK_FORMAT_R32G32_SFLOAT, 3 * sizeof(float));
 
 	std::vector<Vertex> vertexs = {
-		{{1.0f,1.0f,0.0f},{1.0f,1.0f}},
-		{{-1.0f,1.0f,0.0f},{0.0f,1.0f}},
-		{{-1.0f,-1.0f,0.0f},{0.0f,0.0f}},
-		{{1.0f,-1.0f,0.0f},{1.0f,0.0f}}
+		{{2.0f,2.0f,0.0f},{1.0f,1.0f}},
+		{{-2.0f,2.0f,0.0f},{0.0f,1.0f}},
+		{{-2.0f,-2.0f,0.0f},{0.0f,0.0f}},
+		{{2.0f,-2.0f,0.0f},{1.0f,0.0f}}
 	};
 
-	std::vector<uint32_t> indices = {0,1,2,2,3,0};
+	std::vector<uint32_t> indices = { 0,1,2,2,3,0 };
 
 	ModelViewProjection mvp;
 
@@ -61,7 +186,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::MemoryBuffer uniform_buffer;
 	ValkyrieImageFilePointer png_ptr = std::make_shared<ValkyriePNG>();
 	Vulkan::ImageTexture texture(png_ptr);
-	
+
 	valkyrie.allocateMemoryBuffer(vertex_buffer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertexs.size() * sizeof(Vertex));
 	valkyrie.allocateMemoryBuffer(index_buffer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indices.size() * sizeof(uint32_t));
 	valkyrie.allocateMemoryBuffer(uniform_buffer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(mvp));
@@ -70,18 +195,21 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	valkyrie.writeMemoryBuffer(uniform_buffer, &mvp);
 	texture.load("wang.png");
 	valkyrie.initailizeTexture(texture);
-	
+
+	Vulkan::MemoryTexture memory_texture = CreateImGuiFontsTexture(valkyrie, imgui_io);
+	imgui_io.Fonts->TexID = memory_texture.image;
+
 	valkyrie.descriptorPool.setLayout.setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 1);
 	valkyrie.descriptorPool.setLayout.setBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
 	valkyrie.initializeDescriptorSetLayout();
-	
+
 	valkyrie.initializePipelineLayout();
 	valkyrie.pipelines["NORMAL"] = std::make_shared<Vulkan::Pipeline>();
 	auto p_pipeline = valkyrie.pipelines["NORMAL"];
 
 	std::string vertex_code = Vulkan::Shader::LoadSPVBinaryCode("vert.spv");
 	std::string fragment_code = Vulkan::Shader::LoadSPVBinaryCode("frag.spv");
-	
+
 	valkyrie.shaders["VERTEX"] = std::make_shared<Vulkan::Shader>(vertex_code, VK_SHADER_STAGE_VERTEX_BIT);
 	valkyrie.shaders["FRAGMENT"] = std::make_shared<Vulkan::Shader>(fragment_code, VK_SHADER_STAGE_FRAGMENT_BIT);
 
@@ -98,7 +226,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	std::vector<VkWriteDescriptorSet> writes(2);
 	VkWriteDescriptorSet& write_uniform = writes[0];
-	VkWriteDescriptorSet& write_sampler = writes[1];
+	VkWriteDescriptorSet& samplers = writes[1];
 
 	write_uniform = {};
 	write_uniform.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -108,13 +236,13 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	write_uniform.pBufferInfo = uniform_buffer.getInformationPointer();
 	write_uniform.dstBinding = 0;
 
-	write_sampler = {};
-	write_sampler.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	write_sampler.dstSet = valkyrie.descriptorPool.set;
-	write_sampler.descriptorCount = 1;
-	write_sampler.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	write_sampler.pImageInfo = texture.getInformationPointer();
-	write_sampler.dstBinding = 1;
+	samplers = {};
+	samplers.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	samplers.dstSet = valkyrie.descriptorPool.set;
+	samplers.descriptorCount = 1;
+	samplers.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	samplers.pImageInfo = texture.getInformationPointer();
+	samplers.dstBinding = 1;
 
 	valkyrie.writeSets(writes);
 
@@ -136,13 +264,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	render_pass_begin.renderArea.extent.height = height;
 	render_pass_begin.clearValueCount = 2;
 	render_pass_begin.pClearValues = clear_values;
-
-	bool i = true;
-	auto io = ImGui::GetIO();
-	io.DisplaySize.x = 800;
-	io.DisplaySize.y = 600;
-	CreateImGuiFontsTexture(valkyrie, io);
-	//ImGui::ShowTestWindow(&i);
 
 	VkResult result;
 	int render_command_size = valkyrie.renderCommands.size();
@@ -185,7 +306,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	}
 
 	glm::vec3 rotation = glm::vec3();
-	
+	ValkyrieRenderPFN imgui_render_pfn = std::make_shared<ImGuiRenderFunction>();
+	valkyrie.registerRenderFunction("imgui", imgui_render_pfn);
+	std::vector<void*> parameter({ &valkyrie, &p_pipeline });
+
 	while (valkyrie.execute()) {
 		rotation.x += 0.01f;
 		rotation.y += 0.01f;
@@ -194,6 +318,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = glm::rotate(mvp.model, rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 		valkyrie.writeMemoryBuffer(uniform_buffer, &mvp);
+		valkyrie.executeRenderFunction("imgui", parameter);
 	}
 	return 0;
 }

@@ -261,6 +261,8 @@ void Valkyrie::destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer) {
 		vkDestroyBuffer(m_device.handle, buffer.handle, nullptr);
 	if(buffer.memory != VK_NULL_HANDLE)
 		vkFreeMemory(m_device.handle, buffer.memory, nullptr);
+	buffer.handle = VK_NULL_HANDLE;
+	buffer.memory = VK_NULL_HANDLE;
 }
 
 void Valkyrie::writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset) {
@@ -357,3 +359,12 @@ bool Valkyrie::registerRenderFunction(std::string name, ValkyrieRenderPFN pfn) {
 	}
 	return true;
 }
+
+void Valkyrie::executeRenderFunction(std::string name, const std::vector<void*>& data) {
+	m_render_pfns[name]->render(data, mp_swapchain->getCurrent());
+}
+
+Vulkan::CommandBuffer Valkyrie::createCommandBuffer() {
+	return m_thread_ptrs[0]->createCommandBuffer();
+}
+

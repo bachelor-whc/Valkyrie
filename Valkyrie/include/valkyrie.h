@@ -59,6 +59,8 @@ public:
 	void commandSetScissor(const Vulkan::CommandBuffer& command_buffer);
 	void initailizeTexture(Vulkan::Texture& texture);
 	bool registerRenderFunction(std::string name, ValkyrieRenderPFN pfn);
+	void executeRenderFunction(std::string name, const std::vector<void*>& data);
+	Vulkan::CommandBuffer createCommandBuffer();
 
 	inline VkRenderPass getRenderPassHandle() { return m_render_pass.handle; }
 	inline VkFramebuffer getFramebuffer(int index) { return mp_swapchain->getFramebuffers()->handles[index]; }
