@@ -27,6 +27,8 @@ Valkyrie::~Valkyrie() {
 	DestroySurface(m_instatnce, m_surface);
 	DestroyDevice(m_device);
 	DestroyInstance(m_instatnce);
+	delete mp_swapchain;
+	delete mp_depth_buffer;
 }
 
 void Valkyrie::initializeInstance() {
@@ -63,14 +65,14 @@ void Valkyrie::initializeThreads() {
 
 void Valkyrie::initializeSwapChain(CommandBuffer& command_bufer) {
 	VkResult result;
-	mp_swapchain = new SwapChain(m_device, m_physical_device, m_surface, *mp_window);
+	mp_swapchain = NEW_NT SwapChain(m_device, m_physical_device, m_surface, *mp_window);
 	result = mp_swapchain->initializeImages(m_device, m_surface, command_bufer);
 	assert(result == VK_SUCCESS);
 }
 
 void Valkyrie::initializeDepthBuffer(CommandBuffer& command_bufer) {
 	VkResult result;
-	mp_depth_buffer = new DepthBuffer(m_physical_device);
+	mp_depth_buffer = NEW_NT DepthBuffer(m_physical_device);
 	result = mp_depth_buffer->initializeImages(m_device, m_physical_device, command_bufer, *mp_window);
 	assert(result == VK_SUCCESS);
 }
@@ -306,7 +308,7 @@ void Valkyrie::initializeDescriptorSets() {
 	assert(result == VK_SUCCESS);
 }
 void Valkyrie::writeSets(const std::vector<VkWriteDescriptorSet>& writes) {
-	vkUpdateDescriptorSets(m_device.handle, writes.size(), writes.data(), 0, NULL);
+	vkUpdateDescriptorSets(m_device.handle, (uint32_t)writes.size(), writes.data(), 0, NULL);
 }
 
 void Valkyrie::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
@@ -320,8 +322,8 @@ void Valkyrie::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
 }
 
 void Valkyrie::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
-	m_scissor.extent.width = (float)mp_window->getWidth();
-	m_scissor.extent.height = (float)mp_window->getHeight();
+	m_scissor.extent.width = (uint32_t)mp_window->getWidth();
+	m_scissor.extent.height = (uint32_t)mp_window->getHeight();
 	m_scissor.offset.x = 0;
 	m_scissor.offset.y = 0;
 	vkCmdSetScissor(command_buffer.handle, 0, 1, &m_scissor);

@@ -24,6 +24,7 @@
 #include <unordered_set>
 #include "valkyrie/default_create_info.h"
 #define NEW_NT new(std::nothrow)
+
 const int VALKYRIE_FRAME_BUFFER_COUNT = 2;
 
 class FileSystem {

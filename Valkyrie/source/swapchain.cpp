@@ -13,7 +13,7 @@ Framebuffers::Framebuffers(const uint32_t count, const std::vector<SwapChainBuff
 	m_swap_chain_views(buffers.size()) {
 	assert(count == buffers.size());
 	handles.resize(m_count);
-	for (int i = 0; i < m_count; ++i)
+	for (uint32_t i = 0; i < m_count; ++i)
 		m_swap_chain_views[i] = buffers[i].view;
 }
 
@@ -77,7 +77,7 @@ SwapChain::SwapChain(const Device& device, const PhysicalDevice& physical_device
 	}
 
 	VkPresentModeKHR swapchain_present_mode = VK_PRESENT_MODE_FIFO_KHR;
-	for (size_t i = 0; i < present_mode_count; ++i) {
+	for (uint32_t i = 0; i < present_mode_count; ++i) {
 		if (present_modes[i] == VK_PRESENT_MODE_MAILBOX_KHR) {
 			swapchain_present_mode = VK_PRESENT_MODE_MAILBOX_KHR;
 			break;

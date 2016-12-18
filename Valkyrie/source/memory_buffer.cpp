@@ -76,6 +76,7 @@ VkResult MemoryBuffer::endWriting(const Device& device) {
 VkDescriptorBufferInfo* MemoryBuffer::getInformationPointer() {
 	if (mp_information == nullptr) {
 		mp_information = NEW_NT VkDescriptorBufferInfo;
+		assert(mp_information != nullptr);
 		mp_information->buffer = handle;
 		mp_information->range = m_size;
 		mp_information->offset = m_offset;

@@ -41,7 +41,7 @@ namespace Vulkan {
 
 		VkSwapchainKHR handle = NULL;
 
-		inline uint32_t getImageCount() const { return m_buffers.size(); }
+		inline uint32_t getImageCount() const { return (uint32_t)m_buffers.size(); }
 		inline uint32_t getCurrent() const { return m_current_buffer; }
 		inline Framebuffers* getFramebuffers() const { return mp_framebuffers; }
 		inline VkImage getCurrentImage() const { return m_buffers[m_current_buffer].image; }

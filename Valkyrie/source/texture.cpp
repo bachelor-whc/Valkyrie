@@ -3,12 +3,13 @@
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/physical_device.h"
 
-Vulkan::Texture::Texture() {
+Vulkan::Texture::Texture() : mp_information(nullptr) {
 
 }
 
 Vulkan::Texture::~Texture() {
-
+	if (mp_information != nullptr)
+		delete mp_information;
 }
 
 VkResult Vulkan::Texture::initializeSampler(const Device& device) {

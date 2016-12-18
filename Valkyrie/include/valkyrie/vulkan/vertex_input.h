@@ -4,8 +4,8 @@
 
 namespace Vulkan {
 	struct VertexInput {
-		void setBindingDescription(const uint32_t binding, const size_t size);
-		void setAttributeDescription(const uint32_t binding, const uint32_t location, const VkFormat format, const size_t offset);
+		void setBindingDescription(const uint32_t binding, const uint32_t size);
+		void setAttributeDescription(const uint32_t binding, const uint32_t location, const VkFormat format, const uint32_t offset);
 
 		std::vector<VkVertexInputBindingDescription> bindings;
 		std::vector<VkVertexInputAttributeDescription> attributes;

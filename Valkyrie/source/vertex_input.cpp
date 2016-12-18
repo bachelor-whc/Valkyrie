@@ -1,7 +1,7 @@
 #include "valkyrie/vulkan/vertex_input.h"
 using namespace Vulkan;
 
-void VertexInput::setBindingDescription(const uint32_t binding, const size_t size) {
+void VertexInput::setBindingDescription(const uint32_t binding, const uint32_t size) {
 	const auto& binding_exists = m_binding_set.find(binding);
 	assert(binding_exists == m_binding_set.end());
 	m_binding_set.insert(binding);
@@ -12,7 +12,7 @@ void VertexInput::setBindingDescription(const uint32_t binding, const size_t siz
 	bindings.push_back(description);
 }
 
-void VertexInput::setAttributeDescription(const uint32_t binding, const uint32_t location, const VkFormat format, const size_t offset) {
+void VertexInput::setAttributeDescription(const uint32_t binding, const uint32_t location, const VkFormat format, const uint32_t offset) {
 	const auto& binding_exists = m_binding_set.find(binding);
 	assert(binding_exists != m_binding_set.end());
 	VkVertexInputAttributeDescription description = {};

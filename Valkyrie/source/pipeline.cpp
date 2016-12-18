@@ -15,15 +15,15 @@ VkResult Pipeline::initializeCache(const Device& device) {
 }
 
 VkResult Pipeline::initializeLayout(const Device& device, const std::vector<Vulkan::DescriptorSetLayout>& descriptor_set_layouts) {
-	int layout_count = descriptor_set_layouts.size();
+	size_t layout_count = descriptor_set_layouts.size();
 	VkDescriptorSetLayout* p_layouts = NEW_NT VkDescriptorSetLayout[layout_count];
 
-	for (int i = 0; i < layout_count; ++i) {
+	for (size_t i = 0; i < layout_count; ++i) {
 		p_layouts[i] = descriptor_set_layouts[i].handle;
 	}
 	VkPipelineLayoutCreateInfo pipeline_layout_create = {};
 	pipeline_layout_create.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipeline_layout_create.setLayoutCount = layout_count;
+	pipeline_layout_create.setLayoutCount = (uint32_t)layout_count;
 	pipeline_layout_create.pSetLayouts = p_layouts;
 	VkResult result = vkCreatePipelineLayout(device.handle, &pipeline_layout_create, nullptr, &layout);
 	delete[] p_layouts;
@@ -58,7 +58,7 @@ Pipeline::~Pipeline() {
 }
 
 VkResult Pipeline::initialize(const Device& device) {
-	m_pipeline_create.stageCount = shaderStageCreates.size();
+	m_pipeline_create.stageCount = (uint32_t)shaderStageCreates.size();
 	m_pipeline_create.pStages = shaderStageCreates.data();
 	return vkCreateGraphicsPipelines(device.handle, cache, 1, &m_pipeline_create, nullptr, &handle);
 }
@@ -69,9 +69,9 @@ void Pipeline::setRenderPass(const RenderPass& render_pass, uint32_t index) {
 }
 
 void Pipeline::setVertexInput(const VertexInput& vertex_input) {
-	m_vertex_input_state.vertexBindingDescriptionCount = vertex_input.bindings.size();
+	m_vertex_input_state.vertexBindingDescriptionCount = (uint32_t)vertex_input.bindings.size();
 	m_vertex_input_state.pVertexBindingDescriptions = vertex_input.bindings.data();
-	m_vertex_input_state.vertexAttributeDescriptionCount = vertex_input.attributes.size();
+	m_vertex_input_state.vertexAttributeDescriptionCount = (uint32_t)vertex_input.attributes.size();
 	m_vertex_input_state.pVertexAttributeDescriptions = vertex_input.attributes.data();
 }
 
@@ -136,7 +136,7 @@ void Pipeline::initializeColorBlendState() {
 	m_color_blend_attachments[0].dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
 	m_color_blend_attachments[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 	m_color_blend_attachments[0].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-	m_color_blend_state.attachmentCount = m_color_blend_attachments.size();
+	m_color_blend_state.attachmentCount = (uint32_t)m_color_blend_attachments.size();
 	m_color_blend_state.pAttachments = m_color_blend_attachments.data();;
 	m_color_blend_state.blendConstants[0] = 0.0f;
 	m_color_blend_state.blendConstants[1] = 0.0f;
@@ -149,7 +149,7 @@ void Pipeline::initializeDynamicState() {
 	m_dynamic_state_enables.push_back(VK_DYNAMIC_STATE_SCISSOR);
 	m_dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 	m_dynamic_state.pDynamicStates = m_dynamic_state_enables.data();
-	m_dynamic_state.dynamicStateCount = m_dynamic_state_enables.size();
+	m_dynamic_state.dynamicStateCount = (uint32_t)m_dynamic_state_enables.size();
 }
 
 void Vulkan::DestroyPipeline(const Device& device, Pipeline& pipeline) {
