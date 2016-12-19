@@ -205,18 +205,26 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	valkyrie.initializePipelineLayout();
 	valkyrie.pipelines["NORMAL"] = std::make_shared<Vulkan::Pipeline>();
-	auto p_pipeline = valkyrie.pipelines["NORMAL"];
+	valkyrie.pipelines["IMGUI"] = std::make_shared<Vulkan::Pipeline>();
+	auto p_normal_pipeline = valkyrie.pipelines["NORMAL"];
+	auto p_imgui_pipeline = valkyrie.pipelines["IMGUI"];
 
-	std::string vertex_code = Vulkan::Shader::LoadSPVBinaryCode("vert.spv");
-	std::string fragment_code = Vulkan::Shader::LoadSPVBinaryCode("frag.spv");
+	std::string normal_vertex_code = Vulkan::Shader::LoadSPVBinaryCode("vert.spv");
+	std::string normal_fragment_code = Vulkan::Shader::LoadSPVBinaryCode("frag.spv");
+	std::string imgui_vertex_code = Vulkan::Shader::LoadSPVBinaryCode("imgui.vert.spv");
+	std::string imgui_fragment_code = Vulkan::Shader::LoadSPVBinaryCode("imgui.frag.spv");
 
-	valkyrie.shaders["VERTEX"] = std::make_shared<Vulkan::Shader>(vertex_code, VK_SHADER_STAGE_VERTEX_BIT);
-	valkyrie.shaders["FRAGMENT"] = std::make_shared<Vulkan::Shader>(fragment_code, VK_SHADER_STAGE_FRAGMENT_BIT);
+	valkyrie.shaders["VERTEX"] = std::make_shared<Vulkan::Shader>(normal_vertex_code, VK_SHADER_STAGE_VERTEX_BIT);
+	valkyrie.shaders["FRAGMENT"] = std::make_shared<Vulkan::Shader>(normal_fragment_code, VK_SHADER_STAGE_FRAGMENT_BIT);
+	valkyrie.shaders["IMGUI_VERTEX"] = std::make_shared<Vulkan::Shader>(imgui_vertex_code, VK_SHADER_STAGE_VERTEX_BIT);
+	valkyrie.shaders["IMGUI_FRAGMENT"] = std::make_shared<Vulkan::Shader>(imgui_fragment_code, VK_SHADER_STAGE_FRAGMENT_BIT);
 
 	valkyrie.initializeShaderModules();
 
-	p_pipeline->shaderStageCreates.push_back(valkyrie.shaders["VERTEX"]->createPipelineShaderStage());
-	p_pipeline->shaderStageCreates.push_back(valkyrie.shaders["FRAGMENT"]->createPipelineShaderStage());
+	p_normal_pipeline->shaderStageCreates.push_back(valkyrie.shaders["VERTEX"]->createPipelineShaderStage());
+	p_normal_pipeline->shaderStageCreates.push_back(valkyrie.shaders["FRAGMENT"]->createPipelineShaderStage());
+	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
+	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
 
 	valkyrie.initializePipelines();
 	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
@@ -276,8 +284,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		valkyrie.commandSetViewport(command);
 		valkyrie.commandSetScissor(command);
 
-		vkCmdBindDescriptorSets(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->layout, 0, 1, &valkyrie.descriptorPool.set, 0, nullptr);
-		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->handle);
+		vkCmdBindDescriptorSets(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->layout, 0, 1, &valkyrie.descriptorPool.set, 0, nullptr);
+		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->handle);
 
 		const VkDeviceSize offsets[1] = { 0 };
 		vkCmdBindVertexBuffers(command.handle, 0, 1, &vertex_buffer.handle, offsets);
@@ -308,7 +316,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	glm::vec3 rotation = glm::vec3();
 	ValkyrieRenderPFN imgui_render_pfn = std::make_shared<ImGuiRenderFunction>();
 	valkyrie.registerRenderFunction("imgui", imgui_render_pfn);
-	std::vector<void*> parameter({ &valkyrie, &p_pipeline });
+	std::vector<void*> parameter({ &valkyrie, &p_normal_pipeline });
 	while (valkyrie.execute()) {
 		rotation.x += 0.01f;
 		rotation.y += 0.01f;

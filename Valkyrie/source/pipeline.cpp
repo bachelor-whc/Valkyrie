@@ -58,6 +58,7 @@ Pipeline::~Pipeline() {
 }
 
 VkResult Pipeline::initialize(const Device& device) {
+	assert(cache != VK_NULL_HANDLE);
 	m_pipeline_create.stageCount = (uint32_t)shaderStageCreates.size();
 	m_pipeline_create.pStages = shaderStageCreates.data();
 	return vkCreateGraphicsPipelines(device.handle, cache, 1, &m_pipeline_create, nullptr, &handle);
