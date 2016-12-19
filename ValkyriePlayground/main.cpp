@@ -46,6 +46,8 @@ private:
 		ImGui::NewFrame();
 		ImGui::Text("Hello");
 		ImGui::RadioButton("XXXX", true);
+		bool y = true;
+		ImGui::ShowTestWindow(&y);
 		ImGui::Render();
 		auto draw_data = ImGui::GetDrawData();
 		ImGuiIO& imgui_io = ImGui::GetIO();
@@ -81,8 +83,6 @@ private:
 
 		if (m_command_buffer.handle == VK_NULL_HANDLE)
 			m_command_buffer = valkyrie.createCommandBuffer();
-
-		m_command_buffer = valkyrie.renderCommands[current_buffer];
 
 		vkCmdBindPipeline(m_command_buffer.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->handle);
 		vkCmdBindDescriptorSets(m_command_buffer.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->layout, 0, 1, &valkyrie.descriptorPool.set, 0, NULL);
@@ -309,7 +309,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	ValkyrieRenderPFN imgui_render_pfn = std::make_shared<ImGuiRenderFunction>();
 	valkyrie.registerRenderFunction("imgui", imgui_render_pfn);
 	std::vector<void*> parameter({ &valkyrie, &p_pipeline });
-
 	while (valkyrie.execute()) {
 		rotation.x += 0.01f;
 		rotation.y += 0.01f;
