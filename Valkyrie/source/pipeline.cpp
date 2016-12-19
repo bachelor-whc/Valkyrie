@@ -5,8 +5,8 @@
 #include "valkyrie/vulkan/vertex_input.h"
 using namespace Vulkan;
 
-VkPipelineCache Pipeline::cache = NULL;
-VkPipelineLayout Pipeline::layout = NULL;
+VkPipelineCache Pipeline::cache = VK_NULL_HANDLE;
+VkPipelineLayout Pipeline::layout = VK_NULL_HANDLE;
 
 VkResult Pipeline::initializeCache(const Device& device) {
 	VkPipelineCacheCreateInfo pipeline_cache_create = {};
