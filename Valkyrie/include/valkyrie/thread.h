@@ -18,8 +18,8 @@ struct ValkyrieThread {
 	Vulkan::SecondaryCommandBuffers ValkyrieThread::createSecondaryCommandBuffer(const uint32_t count);
 
 private:
-	VkDevice m_device = NULL;
-	VkCommandPool m_command_pool = NULL;
+	VkDevice m_device = VK_NULL_HANDLE;
+	VkCommandPool m_command_pool = VK_NULL_HANDLE;
 	VkCommandBufferLevel m_level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 };
 

@@ -6,8 +6,7 @@ namespace Vulkan {
 	struct PhysicalDevice;
 
 	struct Device {
-		VkDevice handle = NULL;
-		VkCommandPool commandPool = NULL;
+		VkDevice handle = VK_NULL_HANDLE;
 	};
 
 	VkResult CreateDevice(const PhysicalDevice& physical_device, Device& device);

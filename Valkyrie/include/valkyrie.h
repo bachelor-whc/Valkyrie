@@ -66,6 +66,8 @@ public:
 	inline VkFramebuffer getFramebuffer(int index) { return mp_swapchain->getFramebuffers()->handles[index]; }
 	inline VkImage getSwapChainImage(int index) { return mp_swapchain->getImage(index); }
 
+	inline Vulkan::Queue& getGraphicsQueue() { return m_graphics_queue; }
+
 	std::vector<Vulkan::CommandBuffer> renderCommands;
 	Vulkan::VertexInput vertexInput;
 	std::vector<Vulkan::MemoryBuffer> memoryBuffers;
