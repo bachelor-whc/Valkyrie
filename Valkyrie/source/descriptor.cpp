@@ -8,8 +8,7 @@ DescriptorPool::DescriptorPool(uint32_t max_sets) :
 	m_sets_map(),
 	m_set_layouts(),
 	m_set_layouts_map() {
-	mp_sets = NEW_NT VkDescriptorSet[m_max_sets];
-	assert(mp_sets != nullptr);
+	
 }
 
 DescriptorPool::~DescriptorPool() {
@@ -17,8 +16,6 @@ DescriptorPool::~DescriptorPool() {
 		if (p_set_layout != nullptr)
 			delete p_set_layout;
 	}
-	if (mp_sets != nullptr)
-		delete[] mp_sets;
 }
 
 
@@ -37,9 +34,9 @@ VkResult DescriptorPool::initializeSets(const Device& device) {
 	std::vector<VkDescriptorSetLayout>& set_layouts = getSetLayoutHandles();
 	descriptor_set_allocate.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	descriptor_set_allocate.descriptorPool = handle;
-	descriptor_set_allocate.descriptorSetCount = m_sets_size;
+	descriptor_set_allocate.descriptorSetCount = m_sets.size();
 	descriptor_set_allocate.pSetLayouts = set_layouts.data();
-	VkResult result = vkAllocateDescriptorSets(device.handle, &descriptor_set_allocate, mp_sets);
+	VkResult result = vkAllocateDescriptorSets(device.handle, &descriptor_set_allocate, m_sets.data());
 	return result;
 }
 
@@ -53,21 +50,21 @@ VkResult DescriptorPool::initializeSetLayouts(const Device& device) {
 	return result;
 }
 
-VkDescriptorSet& DescriptorPool::registerSet(const std::string& name) {
+VkDescriptorSet& DescriptorPool::registerSet(const std::string& name, const int index) {
+	if ((index + 1) > m_sets.size())
+		m_sets.resize(index + 1);
 	if (m_sets_map.find(name) != m_sets_map.end()) {
-		return *m_sets_map[name];
+		return m_sets[m_sets_map[name]];
 	}
 	else {
-		assert((m_sets_size + 1) <= m_max_sets);
-		*(mp_sets + m_sets_size) = VK_NULL_HANDLE;
-		m_sets_map[name] = mp_sets + m_sets_size;
-		++m_sets_size;
-		return *m_sets_map[name];
+		m_sets[index] = VK_NULL_HANDLE;
+		m_sets_map[name] = index;
+		return m_sets[index];
 	}
 }
 
 VkDescriptorSet& DescriptorPool::getSet(const std::string& name) {
-	return *m_sets_map[name];
+	return m_sets[m_sets_map[name]];
 }
 
 DescriptorSetLayout& DescriptorPool::registerSetLayout(const std::string& name, const int index) {
