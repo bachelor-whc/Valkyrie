@@ -20,16 +20,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="frag.spv">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="vert.spv">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="imgui.frag.spv">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="imgui.vert.spv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shader.frag.spv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shader.vert.spv">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

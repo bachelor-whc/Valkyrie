@@ -164,10 +164,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="frag.spv" />
     <None Include="imgui.frag.spv" />
     <None Include="imgui.vert.spv" />
-    <None Include="vert.spv" />
+    <None Include="shader.frag.spv" />
+    <None Include="shader.vert.spv" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="wang.png" />
