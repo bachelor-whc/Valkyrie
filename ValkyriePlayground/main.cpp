@@ -208,18 +208,18 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	imgui_io.Fonts->TexID = (void*)memory_texture.image;
 
 	auto& nomal_set_layout = valkyrie.descriptorPool.registerSetLayout(NORMAL_PIPELINE, 0);
-	//auto& imgui_set_layout = valkyrie.descriptorPool.registerSetLayout(IMGUI_PIPELINE, 1);
+	auto& imgui_set_layout = valkyrie.descriptorPool.registerSetLayout(IMGUI_PIPELINE, 1);
 
 	nomal_set_layout.setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 1);
 	nomal_set_layout.setBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
-	//imgui_set_layout.setBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+	imgui_set_layout.setBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
 	valkyrie.initializeDescriptorSetLayouts();
 
 	valkyrie.initializePipelineLayout();
 	valkyrie.pipelines[NORMAL_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
-	//valkyrie.pipelines[IMGUI_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
+	valkyrie.pipelines[IMGUI_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
 	auto p_normal_pipeline = valkyrie.pipelines[NORMAL_PIPELINE];
-	//auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
+	auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
 
 	std::string normal_vertex_code = Vulkan::Shader::LoadSPVBinaryCode("shader.vert.spv");
 	std::string normal_fragment_code = Vulkan::Shader::LoadSPVBinaryCode("shader.frag.spv");
@@ -235,38 +235,47 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	p_normal_pipeline->shaderStageCreates.push_back(valkyrie.shaders["VERTEX"]->createPipelineShaderStage());
 	p_normal_pipeline->shaderStageCreates.push_back(valkyrie.shaders["FRAGMENT"]->createPipelineShaderStage());
-	//p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
-	//p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
+	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
+	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
 
 	valkyrie.initializePipelines();
 	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
-	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
+	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 2);
 	valkyrie.descriptorPool.registerSet(NORMAL_PIPELINE);
-	//valkyrie.descriptorPool.registerSet(IMGUI_PIPELINE);
+	valkyrie.descriptorPool.registerSet(IMGUI_PIPELINE);
 	valkyrie.initializeDescriptorPool();
 	valkyrie.initializeDescriptorSets();
 
-	std::vector<VkWriteDescriptorSet> normal_writes(2);
-	VkWriteDescriptorSet& write_uniform = normal_writes[0];
-	VkWriteDescriptorSet& samplers = normal_writes[1];
+	std::vector<VkWriteDescriptorSet> writes(3);
+	VkWriteDescriptorSet& shader_uniform = writes[0];
+	VkWriteDescriptorSet& shader_samplers = writes[1];
+	VkWriteDescriptorSet& imgui_samplers = writes[2];
 
-	write_uniform = {};
-	write_uniform.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	write_uniform.dstSet = valkyrie.descriptorPool.getSet(NORMAL_PIPELINE);
-	write_uniform.descriptorCount = 1;
-	write_uniform.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	write_uniform.pBufferInfo = uniform_buffer.getInformationPointer();
-	write_uniform.dstBinding = 0;
+	shader_uniform = {};
+	shader_uniform.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	shader_uniform.dstSet = valkyrie.descriptorPool.getSet(NORMAL_PIPELINE);
+	shader_uniform.descriptorCount = 1;
+	shader_uniform.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	shader_uniform.pBufferInfo = uniform_buffer.getInformationPointer();
+	shader_uniform.dstBinding = 0;
 
-	samplers = {};
-	samplers.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	samplers.dstSet = valkyrie.descriptorPool.getSet(NORMAL_PIPELINE);
-	samplers.descriptorCount = 1;
-	samplers.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	samplers.pImageInfo = texture.getInformationPointer();
-	samplers.dstBinding = 1;
+	shader_samplers = {};
+	shader_samplers.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	shader_samplers.dstSet = valkyrie.descriptorPool.getSet(NORMAL_PIPELINE);
+	shader_samplers.descriptorCount = 1;
+	shader_samplers.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	shader_samplers.pImageInfo = texture.getInformationPointer();
+	shader_samplers.dstBinding = 1;
 
-	valkyrie.writeSets(normal_writes);
+	imgui_samplers = {};
+	imgui_samplers.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	imgui_samplers.dstSet = valkyrie.descriptorPool.getSet(IMGUI_PIPELINE);
+	imgui_samplers.descriptorCount = 1;
+	imgui_samplers.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	imgui_samplers.pImageInfo = memory_texture.getInformationPointer();
+	imgui_samplers.dstBinding = 0;
+
+	valkyrie.writeSets(writes);
 
 	VkClearValue clear_values[2];
 	clear_values[0].color.float32[0] = 0.2f;

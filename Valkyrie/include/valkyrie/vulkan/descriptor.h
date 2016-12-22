@@ -24,6 +24,7 @@ namespace Vulkan {
 		VkResult initializeSetLayouts(const Device& device);
 		VkDescriptorSet& registerSet(const std::string& name);
 		VkDescriptorSet& getSet(const std::string& name);
+		inline int32_t getSetsSize() { return m_sets_size; }
 		DescriptorSetLayout& registerSetLayout(const std::string& name, const int index);
 		DescriptorSetLayout& getSetLayout(const std::string& name);
 		void addPoolSize(VkDescriptorType type, uint32_t count);
@@ -33,8 +34,9 @@ namespace Vulkan {
 
 	private:
 		uint32_t m_max_sets;
+		uint32_t m_sets_size;
 		std::vector<VkDescriptorPoolSize> m_sizes;
-		std::vector<VkDescriptorSet> m_sets;
+		VkDescriptorSet* mp_sets = nullptr;
 		std::map<std::string, VkDescriptorSet*> m_sets_map;
 		std::vector<DescriptorSetLayout*> m_set_layouts;
 		std::map<std::string, int> m_set_layouts_map;
