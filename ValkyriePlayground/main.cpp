@@ -30,9 +30,11 @@ public:
 		ValkyrieRenderFunction(),
 		mp_vertex_buffer(nullptr),
 		mp_index_buffer(nullptr),
-		m_command_buffer() {
+		mp_render_pass_begin(nullptr),
+		mp_command_buffer(nullptr) {
 		mp_vertex_buffer = NEW_NT Vulkan::MemoryBuffer[VALKYRIE_FRAME_BUFFER_COUNT];
 		mp_index_buffer = NEW_NT Vulkan::MemoryBuffer[VALKYRIE_FRAME_BUFFER_COUNT];
+		mp_command_buffer = NEW_NT Vulkan::CommandBuffer[VALKYRIE_FRAME_BUFFER_COUNT];
 		assert(mp_vertex_buffer != nullptr);
 		assert(mp_index_buffer != nullptr);
 	}
@@ -42,6 +44,10 @@ public:
 			delete[] mp_vertex_buffer;
 		if (mp_index_buffer == nullptr)
 			delete[] mp_index_buffer;
+	}
+
+	void setRenderPassBeginInformation(VkRenderPassBeginInfo* p_render_pass_begin) {
+		mp_render_pass_begin = p_render_pass_begin;
 	}
 
 private:
@@ -84,15 +90,19 @@ private:
 			index_memory_destination += command_list->IdxBuffer.Size;
 		}
 
-		if (m_command_buffer.handle == VK_NULL_HANDLE)
-			m_command_buffer = valkyrie.createCommandBuffer();
+		if (mp_command_buffer[current_buffer].handle == VK_NULL_HANDLE)
+			mp_command_buffer[current_buffer] = valkyrie.createCommandBuffer();
 
-		vkCmdBindPipeline(m_command_buffer.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->handle);
-		vkCmdBindDescriptorSets(m_command_buffer.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->layout, 0, 1, &valkyrie.descriptorPool.getSet(IMGUI_PIPELINE), 0, NULL);
+		auto& command_buffer = mp_command_buffer[current_buffer];
+
+		command_buffer.begin();
+		vkCmdBeginRenderPass(command_buffer.handle, mp_render_pass_begin, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBindPipeline(command_buffer.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->handle);
+		vkCmdBindDescriptorSets(command_buffer.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_pipeline->layout, 0, 1, &valkyrie.descriptorPool.getSet(IMGUI_PIPELINE), 0, NULL);
 
 		VkDeviceSize vertex_offset[1] = { 0 };
-		vkCmdBindVertexBuffers(m_command_buffer.handle, 0, 1, &vertex_buffer.handle, vertex_offset);
-		vkCmdBindIndexBuffer(m_command_buffer.handle, index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
+		vkCmdBindVertexBuffers(command_buffer.handle, 0, 1, &vertex_buffer.handle, vertex_offset);
+		vkCmdBindIndexBuffer(command_buffer.handle, index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
 
 		VkViewport viewport;
 		viewport.x = 0;
@@ -101,16 +111,16 @@ private:
 		viewport.height = ImGui::GetIO().DisplaySize.y;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(m_command_buffer.handle, 0, 1, &viewport);
+		vkCmdSetViewport(command_buffer.handle, 0, 1, &viewport);
 
-		/*float scale[2];
+		float scale[2];
 		scale[0] = 2.0f / imgui_io.DisplaySize.x;
 		scale[1] = 2.0f / imgui_io.DisplaySize.y;
 		float translate[2];
 		translate[0] = -1.0f;
 		translate[1] = -1.0f;
-		vkCmdPushConstants(m_command_buffer.handle, p_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
-		vkCmdPushConstants(m_command_buffer.handle, p_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);*/
+		vkCmdPushConstants(command_buffer.handle, p_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
+		vkCmdPushConstants(command_buffer.handle, p_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
 
 		int vtx_offset = 0;
 		int idx_offset = 0;
@@ -127,17 +137,38 @@ private:
 					scissor.offset.y = (int32_t)(pcmd->ClipRect.y);
 					scissor.extent.width = (uint32_t)(pcmd->ClipRect.z - pcmd->ClipRect.x);
 					scissor.extent.height = (uint32_t)(pcmd->ClipRect.w - pcmd->ClipRect.y + 1);
-					vkCmdSetScissor(m_command_buffer.handle, 0, 1, &scissor);
-					vkCmdDrawIndexed(m_command_buffer.handle, pcmd->ElemCount, 1, idx_offset, vtx_offset, 0);
+					vkCmdSetScissor(command_buffer.handle, 0, 1, &scissor);
+					vkCmdDrawIndexed(command_buffer.handle, pcmd->ElemCount, 1, idx_offset, vtx_offset, 0);
 				}
 				idx_offset += pcmd->ElemCount;
 			}
 			vtx_offset += cmd_list->VtxBuffer.Size;
 		}
+
+		vkCmdEndRenderPass(command_buffer.handle);
+		VkImageMemoryBarrier barrier = {};
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+		barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.image = valkyrie.getSwapChainImage(current_buffer);
+		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		barrier.subresourceRange.baseMipLevel = 0;
+		barrier.subresourceRange.levelCount = 1;
+		barrier.subresourceRange.baseArrayLayer = 0;
+		barrier.subresourceRange.layerCount = 1;
+		vkCmdPipelineBarrier(command_buffer.handle, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, NULL, 0, NULL, 1, &barrier);
+		command_buffer.end();
+		command_buffer.submit(valkyrie.getGraphicsQueue());
 	}
+
 	Vulkan::MemoryBuffer* mp_vertex_buffer;
 	Vulkan::MemoryBuffer* mp_index_buffer;
-	Vulkan::CommandBuffer m_command_buffer;
+	Vulkan::CommandBuffer* mp_command_buffer;
+	VkRenderPassBeginInfo* mp_render_pass_begin;
 };
 
 Vulkan::MemoryTexture CreateImGuiFontsTexture(Valkyrie& valkyrie, ImGuiIO& imgui_io) {
@@ -217,9 +248,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	valkyrie.initializePipelineLayout();
 	valkyrie.pipelines[NORMAL_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
-	//valkyrie.pipelines[IMGUI_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
+	valkyrie.pipelines[IMGUI_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
 	auto p_normal_pipeline = valkyrie.pipelines[NORMAL_PIPELINE];
-	//auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
+	auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
 
 	std::string normal_vertex_code = Vulkan::Shader::LoadSPVBinaryCode("shader.vert.spv");
 	std::string normal_fragment_code = Vulkan::Shader::LoadSPVBinaryCode("shader.frag.spv");
@@ -235,8 +266,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	p_normal_pipeline->shaderStageCreates.push_back(valkyrie.shaders["VERTEX"]->createPipelineShaderStage());
 	p_normal_pipeline->shaderStageCreates.push_back(valkyrie.shaders["FRAGMENT"]->createPipelineShaderStage());
-	//p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
-	//p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
+	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
+	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
 
 	valkyrie.initializePipelines();
 	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
@@ -345,8 +376,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	}
 
 	glm::vec3 rotation = glm::vec3();
-	ValkyrieRenderPFN imgui_render_pfn = std::make_shared<ImGuiRenderFunction>();
+	std::shared_ptr<ImGuiRenderFunction> imgui_render_pfn = std::make_shared<ImGuiRenderFunction>();
 	valkyrie.registerRenderFunction("imgui", imgui_render_pfn);
+	imgui_render_pfn->setRenderPassBeginInformation(&render_pass_begin);
+
 	std::vector<void*> parameter({ &valkyrie, &p_normal_pipeline });
 	while (valkyrie.execute()) {
 		rotation.x += 0.01f;
@@ -356,7 +389,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = glm::rotate(mvp.model, rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 		valkyrie.writeMemoryBuffer(uniform_buffer, &mvp);
-		//valkyrie.executeRenderFunction("imgui", parameter);
+		valkyrie.executeRenderFunction("imgui", parameter);
 	}
 	return 0;
 }
