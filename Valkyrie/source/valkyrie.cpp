@@ -310,7 +310,7 @@ void Valkyrie::initializeDescriptorSets() {
 	assert(result == VK_SUCCESS);
 }
 void Valkyrie::writeSets(const std::vector<VkWriteDescriptorSet>& writes) {
-	vkUpdateDescriptorSets(m_device.handle, descriptorPool.getSetsSize(), writes.data(), 0, NULL);
+	vkUpdateDescriptorSets(m_device.handle, writes.size(), writes.data(), 0, NULL);
 }
 
 void Valkyrie::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {

@@ -217,9 +217,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	valkyrie.initializePipelineLayout();
 	valkyrie.pipelines[NORMAL_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
-	valkyrie.pipelines[IMGUI_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
+	//valkyrie.pipelines[IMGUI_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
 	auto p_normal_pipeline = valkyrie.pipelines[NORMAL_PIPELINE];
-	auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
+	//auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
 
 	std::string normal_vertex_code = Vulkan::Shader::LoadSPVBinaryCode("shader.vert.spv");
 	std::string normal_fragment_code = Vulkan::Shader::LoadSPVBinaryCode("shader.frag.spv");
@@ -235,14 +235,15 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	p_normal_pipeline->shaderStageCreates.push_back(valkyrie.shaders["VERTEX"]->createPipelineShaderStage());
 	p_normal_pipeline->shaderStageCreates.push_back(valkyrie.shaders["FRAGMENT"]->createPipelineShaderStage());
-	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
-	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
+	//p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
+	//p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
 
 	valkyrie.initializePipelines();
 	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
-	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 2);
-	valkyrie.descriptorPool.registerSet(NORMAL_PIPELINE);
-	valkyrie.descriptorPool.registerSet(IMGUI_PIPELINE);
+	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
+	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
+	valkyrie.descriptorPool.registerSet(IMGUI_PIPELINE, 1);
+	valkyrie.descriptorPool.registerSet(NORMAL_PIPELINE, 0);
 	valkyrie.initializeDescriptorPool();
 	valkyrie.initializeDescriptorSets();
 
@@ -307,7 +308,15 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		valkyrie.commandSetViewport(command);
 		valkyrie.commandSetScissor(command);
 
-		vkCmdBindDescriptorSets(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->layout, 0, 1, &valkyrie.descriptorPool.getSet("NORMAL"), 0, nullptr);
+		vkCmdBindDescriptorSets(
+			command.handle, 
+			VK_PIPELINE_BIND_POINT_GRAPHICS, 
+			p_normal_pipeline->layout, 
+			0, 
+			valkyrie.descriptorPool.getSetsSize(), 
+			valkyrie.descriptorPool.getSets(), 
+			0, 
+			nullptr);
 		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->handle);
 
 		const VkDeviceSize offsets[1] = { 0 };
