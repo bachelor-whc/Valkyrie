@@ -13,7 +13,7 @@ namespace Vulkan {
 		static VkPipelineCache cache;
 		static VkPipelineLayout layout;
 		static VkResult initializeCache(const Device& device);
-		static VkResult initializeLayout(const Device& device, const std::vector<DescriptorSetLayout>& layouts);
+		static VkResult initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
 
 		Pipeline();
 		~Pipeline();

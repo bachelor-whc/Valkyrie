@@ -9,7 +9,7 @@ namespace Vulkan {
 		void setBinding(const uint32_t shader_binding, const VkDescriptorType type, const VkShaderStageFlags flag, const uint32_t count);
 		VkResult initialize(const Device& device);
 
-		VkDescriptorSetLayout handle = NULL;
+		VkDescriptorSetLayout handle = VK_NULL_HANDLE;
 	private:
 		std::vector<VkDescriptorSetLayoutBinding> m_bindings;
 	};
@@ -20,17 +20,24 @@ namespace Vulkan {
 		~DescriptorPool();
 
 		VkResult initializePool(const Device& device);
-		VkResult initializeSet(const Device& device);
+		VkResult initializeSets(const Device& device);
+		VkResult initializeSetLayouts(const Device& device);
+		VkDescriptorSet& registerSet(const std::string& name);
+		VkDescriptorSet& getSet(const std::string& name);
+		DescriptorSetLayout& registerSetLayout(const std::string& name, const int index);
+		DescriptorSetLayout& getSetLayout(const std::string& name);
 		void addPoolSize(VkDescriptorType type, uint32_t count);
+		std::vector<VkDescriptorSetLayout> getSetLayoutHandles();
 
-		VkDescriptorPool handle = NULL;
-
-		VkDescriptorSet set;
-		DescriptorSetLayout setLayout;
+		VkDescriptorPool handle = VK_NULL_HANDLE;
 
 	private:
-		std::vector<VkDescriptorPoolSize> sizes;
 		uint32_t m_max_sets;
+		std::vector<VkDescriptorPoolSize> m_sizes;
+		std::vector<VkDescriptorSet> m_sets;
+		std::map<std::string, VkDescriptorSet*> m_sets_map;
+		std::vector<DescriptorSetLayout*> m_set_layouts;
+		std::map<std::string, int> m_set_layouts_map;
 	};
 }
 

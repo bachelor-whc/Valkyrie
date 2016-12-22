@@ -14,19 +14,13 @@ VkResult Pipeline::initializeCache(const Device& device) {
 	return vkCreatePipelineCache(device.handle, &pipeline_cache_create, NULL, &cache);
 }
 
-VkResult Pipeline::initializeLayout(const Device& device, const std::vector<Vulkan::DescriptorSetLayout>& descriptor_set_layouts) {
+VkResult Pipeline::initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts) {
 	size_t layout_count = descriptor_set_layouts.size();
-	VkDescriptorSetLayout* p_layouts = NEW_NT VkDescriptorSetLayout[layout_count];
-
-	for (size_t i = 0; i < layout_count; ++i) {
-		p_layouts[i] = descriptor_set_layouts[i].handle;
-	}
 	VkPipelineLayoutCreateInfo pipeline_layout_create = {};
 	pipeline_layout_create.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipeline_layout_create.setLayoutCount = (uint32_t)layout_count;
-	pipeline_layout_create.pSetLayouts = p_layouts;
+	pipeline_layout_create.pSetLayouts = descriptor_set_layouts.data();
 	VkResult result = vkCreatePipelineLayout(device.handle, &pipeline_layout_create, nullptr, &layout);
-	delete[] p_layouts;
 	return result;
 }
 

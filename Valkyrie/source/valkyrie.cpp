@@ -240,14 +240,14 @@ void Valkyrie::setWindowPointer(Wendy::Win32Window* window_ptr) {
 
 void Valkyrie::initializePipelineLayout() {
 	VkResult result;
-	std::vector<DescriptorSetLayout> layouts = { descriptorPool.setLayout };
+	std::vector<VkDescriptorSetLayout>& layouts = descriptorPool.getSetLayoutHandles();
 	result = Pipeline::initializeLayout(m_device, layouts);
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeDescriptorSetLayout() {
+void Valkyrie::initializeDescriptorSetLayouts() {
 	VkResult result;
-	result = descriptorPool.setLayout.initialize(m_device);
+	result = descriptorPool.initializeSetLayouts(m_device);
 	assert(result == VK_SUCCESS);
 }
 
@@ -306,7 +306,7 @@ void Valkyrie::initializeDescriptorPool() {
 
 void Valkyrie::initializeDescriptorSets() {
 	VkResult result;
-	result = descriptorPool.initializeSet(m_device);
+	result = descriptorPool.initializeSets(m_device);
 	assert(result == VK_SUCCESS);
 }
 void Valkyrie::writeSets(const std::vector<VkWriteDescriptorSet>& writes) {
