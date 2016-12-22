@@ -15,6 +15,7 @@ Valkyrie所使用的第三方函式庫或代碼都放置於`license`資料夾內
 * Valkyrie可透過libpng讀取PNG影像檔作為Texture
 * Valkyrie可Render具材質貼圖的3D Model
 * 載入SPV(使用者自行編譯)
+* 簡易設置Descriptor Pool, Descriptor Set, Descriptor Set Layout(2016/12/22)
 
 ## 未來開發項目
 * 更好的Vulkan封裝與介面
