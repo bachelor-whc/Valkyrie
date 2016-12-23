@@ -16,6 +16,14 @@ MemoryBuffer::~MemoryBuffer() {
 }
 
 VkResult MemoryBuffer::allocate(const Device& device, PhysicalDevice& physical_device, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create) {
+	if (handle != VK_NULL_HANDLE) {
+		vkDestroyBuffer(device.handle, handle, nullptr);
+		handle = VK_NULL_HANDLE;
+	}
+	if (memory != VK_NULL_HANDLE) {
+		vkFreeMemory(device.handle, memory, nullptr);
+		memory = VK_NULL_HANDLE;
+	}
 	VkResult result;
 	buffer_create.usage = usage;
 	buffer_create.size = size;

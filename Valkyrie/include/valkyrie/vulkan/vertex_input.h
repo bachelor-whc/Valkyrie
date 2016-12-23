@@ -12,6 +12,8 @@ namespace Vulkan {
 	private:
 		std::unordered_set<uint32_t> m_binding_set;
 	};
+
+	typedef std::shared_ptr<VertexInput> VertexInputPointer;
 }
 
 #endif

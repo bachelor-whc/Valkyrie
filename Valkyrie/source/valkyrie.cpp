@@ -251,6 +251,11 @@ void Valkyrie::initializeDescriptorSetLayouts() {
 	assert(result == VK_SUCCESS);
 }
 
+void Valkyrie::createPipelineModule(const std::string & pipename_name) {
+	pipelines[pipename_name] = std::make_shared<Vulkan::Pipeline>();
+	vertexInputs[pipename_name] = std::make_shared<Vulkan::VertexInput>();
+}
+
 void Valkyrie::allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create) {
 	VkResult result = buffer.allocate(m_device, m_physical_device, usage, size, buffer_create);
 	assert(result == VK_SUCCESS);
@@ -288,12 +293,12 @@ void Valkyrie::initializeShaderModules() {
 	}
 }
 
-void Valkyrie::initializePipelines() {
+void Valkyrie::initializePipeline(const std::string& pipename_name) {
 	VkResult result;
-	for (auto& key_value : pipelines) {
-		auto& pipeline_ptr = key_value.second;
-		pipeline_ptr->setRenderPass(m_render_pass, 0);
-		pipeline_ptr->setVertexInput(vertexInput);
+	if (pipelines.find(pipename_name) != pipelines.end() && vertexInputs.find(pipename_name) != vertexInputs.end()) {
+		auto& pipeline_ptr = pipelines[pipename_name];
+		auto& vertex_input_ptr = vertexInputs[pipename_name];
+		pipeline_ptr->setVertexInput(*vertex_input_ptr);
 		result = pipeline_ptr->initialize(m_device);
 		assert(result == VK_SUCCESS);
 	}

@@ -45,13 +45,14 @@ public:
 #endif
 	void initializePipelineLayout();
 	void initializeDescriptorSetLayouts();
+	void createPipelineModule(const std::string& pipename_name);
 	void allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create = VK_DEFAULT_BUFFER_CREATE_INFO);
 	void destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer);
 	void writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset = 0);
 	void* startWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer, uint32_t offset = 0);
 	void endWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer);
 	void initializeShaderModules();
-	void initializePipelines();
+	void initializePipeline(const std::string& pipename_name);
 	void initializeDescriptorPool();
 	void initializeDescriptorSets();
 	void writeSets(const std::vector<VkWriteDescriptorSet>& writes);
@@ -69,7 +70,7 @@ public:
 	inline Vulkan::Queue& getGraphicsQueue() { return m_graphics_queue; }
 
 	std::vector<Vulkan::CommandBuffer> renderCommands;
-	Vulkan::VertexInput vertexInput;
+	std::map<std::string, Vulkan::VertexInputPointer> vertexInputs;
 	std::vector<Vulkan::MemoryBuffer> memoryBuffers;
 	std::map<std::string, Vulkan::PipelinePointer> pipelines;
 	std::map<std::string, Vulkan::ShaderPointer> shaders;
