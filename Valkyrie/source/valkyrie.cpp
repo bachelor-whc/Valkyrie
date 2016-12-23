@@ -18,7 +18,6 @@ Valkyrie::Valkyrie(std::string application_name) :
 }
 
 Valkyrie::~Valkyrie() {
-	DestroyPipelineLayout(m_device);
 	DestroyPipelineCache(m_device);
 	DestroyFramebuffers(m_device, *mp_swapchain->getFramebuffers());
 	DestroySwapChain(m_device, *mp_swapchain);
@@ -238,10 +237,10 @@ void Valkyrie::setWindowPointer(Wendy::Win32Window* window_ptr) {
 		mp_window = window_ptr;
 }
 
-void Valkyrie::initializePipelineLayout() {
+void Valkyrie::initializePipelineLayout(const std::string& pipeline_name) {
 	VkResult result;
-	std::vector<VkDescriptorSetLayout>& layouts = descriptorPool.getSetLayoutHandles();
-	result = Pipeline::initializeLayout(m_device, layouts);
+	std::vector<VkDescriptorSetLayout>& set_layouts = descriptorPool.getSetLayoutHandles();
+	result = pipelines[pipeline_name]->initializeLayout(m_device, set_layouts);
 	assert(result == VK_SUCCESS);
 }
 

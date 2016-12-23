@@ -11,18 +11,18 @@ namespace Vulkan {
 
 	struct Pipeline {
 		static VkPipelineCache cache;
-		static VkPipelineLayout layout;
 		static VkResult initializeCache(const Device& device);
-		static VkResult initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
+		VkResult initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
 
 		Pipeline();
-		~Pipeline();
+		virtual ~Pipeline();
 
 		VkResult initialize(const Device& device);
 		void setRenderPass(const RenderPass& render_pass, uint32_t index);
 		void setVertexInput(const VertexInput& vertex_input);
 
-		VkPipeline handle = NULL;
+		VkPipeline handle = VK_NULL_HANDLE;
+		VkPipelineLayout layout = VK_NULL_HANDLE;
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStageCreates;
 
 	private:
@@ -56,7 +56,6 @@ namespace Vulkan {
 
 	void DestroyPipeline(const Device& device, Pipeline& pipeline);
 	void DestroyPipelineCache(const Device& device);
-	void DestroyPipelineLayout(const Device& device);
 }
 
 #endif

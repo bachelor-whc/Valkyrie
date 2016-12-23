@@ -43,7 +43,7 @@ public:
 #ifdef WIN32
 	void setWindowPointer(Wendy::Win32Window* window_ptr);
 #endif
-	void initializePipelineLayout();
+	void initializePipelineLayout(const std::string& pipeline_name);
 	void initializeDescriptorSetLayouts();
 	void createPipelineModule(const std::string& pipename_name);
 	void allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create = VK_DEFAULT_BUFFER_CREATE_INFO);

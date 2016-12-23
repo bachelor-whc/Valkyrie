@@ -6,7 +6,6 @@
 using namespace Vulkan;
 
 VkPipelineCache Pipeline::cache = VK_NULL_HANDLE;
-VkPipelineLayout Pipeline::layout = VK_NULL_HANDLE;
 
 VkResult Pipeline::initializeCache(const Device& device) {
 	VkPipelineCacheCreateInfo pipeline_cache_create = {};
@@ -148,13 +147,10 @@ void Pipeline::initializeDynamicState() {
 }
 
 void Vulkan::DestroyPipeline(const Device& device, Pipeline& pipeline) {
+	vkDestroyPipelineLayout(device.handle, pipeline.layout, nullptr);
 	vkDestroyPipeline(device.handle, pipeline.handle, nullptr);
 }
 
 void Vulkan::DestroyPipelineCache(const Device& device) {
 	vkDestroyPipelineCache(device.handle, Pipeline::cache, nullptr);
-}
-
-void Vulkan::DestroyPipelineLayout(const Device& device) {
-	vkDestroyPipelineLayout(device.handle, Pipeline::layout, nullptr);
 }
