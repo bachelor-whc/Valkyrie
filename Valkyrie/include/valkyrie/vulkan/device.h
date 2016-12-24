@@ -9,7 +9,7 @@ namespace Vulkan {
 		VkDevice handle = VK_NULL_HANDLE;
 	};
 
-	VkResult CreateDevice(const PhysicalDevice& physical_device, Device& device);
+	VkResult CreateDevice(Device& device);
 	void DestroyDevice(Device& device);
 }
 

@@ -7,11 +7,11 @@ namespace Vulkan {
 
 	struct PhysicalDevice {
 		VkPhysicalDevice handle = NULL;
-		VkPhysicalDeviceProperties properties = {};
-		VkPhysicalDeviceMemoryProperties memoryProperties = {};
-		std::vector<VkQueueFamilyProperties> queueFamilyProperties;
+		static VkPhysicalDeviceProperties properties;
+		static VkPhysicalDeviceMemoryProperties memoryProperties;
+		static std::vector<VkQueueFamilyProperties> queueFamilyProperties;
 
-		bool setMemoryType(uint32_t type_bits, VkFlags requirements_mask, uint32_t& type_index) const;
+		static bool setMemoryType(uint32_t type_bits, VkFlags requirements_mask, uint32_t& type_index);
 	};
 
 	VkResult CreatePhysicalDevice(Instance& instance, PhysicalDevice& physical_device);

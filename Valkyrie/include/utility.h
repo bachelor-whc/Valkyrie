@@ -26,6 +26,8 @@
 #define NEW_NT new(std::nothrow)
 
 const int VALKYRIE_FRAME_BUFFER_COUNT = 2;
+extern VkDevice g_device_handle;
+extern VkPhysicalDevice g_physical_device_handle;
 
 class FileSystem {
 public:

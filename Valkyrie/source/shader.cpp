@@ -21,12 +21,12 @@ Shader::~Shader() {
 
 }
 
-VkResult Shader::initializeModule(const Device& device) {
+VkResult Shader::initializeModule() {
 	VkShaderModuleCreateInfo shader_module_create = {};
 	shader_module_create.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	shader_module_create.codeSize = m_binary_code.size();
 	shader_module_create.pCode = (uint32_t*)m_binary_code.c_str();
-	return vkCreateShaderModule(device.handle, &shader_module_create, nullptr, &handle);
+	return vkCreateShaderModule(g_device_handle, &shader_module_create, nullptr, &handle);
 }
 
 VkPipelineShaderStageCreateInfo Shader::createPipelineShaderStage() {

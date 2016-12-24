@@ -11,7 +11,7 @@ Vulkan::ImageTexture::~ImageTexture() {
 
 }
 
-VkResult Vulkan::ImageTexture::initializeImage(const Device& device) {
+VkResult Vulkan::ImageTexture::initializeImage() {
 	VkImageCreateInfo image_create = {};
 	image_create.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	image_create.imageType = VK_IMAGE_TYPE_2D;
@@ -25,26 +25,26 @@ VkResult Vulkan::ImageTexture::initializeImage(const Device& device) {
 	image_create.tiling = VK_IMAGE_TILING_LINEAR;
 	image_create.usage = VK_IMAGE_USAGE_SAMPLED_BIT;
 	image_create.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
-	return vkCreateImage(device.handle, &image_create, nullptr, &image);
+	return vkCreateImage(g_device_handle, &image_create, nullptr, &image);
 }
 
-VkResult Vulkan::ImageTexture::allocate(const Device& device, PhysicalDevice& physical_device) {
+VkResult Vulkan::ImageTexture::allocate() {
 	assert(mp_image->available());
 	assert(image != NULL);
 	VkMemoryRequirements memory_requirements = {};
-	vkGetImageMemoryRequirements(device.handle, image, &memory_requirements);
+	vkGetImageMemoryRequirements(g_device_handle, image, &memory_requirements);
 
 	VkMemoryAllocateInfo memory_allocate = {};
 	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	memory_allocate.allocationSize = memory_requirements.size;
 	m_size = memory_requirements.size;
 
-	bool found = physical_device.setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memory_allocate.memoryTypeIndex);
+	bool found = PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memory_allocate.memoryTypeIndex);
 
-	return vkAllocateMemory(device.handle, &memory_allocate, nullptr, &memory);
+	return vkAllocateMemory(g_device_handle, &memory_allocate, nullptr, &memory);
 }
 
-VkResult Vulkan::ImageTexture::write(const Device& device) {
+VkResult Vulkan::ImageTexture::write() {
 	assert(mp_image->available());
 	assert(image != NULL);
 	assert(memory != NULL);
@@ -54,11 +54,11 @@ VkResult Vulkan::ImageTexture::write(const Device& device) {
 
 	VkSubresourceLayout subresource_layout = {};
 
-	vkGetImageSubresourceLayout(device.handle, image, &subresource, &subresource_layout);
+	vkGetImageSubresourceLayout(g_device_handle, image, &subresource, &subresource_layout);
 	void* destination;// = mp_png->getDataPointer();
-	result = vkMapMemory(device.handle, memory, 0, m_size, 0, &destination);
+	result = vkMapMemory(g_device_handle, memory, 0, m_size, 0, &destination);
 	assert(result == VK_SUCCESS);
 	memcpy(destination, mp_image->getDataPointer(), mp_image->getSize());
-	vkUnmapMemory(device.handle, memory);
-	return vkBindImageMemory(device.handle, image, memory, 0);
+	vkUnmapMemory(g_device_handle, memory);
+	return vkBindImageMemory(g_device_handle, image, memory, 0);
 }

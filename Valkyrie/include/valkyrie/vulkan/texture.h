@@ -14,11 +14,11 @@ namespace Vulkan {
 		Texture();
 		virtual ~Texture();
 
-		virtual VkResult initializeImage(const Device& device) = 0;
-		VkResult initializeSampler(const Device& device);
-		VkResult initializeView(const Device& device);
-		virtual VkResult allocate(const Device& device, PhysicalDevice& physical_device) = 0;
-		virtual VkResult write(const Device& device) = 0;
+		virtual VkResult initializeImage() = 0;
+		VkResult initializeSampler();
+		VkResult initializeView();
+		virtual VkResult allocate() = 0;
+		virtual VkResult write() = 0;
 		VkDescriptorImageInfo* getInformationPointer();
 
 		VkDeviceMemory memory = NULL;

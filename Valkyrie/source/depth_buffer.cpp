@@ -5,7 +5,7 @@
 #include "valkyrie/vulkan/tool.h"
 using namespace Vulkan;
 
-DepthBuffer::DepthBuffer(const PhysicalDevice& physical_device) {
+DepthBuffer::DepthBuffer() {
 	std::vector<VkFormat> depth_formats = {
 		VK_FORMAT_D32_SFLOAT_S8_UINT,
 		VK_FORMAT_D32_SFLOAT,
@@ -17,7 +17,7 @@ DepthBuffer::DepthBuffer(const PhysicalDevice& physical_device) {
 	bool found = false;
 	for (auto& device_format : depth_formats) {
 		VkFormatProperties format_properties;
-		vkGetPhysicalDeviceFormatProperties(physical_device.handle, device_format, &format_properties);
+		vkGetPhysicalDeviceFormatProperties(g_physical_device_handle, device_format, &format_properties);
 		if (format_properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
 			format = device_format;
 			found = true;
@@ -31,7 +31,7 @@ DepthBuffer::~DepthBuffer() {
 
 }
 
-VkResult DepthBuffer::initializeImages(const Device& device, const PhysicalDevice& physical_device, CommandBuffer& buffer, const Wendy::Window& window) {
+VkResult DepthBuffer::initializeImages(CommandBuffer& buffer, const Wendy::Window& window) {
 	VkResult result;
 	
 	VkImageCreateInfo image_create = {};
@@ -68,17 +68,17 @@ VkResult DepthBuffer::initializeImages(const Device& device, const PhysicalDevic
 
 	VkMemoryRequirements memory_requirements;
 
-	result = vkCreateImage(device.handle, &image_create, nullptr, &image);
-	vkGetImageMemoryRequirements(device.handle, image, &memory_requirements);
+	result = vkCreateImage(g_device_handle, &image_create, nullptr, &image);
+	vkGetImageMemoryRequirements(g_device_handle, image, &memory_requirements);
 	memory_allocate.allocationSize = memory_requirements.size;
-	physical_device.setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memory_allocate.memoryTypeIndex);
-	result = vkAllocateMemory(device.handle, &memory_allocate, nullptr, &memory);
+	PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memory_allocate.memoryTypeIndex);
+	result = vkAllocateMemory(g_device_handle, &memory_allocate, nullptr, &memory);
 
-	result = vkBindImageMemory(device.handle, image, memory, 0);
+	result = vkBindImageMemory(g_device_handle, image, memory, 0);
 	setImageLayout(buffer, image, VK_IMAGE_ASPECT_DEPTH_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
 	image_view_create.image = image;
-	result = vkCreateImageView(device.handle, &image_view_create, nullptr, &view);
+	result = vkCreateImageView(g_device_handle, &image_view_create, nullptr, &view);
 	return result;
 }
 

@@ -11,7 +11,7 @@ namespace Vulkan {
 
 struct ValkyrieThread {
 	ValkyrieThread() = delete;
-	ValkyrieThread(const Vulkan::Device& device, const Vulkan::Queue& queue);
+	ValkyrieThread(const Vulkan::Queue& queue);
 	virtual ~ValkyrieThread();
 
 	Vulkan::CommandBuffer createCommandBuffer();

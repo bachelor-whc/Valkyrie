@@ -12,7 +12,7 @@ Vulkan::Texture::~Texture() {
 		delete mp_information;
 }
 
-VkResult Vulkan::Texture::initializeSampler(const Device& device) {
+VkResult Vulkan::Texture::initializeSampler() {
 	VkSamplerCreateInfo sampler_create = {};
 	sampler_create.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	sampler_create.magFilter = VK_FILTER_NEAREST;
@@ -29,10 +29,10 @@ VkResult Vulkan::Texture::initializeSampler(const Device& device) {
 	sampler_create.maxLod = 1000.0f;
 	sampler_create.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 	sampler_create.unnormalizedCoordinates = VK_FALSE;
-	return vkCreateSampler(device.handle, &sampler_create, nullptr, &sampler);
+	return vkCreateSampler(g_device_handle, &sampler_create, nullptr, &sampler);
 }
 
-VkResult Vulkan::Texture::initializeView(const Device& device) {
+VkResult Vulkan::Texture::initializeView() {
 	assert(image != NULL);
 	VkImageViewCreateInfo image_view_create = {};
 	image_view_create.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -48,7 +48,7 @@ VkResult Vulkan::Texture::initializeView(const Device& device) {
 	image_view_create.subresourceRange.baseArrayLayer = 0;
 	image_view_create.subresourceRange.layerCount = 1;
 	image_view_create.subresourceRange.levelCount = 1;
-	return vkCreateImageView(device.handle, &image_view_create, nullptr, &view);
+	return vkCreateImageView(g_device_handle, &image_view_create, nullptr, &view);
 }
 
 VkDescriptorImageInfo* Vulkan::Texture::getInformationPointer() {

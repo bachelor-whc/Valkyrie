@@ -4,14 +4,14 @@
 #include "utility.h"
 using namespace Vulkan;
 
-bool Vulkan::GetQueue(const Device& device, const PhysicalDevice& physical_device, VkQueueFlags flag, Queue& queue) {
-	const uint32_t number_of_queues = physical_device.queueFamilyProperties.size();
+bool Vulkan::GetQueue(VkQueueFlags flag, Queue& queue) {
+	const uint32_t number_of_queues = PhysicalDevice::queueFamilyProperties.size();
 
 	for (uint32_t i = 0; i < number_of_queues; ++i) {
-		uint32_t queue_support = physical_device.queueFamilyProperties[i].queueFlags & flag;
+		uint32_t queue_support = PhysicalDevice::queueFamilyProperties[i].queueFlags & flag;
 		if (queue_support != 0) {
 			queue.index = i;
-			vkGetDeviceQueue(device.handle, queue.index, 0, &queue.handle);
+			vkGetDeviceQueue(g_device_handle, queue.index, 0, &queue.handle);
 			return queue.handle != VK_NULL_HANDLE;
 		}
 		
@@ -20,11 +20,11 @@ bool Vulkan::GetQueue(const Device& device, const PhysicalDevice& physical_devic
 			if (flag == VK_QUEUE_GRAPHICS_BIT) {
 				VkBool32 support;
 				VkSurfaceKHR surface = NULL;
-				vkGetPhysicalDeviceSurfaceSupportKHR(physical_device.handle, i, surface, &support);
+				vkGetPhysicalDeviceSurfaceSupportKHR(g_physical_device_handle, i, surface, &support);
 				assert(support == VK_TRUE);
 			}
 			queue.index = i;
-			vkGetDeviceQueue(device.handle, queue.index, 0, &queue.handle);
+			vkGetDeviceQueue(g_device_handle, queue.index, 0, &queue.handle);
 			return queue.handle != VK_NULL_HANDLE;
 		}
 		else

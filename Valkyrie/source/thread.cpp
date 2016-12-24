@@ -2,14 +2,14 @@
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/queue.h"
 
-ValkyrieThread::ValkyrieThread(const Vulkan::Device& device, const Vulkan::Queue& queue) {
+ValkyrieThread::ValkyrieThread(const Vulkan::Queue& queue) {
 	VkResult result;
 	VkCommandPoolCreateInfo command_pool_create = {};
 	command_pool_create.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	command_pool_create.queueFamilyIndex = queue.index;
 	command_pool_create.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-	m_device = device.handle;
-	result = vkCreateCommandPool(m_device, &command_pool_create, nullptr, &m_command_pool);
+	m_device = g_device_handle;
+	result = vkCreateCommandPool(g_device_handle, &command_pool_create, nullptr, &m_command_pool);
 	assert(result == VK_SUCCESS);
 }
 

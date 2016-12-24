@@ -10,10 +10,10 @@ namespace Vulkan {
 		MemoryBuffer();
 		~MemoryBuffer();
 
-		VkResult allocate(const Device& device, PhysicalDevice& physical_device, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create);
-		VkResult write(const Device& device, const void *data, uint32_t offset = 0);
-		void* startWriting(const Device& device, uint32_t offset = 0);
-		VkResult endWriting(const Device& device);
+		VkResult allocate(PhysicalDevice& physical_device, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create);
+		VkResult write(const void *data, uint32_t offset = 0);
+		void* startWriting(uint32_t offset = 0);
+		VkResult endWriting();
 		VkDescriptorBufferInfo* getInformationPointer();
 		inline uint32_t getSize() { return m_size; }
 		inline uint32_t getOffset() { return m_size; }

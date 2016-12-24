@@ -10,7 +10,7 @@ RenderPass::~RenderPass() {
 	
 }
 
-bool RenderPass::initialize(const Device& device, const SubpassDependencies& dependencies) {
+bool RenderPass::initialize(const SubpassDependencies& dependencies) {
 	if (attachments.size() == 0 || subpasses.size() == 0)
 		return false;
 
@@ -23,7 +23,7 @@ bool RenderPass::initialize(const Device& device, const SubpassDependencies& dep
 	renderpass_create.dependencyCount = dependencies.size();
 	renderpass_create.pDependencies = dependencies.data();
 
-	VkResult result = vkCreateRenderPass(device.handle, &renderpass_create, nullptr, &handle);
+	VkResult result = vkCreateRenderPass(g_device_handle, &renderpass_create, nullptr, &handle);
 	return result == VK_SUCCESS;
 }
 

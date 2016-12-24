@@ -1,5 +1,5 @@
 #ifndef _VALKYRIE_H 
-#define _VALKYRIE_H 
+#define _VALKYRIE_H
 #include "utility.h"
 #include "valkyrie/vulkan/instance.h"
 #include "valkyrie/vulkan/physical_device.h"
@@ -31,7 +31,7 @@ public:
 		UNINITIALIZED, INITIALIZING, INITIALIZED, EXECUTE, EXIT
 	};
 	static Valkyrie* getGlobalValkyriePtr() { return gp_valkyrie; };
-
+	
 public:
 	Valkyrie() = delete;
 	Valkyrie(std::string application_name);

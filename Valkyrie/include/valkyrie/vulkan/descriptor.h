@@ -7,7 +7,7 @@ namespace Vulkan {
 
 	struct DescriptorSetLayout {
 		void setBinding(const uint32_t shader_binding, const VkDescriptorType type, const VkShaderStageFlags flag, const uint32_t count);
-		VkResult initialize(const Device& device);
+		VkResult initialize();
 
 		VkDescriptorSetLayout handle = VK_NULL_HANDLE;
 	private:
@@ -19,9 +19,9 @@ namespace Vulkan {
 		DescriptorPool(uint32_t max_sets);
 		~DescriptorPool();
 
-		VkResult initializePool(const Device& device);
-		VkResult initializeSets(const Device& device);
-		VkResult initializeSetLayouts(const Device& device);
+		VkResult initializePool();
+		VkResult initializeSets();
+		VkResult initializeSetLayouts();
 		VkDescriptorSet& registerSet(const std::string& name, const int index);
 		VkDescriptorSet& getSet(const std::string& name);
 		inline VkDescriptorSet* getSets() { return m_sets.data(); }

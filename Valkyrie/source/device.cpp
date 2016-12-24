@@ -18,11 +18,11 @@ void WriteDeviceQueueCreates(std::vector<VkDeviceQueueCreateInfo>& device_queue_
 	}
 }
 
-VkResult Vulkan::CreateDevice(const PhysicalDevice& physical_device, Device& device) {
+VkResult Vulkan::CreateDevice(Device& device) {
 	VkResult result;
-	uint32_t number_of_queue_family = physical_device.queueFamilyProperties.size();
+	uint32_t number_of_queue_family = PhysicalDevice::queueFamilyProperties.size();
 
-	const uint32_t queue_count = physical_device.queueFamilyProperties.size();
+	const uint32_t queue_count = PhysicalDevice::queueFamilyProperties.size();
 	std::vector<VkDeviceQueueCreateInfo> device_queue_creates(queue_count);
 	WriteDeviceQueueCreates(device_queue_creates);
 
@@ -33,10 +33,10 @@ VkResult Vulkan::CreateDevice(const PhysicalDevice& physical_device, Device& dev
 	device_create.enabledExtensionCount = g_device_extensions.size();
 	device_create.ppEnabledExtensionNames = g_device_extensions.data();
 
-	result = vkCreateDevice(physical_device.handle, &device_create, nullptr, &device.handle);
+	result = vkCreateDevice(g_physical_device_handle, &device_create, nullptr, &device.handle);
 	return result;
 }
 
 void Vulkan::DestroyDevice(Device& device) {
-	vkDestroyDevice(device.handle, nullptr);
+	vkDestroyDevice(g_device_handle, nullptr);
 }

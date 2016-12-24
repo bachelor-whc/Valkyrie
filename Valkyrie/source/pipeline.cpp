@@ -7,19 +7,19 @@ using namespace Vulkan;
 
 VkPipelineCache PipelineModule::cache = VK_NULL_HANDLE;
 
-VkResult PipelineModule::initializeCache(const Device& device) {
+VkResult PipelineModule::initializeCache() {
 	VkPipelineCacheCreateInfo pipeline_cache_create = {};
 	pipeline_cache_create.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-	return vkCreatePipelineCache(device.handle, &pipeline_cache_create, NULL, &cache);
+	return vkCreatePipelineCache(g_device_handle, &pipeline_cache_create, NULL, &cache);
 }
 
-VkResult PipelineModule::initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts) {
+VkResult PipelineModule::initializeLayout(const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts) {
 	size_t layout_count = descriptor_set_layouts.size();
 	VkPipelineLayoutCreateInfo pipeline_layout_create = {};
 	pipeline_layout_create.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipeline_layout_create.setLayoutCount = (uint32_t)layout_count;
 	pipeline_layout_create.pSetLayouts = descriptor_set_layouts.data();
-	VkResult result = vkCreatePipelineLayout(device.handle, &pipeline_layout_create, nullptr, &layout);
+	VkResult result = vkCreatePipelineLayout(g_device_handle, &pipeline_layout_create, nullptr, &layout);
 	return result;
 }
 
@@ -49,12 +49,12 @@ PipelineModule::~PipelineModule() {
 
 }
 
-VkResult PipelineModule::initialize(const Device& device) {
+VkResult PipelineModule::initialize() {
 	assert(cache != VK_NULL_HANDLE);
 	m_pipeline_create.stageCount = (uint32_t)shaderStageCreates.size();
 	m_pipeline_create.pStages = shaderStageCreates.data();
 	m_pipeline_create.layout = layout;
-	return vkCreateGraphicsPipelines(device.handle, cache, 1, &m_pipeline_create, nullptr, &handle);
+	return vkCreateGraphicsPipelines(g_device_handle, cache, 1, &m_pipeline_create, nullptr, &handle);
 }
 
 void PipelineModule::setRenderPass(const RenderPass& render_pass, uint32_t index) {
@@ -146,11 +146,11 @@ void PipelineModule::initializeDynamicState() {
 	m_dynamic_state.dynamicStateCount = (uint32_t)m_dynamic_state_enables.size();
 }
 
-void Vulkan::DestroyPipeline(const Device& device, PipelineModule& pipeline) {
-	vkDestroyPipelineLayout(device.handle, pipeline.layout, nullptr);
-	vkDestroyPipeline(device.handle, pipeline.handle, nullptr);
+void Vulkan::DestroyPipeline(PipelineModule& pipeline) {
+	vkDestroyPipelineLayout(g_device_handle, pipeline.layout, nullptr);
+	vkDestroyPipeline(g_device_handle, pipeline.handle, nullptr);
 }
 
-void Vulkan::DestroyPipelineCache(const Device& device) {
-	vkDestroyPipelineCache(device.handle, PipelineModule::cache, nullptr);
+void Vulkan::DestroyPipelineCache() {
+	vkDestroyPipelineCache(g_device_handle, PipelineModule::cache, nullptr);
 }

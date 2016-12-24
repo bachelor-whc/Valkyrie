@@ -3,6 +3,10 @@
 #include "utility.h"
 using namespace Vulkan;
 
+VkPhysicalDeviceProperties PhysicalDevice::properties = {};
+VkPhysicalDeviceMemoryProperties PhysicalDevice::memoryProperties = {};
+std::vector<VkQueueFamilyProperties> PhysicalDevice::queueFamilyProperties = {};
+
 VkResult Vulkan::CreatePhysicalDevice(Instance& instance, PhysicalDevice& physical_device) {
 	VkResult result;
 	uint32_t number_of_devices = 1;
@@ -27,7 +31,7 @@ VkResult Vulkan::CreatePhysicalDevice(Instance& instance, PhysicalDevice& physic
 	return result;
 }
 
-bool PhysicalDevice::setMemoryType(uint32_t type_bits, VkFlags requirements_mask, uint32_t& type_index) const {
+bool PhysicalDevice::setMemoryType(uint32_t type_bits, VkFlags requirements_mask, uint32_t& type_index) {
 	for (uint32_t i = 0; i < 32; i++) {
 		if ((type_bits & 1) == 1) {
 			if ((memoryProperties.memoryTypes[i].propertyFlags & requirements_mask) == requirements_mask) {

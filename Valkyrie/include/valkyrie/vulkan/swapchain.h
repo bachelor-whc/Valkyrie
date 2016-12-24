@@ -20,7 +20,7 @@ namespace Vulkan {
 		Framebuffers() = delete;
 		Framebuffers(const uint32_t count, const std::vector<SwapChainBuffer>& buffers);
 		~Framebuffers();
-		void initialize(const Device& device, const RenderPass& render_pass, const int width, const int height);
+		void initialize(const RenderPass& render_pass, const int width, const int height);
 		
 		std::vector<VkFramebuffer> handles;
 		std::vector<VkImageView> extendedAttachments;
@@ -33,11 +33,11 @@ namespace Vulkan {
 	class SwapChain {
 	public:
 		SwapChain() = delete;
-		SwapChain(const Device& device, const PhysicalDevice& physical_device, const Surface& surface, const Wendy::Window& window);
+		SwapChain(const Surface& surface, const Wendy::Window& window);
 		virtual ~SwapChain();
 
-		VkResult initializeImages(const Device& device, const Surface& surface, CommandBuffer& buffer);
-		void initializeFramebuffers(const Device& device, const RenderPass& render_pass, const VkImageView* extended_attachments, int count);
+		VkResult initializeImages(const Surface& surface, CommandBuffer& buffer);
+		void initializeFramebuffers(const RenderPass& render_pass, const VkImageView* extended_attachments, int count);
 
 		VkSwapchainKHR handle = NULL;
 
@@ -46,7 +46,7 @@ namespace Vulkan {
 		inline Framebuffers* getFramebuffers() const { return mp_framebuffers; }
 		inline VkImage getCurrentImage() const { return m_buffers[m_current_buffer].image; }
 		inline VkImage getImage(int index) const { return m_buffers[index].image; }
-		VkResult acquireNextImage(const Device& device, uint64_t timeout, const VkSemaphore semaphore, const VkFence fence);
+		VkResult acquireNextImage(uint64_t timeout, const VkSemaphore semaphore, const VkFence fence);
 		VkResult queuePresent(const Queue& queue);
 
 	private:
@@ -58,8 +58,8 @@ namespace Vulkan {
 		bool m_images_initialized;
 	};
 
-	void DestroySwapChain(const Device& device, SwapChain& swapchain);
-	void DestroyFramebuffers(const Device& device, Framebuffers& framebuffers);
+	void DestroySwapChain(SwapChain& swapchain);
+	void DestroyFramebuffers(Framebuffers& framebuffers);
 }
 
 #endif

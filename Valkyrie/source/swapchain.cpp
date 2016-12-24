@@ -21,7 +21,7 @@ Framebuffers::~Framebuffers() {
 	
 }
 
-void Framebuffers::initialize(const Device& device, const RenderPass& render_pass, const int width, const int height) {
+void Framebuffers::initialize(const RenderPass& render_pass, const int width, const int height) {
 	int extended_count = extendedAttachments.size();
 	std::vector<VkImageView> attachments(1 + extended_count);
 	if(extended_count > 0) {
@@ -42,12 +42,12 @@ void Framebuffers::initialize(const Device& device, const RenderPass& render_pas
 	VkResult result;
 	for (int i = 0; i < m_count; ++i) {
 		attachments[0] = m_swap_chain_views[i];
-		result = vkCreateFramebuffer(device.handle, &frame_buffer_info, nullptr, &handles[i]);
+		result = vkCreateFramebuffer(g_device_handle, &frame_buffer_info, nullptr, &handles[i]);
 		assert(result == VK_SUCCESS);
 	}
 }
 
-SwapChain::SwapChain(const Device& device, const PhysicalDevice& physical_device, const Surface& surface, const Wendy::Window& window) :
+SwapChain::SwapChain(const Surface& surface, const Wendy::Window& window) :
 	mp_framebuffers(nullptr),
 	m_current_buffer(-1),
 	m_width(window.getWidth()),
@@ -58,13 +58,13 @@ SwapChain::SwapChain(const Device& device, const PhysicalDevice& physical_device
 
 	// Specification:
 	// To query the basic capabilities of a surface, needed in order to create a swapchain.
-	result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device.handle, surface.handle, &surface_capabilities);
+	result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(g_physical_device_handle, surface.handle, &surface_capabilities);
 
 	uint32_t present_mode_count;
-	result = vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device.handle, surface.handle, &present_mode_count, nullptr);
+	result = vkGetPhysicalDeviceSurfacePresentModesKHR(g_physical_device_handle, surface.handle, &present_mode_count, nullptr);
 
 	std::vector<VkPresentModeKHR> present_modes(present_mode_count);
-	result = vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device.handle, surface.handle, &present_mode_count, present_modes.data());
+	result = vkGetPhysicalDeviceSurfacePresentModesKHR(g_physical_device_handle, surface.handle, &present_mode_count, present_modes.data());
 
 	VkExtent2D swap_chain_extent;
 	bool surface_size_undefined = surface_capabilities.currentExtent.width == 0xFFFFFFFF && surface_capabilities.currentExtent.height == 0xFFFFFFFF;
@@ -119,7 +119,7 @@ SwapChain::SwapChain(const Device& device, const PhysicalDevice& physical_device
 	swapchain_create.queueFamilyIndexCount = 0;
 	swapchain_create.pQueueFamilyIndices = nullptr;
 
-	result = vkCreateSwapchainKHR(device.handle, &swapchain_create, nullptr, &handle);
+	result = vkCreateSwapchainKHR(g_device_handle, &swapchain_create, nullptr, &handle);
 	assert(result == VK_SUCCESS);
 }
 
@@ -128,17 +128,17 @@ SwapChain::~SwapChain() {
 		delete mp_framebuffers;
 }
 
-VkResult SwapChain::initializeImages(const Device& device, const Surface& surface, CommandBuffer& buffer) {
+VkResult SwapChain::initializeImages(const Surface& surface, CommandBuffer& buffer) {
 	VkResult result;
 	uint32_t buffer_count;
-	result = vkGetSwapchainImagesKHR(device.handle, handle, &buffer_count, nullptr);
+	result = vkGetSwapchainImagesKHR(g_device_handle, handle, &buffer_count, nullptr);
 	if (result != VK_SUCCESS)
 		return result;
 
 	VkImage *swapchain_images = NEW_NT VkImage[buffer_count];
 	assert(swapchain_images);
 
-	result = vkGetSwapchainImagesKHR(device.handle, handle, &buffer_count, swapchain_images);
+	result = vkGetSwapchainImagesKHR(g_device_handle, handle, &buffer_count, swapchain_images);
 	if(result != VK_SUCCESS)
 		return result;
 
@@ -171,7 +171,7 @@ VkResult SwapChain::initializeImages(const Device& device, const Surface& surfac
 
 		image_view_create.image = m_buffers[i].image;
 
-		result = vkCreateImageView(device.handle, &image_view_create, nullptr, &m_buffers[i].view);
+		result = vkCreateImageView(g_device_handle, &image_view_create, nullptr, &m_buffers[i].view);
 		if(result != VK_SUCCESS)
 			return result;
 	}
@@ -180,18 +180,18 @@ VkResult SwapChain::initializeImages(const Device& device, const Surface& surfac
 	return result;
 }
 
-void SwapChain::initializeFramebuffers(const Device& device, const RenderPass& render_pass, const VkImageView* extended_attachments, int count) {
+void SwapChain::initializeFramebuffers(const RenderPass& render_pass, const VkImageView* extended_attachments, int count) {
 	mp_framebuffers = NEW_NT Framebuffers(VALKYRIE_FRAME_BUFFER_COUNT, m_buffers);
 	assert(mp_framebuffers != nullptr && m_images_initialized);
 	mp_framebuffers->extendedAttachments.resize(count);
 	memcpy(mp_framebuffers->extendedAttachments.data(), 
 		extended_attachments, 
 		count * sizeof(VkImageView));
-	mp_framebuffers->initialize(device, render_pass, m_width, m_height);
+	mp_framebuffers->initialize(render_pass, m_width, m_height);
 }
 
-VkResult SwapChain::acquireNextImage(const Device& device, uint64_t timeout, const VkSemaphore semaphore, const VkFence fence) {
-	return vkAcquireNextImageKHR(device.handle, handle, timeout, semaphore, fence, &m_current_buffer);
+VkResult SwapChain::acquireNextImage(uint64_t timeout, const VkSemaphore semaphore, const VkFence fence) {
+	return vkAcquireNextImageKHR(g_device_handle, handle, timeout, semaphore, fence, &m_current_buffer);
 }
 
 VkResult SwapChain::queuePresent(const Queue& queue) {
@@ -203,12 +203,12 @@ VkResult SwapChain::queuePresent(const Queue& queue) {
 	return vkQueuePresentKHR(queue.handle, &present);
 }
 
-void Vulkan::DestroySwapChain(const Device& device, SwapChain& swapchain) {
-	vkDestroySwapchainKHR(device.handle, swapchain.handle, nullptr);
+void Vulkan::DestroySwapChain(SwapChain& swapchain) {
+	vkDestroySwapchainKHR(g_device_handle, swapchain.handle, nullptr);
 }
 
-void Vulkan::DestroyFramebuffers(const Device& device, Framebuffers& framebuffers) {
+void Vulkan::DestroyFramebuffers(Framebuffers& framebuffers) {
 	for (auto& framebuffer : framebuffers.handles) {
-		vkDestroyFramebuffer(device.handle, framebuffer, nullptr);
+		vkDestroyFramebuffer(g_device_handle, framebuffer, nullptr);
 	}
 }

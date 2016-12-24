@@ -8,9 +8,9 @@ namespace Vulkan {
 	public:
 		ImageTexture() = delete;
 		ImageTexture(const ValkyrieImageFilePointer& texture_ptr);
-		virtual VkResult initializeImage(const Device& device) override;
-		virtual VkResult allocate(const Device& device, PhysicalDevice& physical_device)  override;
-		virtual VkResult write(const Device& device)  override;
+		virtual VkResult initializeImage() override;
+		virtual VkResult allocate()  override;
+		virtual VkResult write()  override;
 		virtual ~ImageTexture();
 
 		virtual bool load(const std::string& file_path) { return mp_image->load(file_path); };

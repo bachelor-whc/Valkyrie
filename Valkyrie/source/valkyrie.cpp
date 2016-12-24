@@ -4,6 +4,8 @@
 using namespace Vulkan;
 
 Valkyrie* Valkyrie::gp_valkyrie = nullptr;
+VkDevice g_device_handle = VK_NULL_HANDLE;
+VkPhysicalDevice g_physical_device_handle = VK_NULL_HANDLE;
 
 Valkyrie::Valkyrie(std::string application_name) :
 	m_application_name(application_name),
@@ -18,9 +20,9 @@ Valkyrie::Valkyrie(std::string application_name) :
 }
 
 Valkyrie::~Valkyrie() {
-	DestroyPipelineCache(m_device);
-	DestroyFramebuffers(m_device, *mp_swapchain->getFramebuffers());
-	DestroySwapChain(m_device, *mp_swapchain);
+	DestroyPipelineCache();
+	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
+	DestroySwapChain(*mp_swapchain);
 	for (auto& ph : m_thread_ptrs)
 		delete ph;
 	DestroySurface(m_instatnce, m_surface);
@@ -39,40 +41,42 @@ void Valkyrie::initializeInstance() {
 void Valkyrie::initializePhysicalDevice() {
 	VkResult result;
 	result = CreatePhysicalDevice(m_instatnce, m_physical_device);
+	g_physical_device_handle = m_physical_device.handle;
 	assert(result == VK_SUCCESS);
 }
 
 void Valkyrie::initializeDevice() {
 	VkResult result;
-	result = CreateDevice(m_physical_device, m_device);
+	result = CreateDevice(m_device);
+	g_device_handle = m_device.handle;
 	assert(result == VK_SUCCESS);
 }
 
 void Valkyrie::initializeSurface() {
 	VkResult result;
-	result = setSurface(m_surface, *mp_window, m_instatnce, m_physical_device);
+	result = setSurface(m_surface, *mp_window, m_instatnce);
 	assert(result == VK_SUCCESS);
 }
 
 void Valkyrie::initializeThreads() {
-	bool queue_got = GetQueue(m_device, m_physical_device, VK_QUEUE_GRAPHICS_BIT, m_graphics_queue);
+	bool queue_got = GetQueue(VK_QUEUE_GRAPHICS_BIT, m_graphics_queue);
 	assert(queue_got == true);
 
-	ThreadPointer p_thread = NEW_NT ValkyrieThread(m_device, m_graphics_queue);
+	ThreadPointer p_thread = NEW_NT ValkyrieThread(m_graphics_queue);
 	m_thread_ptrs.push_back(p_thread);
 }
 
 void Valkyrie::initializeSwapChain(CommandBuffer& command_bufer) {
 	VkResult result;
-	mp_swapchain = NEW_NT SwapChain(m_device, m_physical_device, m_surface, *mp_window);
-	result = mp_swapchain->initializeImages(m_device, m_surface, command_bufer);
+	mp_swapchain = NEW_NT SwapChain(m_surface, *mp_window);
+	result = mp_swapchain->initializeImages(m_surface, command_bufer);
 	assert(result == VK_SUCCESS);
 }
 
 void Valkyrie::initializeDepthBuffer(CommandBuffer& command_bufer) {
 	VkResult result;
-	mp_depth_buffer = NEW_NT DepthBuffer(m_physical_device);
-	result = mp_depth_buffer->initializeImages(m_device, m_physical_device, command_bufer, *mp_window);
+	mp_depth_buffer = NEW_NT DepthBuffer();
+	result = mp_depth_buffer->initializeImages(command_bufer, *mp_window);
 	assert(result == VK_SUCCESS);
 }
 
@@ -96,17 +100,17 @@ void Valkyrie::initializeRenderPass() {
 	m_render_pass.subpasses.push_back(subpass.createSubpassDescription());
 
 	SubpassDependencies dependencies;
-	bool initialized = m_render_pass.initialize(m_device, dependencies);
+	bool initialized = m_render_pass.initialize(dependencies);
 	assert(initialized);
 }
 
 void Valkyrie::initializeFramebuffers() {
-	mp_swapchain->initializeFramebuffers(m_device, m_render_pass, &(mp_depth_buffer->view), 1);
+	mp_swapchain->initializeFramebuffers(m_render_pass, &(mp_depth_buffer->view), 1);
 }
 
 void Valkyrie::initializePipelineCache() {
 	VkResult result;
-	result = PipelineModule::initializeCache(m_device);
+	result = PipelineModule::initializeCache();
 	assert(result == VK_SUCCESS);
 }
 
@@ -163,7 +167,7 @@ VkResult Valkyrie::render() {
 	result = vkCreateSemaphore(m_device.handle, &present_semaphore_create, nullptr, &present_semaphore);
 	assert(result == VK_SUCCESS);
 
-	result = mp_swapchain->acquireNextImage(m_device, UINT64_MAX, present_semaphore, NULL);
+	result = mp_swapchain->acquireNextImage(UINT64_MAX, present_semaphore, NULL);
 	assert(result == VK_SUCCESS);
 
 	VkSubmitInfo submit = {};
@@ -241,13 +245,13 @@ void Valkyrie::initializePipelineLayout(const std::string& pipeline_name) {
 	VkResult result;
 	assert(pipelines.count(pipeline_name) > 0);
 	std::vector<VkDescriptorSetLayout>& set_layouts = descriptorPool.getSetLayoutHandles();
-	result = pipelines[pipeline_name]->initializeLayout(m_device, set_layouts);
+	result = pipelines[pipeline_name]->initializeLayout(set_layouts);
 	assert(result == VK_SUCCESS);
 }
 
 void Valkyrie::initializeDescriptorSetLayouts() {
 	VkResult result;
-	result = descriptorPool.initializeSetLayouts(m_device);
+	result = descriptorPool.initializeSetLayouts();
 	assert(result == VK_SUCCESS);
 }
 
@@ -257,7 +261,7 @@ void Valkyrie::createPipelineModule(const std::string & pipename_name) {
 }
 
 void Valkyrie::allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create) {
-	VkResult result = buffer.allocate(m_device, m_physical_device, usage, size, buffer_create);
+	VkResult result = buffer.allocate(m_physical_device, usage, size, buffer_create);
 	assert(result == VK_SUCCESS);
 }
 
@@ -271,16 +275,16 @@ void Valkyrie::destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer) {
 }
 
 void Valkyrie::writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset) {
-	VkResult result = buffer.write(m_device, data, offset);
+	VkResult result = buffer.write(data, offset);
 	assert(result == VK_SUCCESS);
 }
 
 void* Valkyrie::startWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer, uint32_t offset) {
-	return buffer.startWriting(m_device);
+	return buffer.startWriting();
 }
 
 void Valkyrie::endWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer) {
-	VkResult result = buffer.endWriting(m_device);
+	VkResult result = buffer.endWriting();
 	assert(result == VK_SUCCESS);
 }
 
@@ -288,7 +292,7 @@ void Valkyrie::initializeShaderModules() {
 	VkResult result;
 	for (auto& key_value : shaders) {
 		auto& shader_ptr = key_value.second;
-		result = shader_ptr->initializeModule(m_device);
+		result = shader_ptr->initializeModule();
 		assert(result == VK_SUCCESS);
 	}
 }
@@ -299,19 +303,19 @@ void Valkyrie::initializePipeline(const std::string& pipename_name) {
 		auto& pipeline_ptr = pipelines[pipename_name];
 		auto& vertex_input_ptr = vertexInputs[pipename_name];
 		pipeline_ptr->setVertexInput(*vertex_input_ptr);
-		result = pipeline_ptr->initialize(m_device);
+		result = pipeline_ptr->initialize();
 		assert(result == VK_SUCCESS);
 	}
 }
 
 void Valkyrie::initializeDescriptorPool() {
-	VkResult result = descriptorPool.initializePool(m_device);
+	VkResult result = descriptorPool.initializePool();
 	assert(result == VK_SUCCESS);
 }
 
 void Valkyrie::initializeDescriptorSets() {
 	VkResult result;
-	result = descriptorPool.initializeSets(m_device);
+	result = descriptorPool.initializeSets();
 	assert(result == VK_SUCCESS);
 }
 void Valkyrie::writeSets(const std::vector<VkWriteDescriptorSet>& writes) {
@@ -338,15 +342,15 @@ void Valkyrie::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
 
 void Valkyrie::initailizeTexture(Vulkan::Texture& texture) {
 	VkResult result;
-	result = texture.initializeImage(m_device);
+	result = texture.initializeImage();
 	assert(result == VK_SUCCESS);
-	result = texture.allocate(m_device, m_physical_device);
+	result = texture.allocate();
 	assert(result == VK_SUCCESS);
-	result = texture.write(m_device);
+	result = texture.write();
 	assert(result == VK_SUCCESS);
-	result = texture.initializeSampler(m_device);
+	result = texture.initializeSampler();
 	assert(result == VK_SUCCESS);
-	result = texture.initializeView(m_device);
+	result = texture.initializeView();
 	assert(result == VK_SUCCESS);
 	result = m_setup_command_buffer.begin();
 	assert(result == VK_SUCCESS);

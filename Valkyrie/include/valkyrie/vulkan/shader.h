@@ -12,7 +12,7 @@ namespace Vulkan {
 		Shader(const std::string spv_code, const VkShaderStageFlagBits flag, std::string entry = "main");
 		~Shader();
 
-		VkResult initializeModule(const Device& device);
+		VkResult initializeModule();
 		VkPipelineShaderStageCreateInfo createPipelineShaderStage();
 
 		VkShaderModule handle = NULL;

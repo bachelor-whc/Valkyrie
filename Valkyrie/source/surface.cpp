@@ -3,7 +3,7 @@
 #include "valkyrie/vulkan/physical_device.h"
 using namespace Vulkan;
 
-VkResult Vulkan::setSurface(Surface& surface, const Wendy::Win32Window& window, const Instance& instance, const PhysicalDevice& physical_device) {
+VkResult Vulkan::setSurface(Surface& surface, const Wendy::Win32Window& window, const Instance& instance) {
 	VkResult result;
 #ifdef _WIN32
 	VkWin32SurfaceCreateInfoKHR surface_create = {};
@@ -15,11 +15,11 @@ VkResult Vulkan::setSurface(Surface& surface, const Wendy::Win32Window& window, 
 
 #endif
 	uint32_t format_count;
-	//result = vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device.handle, surface.handle, &format_count, NULL);
-	result = vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device.handle, surface.handle, &format_count, NULL);
+	//result = vkGetPhysicalDeviceSurfaceFormatsKHR(g_physical_device_handle, surface.handle, &format_count, NULL);
+	result = vkGetPhysicalDeviceSurfaceFormatsKHR(g_physical_device_handle, surface.handle, &format_count, NULL);
 	
 	VkSurfaceFormatKHR* surface_format = NEW_NT VkSurfaceFormatKHR[format_count];
-	result = vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device.handle, surface.handle, &format_count, surface_format);
+	result = vkGetPhysicalDeviceSurfaceFormatsKHR(g_physical_device_handle, surface.handle, &format_count, surface_format);
 	
 	if (format_count == 1 && surface_format[0].format == VK_FORMAT_UNDEFINED) {
 		surface_format[0].format = VK_FORMAT_B8G8R8A8_UNORM;

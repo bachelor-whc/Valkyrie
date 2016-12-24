@@ -10,13 +10,13 @@ namespace Vulkan {
 
 	struct PipelineModule {
 		static VkPipelineCache cache;
-		static VkResult initializeCache(const Device& device);
-		VkResult initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
+		static VkResult initializeCache();
+		VkResult initializeLayout(const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
 
 		PipelineModule();
 		virtual ~PipelineModule();
 
-		VkResult initialize(const Device& device);
+		VkResult initialize();
 		void setRenderPass(const RenderPass& render_pass, uint32_t index);
 		void setVertexInput(const VertexInput& vertex_input);
 
@@ -53,8 +53,8 @@ namespace Vulkan {
 
 	typedef std::shared_ptr<PipelineModule> PipelinePointer;
 
-	void DestroyPipeline(const Device& device, PipelineModule& pipeline);
-	void DestroyPipelineCache(const Device& device);
+	void DestroyPipeline(PipelineModule& pipeline);
+	void DestroyPipelineCache();
 }
 
 #endif

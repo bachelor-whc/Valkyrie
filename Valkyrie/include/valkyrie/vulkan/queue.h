@@ -11,7 +11,7 @@ namespace Vulkan {
 		VkResult waitIdle();
 	};
 
-	bool GetQueue(const Device& device, const PhysicalDevice& physical_device, VkQueueFlags flag, Queue& queue);
+	bool GetQueue(VkQueueFlags flag, Queue& queue);
 }
 
 #endif

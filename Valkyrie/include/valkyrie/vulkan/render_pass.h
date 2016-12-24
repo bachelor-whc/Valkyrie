@@ -27,7 +27,7 @@ namespace Vulkan {
 		RenderPass();
 		~RenderPass();
 
-		bool initialize(const Device& device, const SubpassDependencies& dependencies);
+		bool initialize(const SubpassDependencies& dependencies);
 		
 		VkRenderPass handle = NULL;
 		std::vector<VkSubpassDescription> subpasses;

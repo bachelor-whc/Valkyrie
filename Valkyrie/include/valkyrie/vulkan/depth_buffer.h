@@ -10,11 +10,10 @@ namespace Vulkan{
 	struct CommandBuffer;
 
 	struct DepthBuffer : public Attachment {
-		DepthBuffer() = delete;
-		DepthBuffer(const PhysicalDevice& physical_device);
+		DepthBuffer();
 		virtual ~DepthBuffer();
 
-		VkResult initializeImages(const Device& device, const PhysicalDevice& physical_device, CommandBuffer& buffer, const Wendy::Window& window);
+		VkResult initializeImages(CommandBuffer& buffer, const Wendy::Window& window);
 		virtual VkAttachmentDescription getAttachmentDescription() const;
 
 		VkFormat format = VK_FORMAT_UNDEFINED;

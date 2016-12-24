@@ -17,7 +17,7 @@ namespace Vulkan {
 	};
 
 #ifdef WIN32
-	VkResult setSurface(Surface& surface, const Wendy::Win32Window& window, const Instance& instance, const PhysicalDevice& physical_device);
+	VkResult setSurface(Surface& surface, const Wendy::Win32Window& window, const Instance& instance);
 #endif
 	void DestroySurface(Instance& instance, Surface& surface);
 }
