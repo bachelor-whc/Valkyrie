@@ -353,7 +353,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		vkCmdBindVertexBuffers(command.handle, 0, 1, &normal_vertex_buffer.handle, offsets);
 		vkCmdBindIndexBuffer(command.handle, normal_index_buffer.handle, 0, VK_INDEX_TYPE_UINT32);
 		vkCmdDrawIndexed(command.handle, indices.size(), 1, 0, 0, 1);
-
+		/*
 		vkCmdBindDescriptorSets(
 			command.handle,
 			VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -362,9 +362,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 			valkyrie.descriptorPool.getSetsSize(), valkyrie.descriptorPool.getSets(),
 			0, nullptr);
 		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_imgui_pipeline->handle);
-
+		*/
 		vkCmdEndRenderPass(command.handle);
-
+		
 		VkImageMemoryBarrier previous_present_barrier = {};
 		previous_present_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 		previous_present_barrier.pNext = NULL;
