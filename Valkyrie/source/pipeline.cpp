@@ -5,15 +5,15 @@
 #include "valkyrie/vulkan/vertex_input.h"
 using namespace Vulkan;
 
-VkPipelineCache Pipeline::cache = VK_NULL_HANDLE;
+VkPipelineCache PipelineModule::cache = VK_NULL_HANDLE;
 
-VkResult Pipeline::initializeCache(const Device& device) {
+VkResult PipelineModule::initializeCache(const Device& device) {
 	VkPipelineCacheCreateInfo pipeline_cache_create = {};
 	pipeline_cache_create.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 	return vkCreatePipelineCache(device.handle, &pipeline_cache_create, NULL, &cache);
 }
 
-VkResult Pipeline::initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts) {
+VkResult PipelineModule::initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts) {
 	size_t layout_count = descriptor_set_layouts.size();
 	VkPipelineLayoutCreateInfo pipeline_layout_create = {};
 	pipeline_layout_create.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -23,7 +23,7 @@ VkResult Pipeline::initializeLayout(const Device& device, const std::vector<VkDe
 	return result;
 }
 
-Pipeline::Pipeline() {
+PipelineModule::PipelineModule() {
 	initializeVertexInputState();
 	initializeInputAssemblyState();
 	initializeViewportState();
@@ -46,46 +46,46 @@ Pipeline::Pipeline() {
 	m_pipeline_create.pDynamicState = &m_dynamic_state;
 }
 
-Pipeline::~Pipeline() {
+PipelineModule::~PipelineModule() {
 
 }
 
-VkResult Pipeline::initialize(const Device& device) {
+VkResult PipelineModule::initialize(const Device& device) {
 	assert(cache != VK_NULL_HANDLE);
 	m_pipeline_create.stageCount = (uint32_t)shaderStageCreates.size();
 	m_pipeline_create.pStages = shaderStageCreates.data();
 	return vkCreateGraphicsPipelines(device.handle, cache, 1, &m_pipeline_create, nullptr, &handle);
 }
 
-void Pipeline::setRenderPass(const RenderPass& render_pass, uint32_t index) {
+void PipelineModule::setRenderPass(const RenderPass& render_pass, uint32_t index) {
 	m_pipeline_create.renderPass = render_pass.handle;
 	m_pipeline_create.subpass = index;
 }
 
-void Pipeline::setVertexInput(const VertexInput& vertex_input) {
+void PipelineModule::setVertexInput(const VertexInput& vertex_input) {
 	m_vertex_input_state.vertexBindingDescriptionCount = (uint32_t)vertex_input.bindings.size();
 	m_vertex_input_state.pVertexBindingDescriptions = vertex_input.bindings.data();
 	m_vertex_input_state.vertexAttributeDescriptionCount = (uint32_t)vertex_input.attributes.size();
 	m_vertex_input_state.pVertexAttributeDescriptions = vertex_input.attributes.data();
 }
 
-void Pipeline::initializeVertexInputState() {
+void PipelineModule::initializeVertexInputState() {
 	m_vertex_input_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 }
 
-void Pipeline::initializeInputAssemblyState() {
+void PipelineModule::initializeInputAssemblyState() {
 	m_input_assembly_state.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 	m_input_assembly_state.primitiveRestartEnable = VK_FALSE;
 	m_input_assembly_state.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 }
 
-void Pipeline::initializeViewportState() {
+void PipelineModule::initializeViewportState() {
 	m_viewport_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 	m_viewport_state.viewportCount = 1;
 	m_viewport_state.scissorCount = 1;
 }
 
-void Pipeline::initializeRasterizationState() {
+void PipelineModule::initializeRasterizationState() {
 	m_rasterization_state.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	m_rasterization_state.polygonMode = VK_POLYGON_MODE_FILL;
 	m_rasterization_state.cullMode = VK_CULL_MODE_NONE;
@@ -96,7 +96,7 @@ void Pipeline::initializeRasterizationState() {
 	m_rasterization_state.lineWidth = 1.0f;
 }
 
-void Pipeline::initializeMultisampleState() {
+void PipelineModule::initializeMultisampleState() {
 	m_multisample_state.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	m_multisample_state.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 	m_multisample_state.sampleShadingEnable = VK_FALSE;
@@ -105,7 +105,7 @@ void Pipeline::initializeMultisampleState() {
 	m_multisample_state.minSampleShading = 0.0;
 }
 
-void Pipeline::initializeDepthStencilState() {
+void PipelineModule::initializeDepthStencilState() {
 	m_depth_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 	m_depth_state.depthTestEnable = VK_TRUE;
 	m_depth_state.depthWriteEnable = VK_TRUE;
@@ -119,7 +119,7 @@ void Pipeline::initializeDepthStencilState() {
 	m_depth_state.front = m_depth_state.back;
 }
 
-void Pipeline::initializeColorBlendState() {
+void PipelineModule::initializeColorBlendState() {
 	m_color_blend_state.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 	m_color_blend_attachments.resize(1);
 	m_color_blend_attachments[0].colorWriteMask = 0xF;
@@ -138,7 +138,7 @@ void Pipeline::initializeColorBlendState() {
 	m_color_blend_state.blendConstants[3] = 0.0f;
 }
 
-void Pipeline::initializeDynamicState() {
+void PipelineModule::initializeDynamicState() {
 	m_dynamic_state_enables.push_back(VK_DYNAMIC_STATE_VIEWPORT);
 	m_dynamic_state_enables.push_back(VK_DYNAMIC_STATE_SCISSOR);
 	m_dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
@@ -146,11 +146,11 @@ void Pipeline::initializeDynamicState() {
 	m_dynamic_state.dynamicStateCount = (uint32_t)m_dynamic_state_enables.size();
 }
 
-void Vulkan::DestroyPipeline(const Device& device, Pipeline& pipeline) {
+void Vulkan::DestroyPipeline(const Device& device, PipelineModule& pipeline) {
 	vkDestroyPipelineLayout(device.handle, pipeline.layout, nullptr);
 	vkDestroyPipeline(device.handle, pipeline.handle, nullptr);
 }
 
 void Vulkan::DestroyPipelineCache(const Device& device) {
-	vkDestroyPipelineCache(device.handle, Pipeline::cache, nullptr);
+	vkDestroyPipelineCache(device.handle, PipelineModule::cache, nullptr);
 }

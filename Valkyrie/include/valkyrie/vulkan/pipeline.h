@@ -1,7 +1,6 @@
 #ifndef _VULKAN_PIPELINE_H
 #define _VULKAN_PIPELINE_H
 #include "utility.h"
-//#include "descriptor_set_layout.h"
 
 namespace Vulkan {
 	struct Device;
@@ -9,13 +8,13 @@ namespace Vulkan {
 	struct RenderPass;
 	struct VertexInput;
 
-	struct Pipeline {
+	struct PipelineModule {
 		static VkPipelineCache cache;
 		static VkResult initializeCache(const Device& device);
 		VkResult initializeLayout(const Device& device, const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
 
-		Pipeline();
-		virtual ~Pipeline();
+		PipelineModule();
+		virtual ~PipelineModule();
 
 		VkResult initialize(const Device& device);
 		void setRenderPass(const RenderPass& render_pass, uint32_t index);
@@ -52,9 +51,9 @@ namespace Vulkan {
 		std::vector<VkDynamicState> m_dynamic_state_enables;
 	};
 
-	typedef std::shared_ptr<Pipeline> PipelinePointer;
+	typedef std::shared_ptr<PipelineModule> PipelinePointer;
 
-	void DestroyPipeline(const Device& device, Pipeline& pipeline);
+	void DestroyPipeline(const Device& device, PipelineModule& pipeline);
 	void DestroyPipelineCache(const Device& device);
 }
 

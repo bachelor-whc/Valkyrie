@@ -200,10 +200,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 #pragma endregion INITIALIZE_VALKYRIE
 
 #pragma region INITIALIZE_VARIABLE
-	valkyrie.vertexInput.setBindingDescription(0, sizeof(Vertex));
-	valkyrie.vertexInput.setAttributeDescription(0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0);
-	valkyrie.vertexInput.setAttributeDescription(0, 1, VK_FORMAT_R32G32_SFLOAT, 3 * sizeof(float));
-
 	std::vector<Vertex> vertexs = {
 		{{2.0f,2.0f,0.0f},{1.0f,1.0f}},
 		{{-2.0f,2.0f,0.0f},{0.0f,1.0f}},
@@ -218,18 +214,20 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	mvp.projection = glm::perspective(60 * 3.14f / 180.0f, (float)width / (float)height, 0.1f, 256.0f);
 	mvp.view = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, -5.0f));
 
-	Vulkan::MemoryBuffer vertex_buffer;
-	Vulkan::MemoryBuffer index_buffer;
-	Vulkan::MemoryBuffer uniform_buffer;
+	Vulkan::MemoryBuffer normal_vertex_buffer;
+	Vulkan::MemoryBuffer normal_index_buffer;
+	Vulkan::MemoryBuffer normal_uniform_buffer;
+	Vulkan::MemoryBuffer imgui_vertex_buffer;
+	Vulkan::MemoryBuffer imgui_index_buffer;
 	ValkyrieImageFilePointer png_ptr = std::make_shared<ValkyriePNG>();
 	Vulkan::ImageTexture texture(png_ptr);
 
-	valkyrie.allocateMemoryBuffer(vertex_buffer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertexs.size() * sizeof(Vertex));
-	valkyrie.allocateMemoryBuffer(index_buffer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indices.size() * sizeof(uint32_t));
-	valkyrie.allocateMemoryBuffer(uniform_buffer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(mvp));
-	valkyrie.writeMemoryBuffer(vertex_buffer, vertexs.data());
-	valkyrie.writeMemoryBuffer(index_buffer, indices.data());
-	valkyrie.writeMemoryBuffer(uniform_buffer, &mvp);
+	valkyrie.allocateMemoryBuffer(normal_vertex_buffer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertexs.size() * sizeof(Vertex));
+	valkyrie.allocateMemoryBuffer(normal_index_buffer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indices.size() * sizeof(uint32_t));
+	valkyrie.allocateMemoryBuffer(normal_uniform_buffer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(mvp));
+	valkyrie.writeMemoryBuffer(normal_vertex_buffer, vertexs.data());
+	valkyrie.writeMemoryBuffer(normal_index_buffer, indices.data());
+	valkyrie.writeMemoryBuffer(normal_uniform_buffer, &mvp);
 #pragma endregion INITIALIZE_VARIABLE
 
 	texture.load("wang.png");
@@ -246,11 +244,15 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	imgui_set_layout.setBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
 	valkyrie.initializeDescriptorSetLayouts();
 
-	valkyrie.initializePipelineLayout();
-	valkyrie.pipelines[NORMAL_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
-	valkyrie.pipelines[IMGUI_PIPELINE] = std::make_shared<Vulkan::Pipeline>();
+	valkyrie.createPipelineModule(NORMAL_PIPELINE);
+	valkyrie.createPipelineModule(IMGUI_PIPELINE);
+	valkyrie.initializePipelineLayout(NORMAL_PIPELINE);
+	valkyrie.initializePipelineLayout(IMGUI_PIPELINE);
 	auto p_normal_pipeline = valkyrie.pipelines[NORMAL_PIPELINE];
 	auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
+	valkyrie.vertexInputs[NORMAL_PIPELINE]->setBindingDescription(0, sizeof(Vertex));
+	valkyrie.vertexInputs[NORMAL_PIPELINE]->setAttributeDescription(0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0);
+	valkyrie.vertexInputs[NORMAL_PIPELINE]->setAttributeDescription(0, 1, VK_FORMAT_R32G32_SFLOAT, 3 * sizeof(float));
 
 	std::string normal_vertex_code = Vulkan::Shader::LoadSPVBinaryCode("shader.vert.spv");
 	std::string normal_fragment_code = Vulkan::Shader::LoadSPVBinaryCode("shader.frag.spv");
@@ -269,7 +271,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
 	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
 
-	valkyrie.initializePipelines();
+	valkyrie.initializePipeline(NORMAL_PIPELINE);
 	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
 	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 	valkyrie.descriptorPool.registerSet(IMGUI_PIPELINE, 1);
@@ -287,7 +289,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	shader_uniform.dstSet = valkyrie.descriptorPool.getSet(NORMAL_PIPELINE);
 	shader_uniform.descriptorCount = 1;
 	shader_uniform.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	shader_uniform.pBufferInfo = uniform_buffer.getInformationPointer();
+	shader_uniform.pBufferInfo = normal_uniform_buffer.getInformationPointer();
 	shader_uniform.dstBinding = 0;
 
 	shader_samplers = {};
@@ -343,16 +345,24 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 			VK_PIPELINE_BIND_POINT_GRAPHICS, 
 			p_normal_pipeline->layout, 
 			0, 
-			valkyrie.descriptorPool.getSetsSize(), 
-			valkyrie.descriptorPool.getSets(), 
-			0, 
-			nullptr);
+			valkyrie.descriptorPool.getSetsSize(), valkyrie.descriptorPool.getSets(), 
+			0, nullptr);
 		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->handle);
 
 		const VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindVertexBuffers(command.handle, 0, 1, &vertex_buffer.handle, offsets);
-		vkCmdBindIndexBuffer(command.handle, index_buffer.handle, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindVertexBuffers(command.handle, 0, 1, &normal_vertex_buffer.handle, offsets);
+		vkCmdBindIndexBuffer(command.handle, normal_index_buffer.handle, 0, VK_INDEX_TYPE_UINT32);
 		vkCmdDrawIndexed(command.handle, indices.size(), 1, 0, 0, 1);
+
+		vkCmdBindDescriptorSets(
+			command.handle,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			p_imgui_pipeline->layout,
+			0,
+			valkyrie.descriptorPool.getSetsSize(), valkyrie.descriptorPool.getSets(),
+			0, nullptr);
+		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_imgui_pipeline->handle);
+
 		vkCmdEndRenderPass(command.handle);
 
 		VkImageMemoryBarrier previous_present_barrier = {};
@@ -388,8 +398,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = glm::rotate(mvp.model, rotation.x * 3.14f / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-		valkyrie.writeMemoryBuffer(uniform_buffer, &mvp);
-		valkyrie.executeRenderFunction("imgui", parameter);
+		valkyrie.writeMemoryBuffer(normal_uniform_buffer, &mvp);
+		//valkyrie.executeRenderFunction("imgui", parameter);
 	}
 	return 0;
 }

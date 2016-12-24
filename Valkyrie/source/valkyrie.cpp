@@ -106,7 +106,7 @@ void Valkyrie::initializeFramebuffers() {
 
 void Valkyrie::initializePipelineCache() {
 	VkResult result;
-	result = Pipeline::initializeCache(m_device);
+	result = PipelineModule::initializeCache(m_device);
 	assert(result == VK_SUCCESS);
 }
 
@@ -239,6 +239,7 @@ void Valkyrie::setWindowPointer(Wendy::Win32Window* window_ptr) {
 
 void Valkyrie::initializePipelineLayout(const std::string& pipeline_name) {
 	VkResult result;
+	assert(pipelines.count(pipeline_name) > 0);
 	std::vector<VkDescriptorSetLayout>& set_layouts = descriptorPool.getSetLayoutHandles();
 	result = pipelines[pipeline_name]->initializeLayout(m_device, set_layouts);
 	assert(result == VK_SUCCESS);
@@ -251,7 +252,7 @@ void Valkyrie::initializeDescriptorSetLayouts() {
 }
 
 void Valkyrie::createPipelineModule(const std::string & pipename_name) {
-	pipelines[pipename_name] = std::make_shared<Vulkan::Pipeline>();
+	pipelines[pipename_name] = std::make_shared<Vulkan::PipelineModule>();
 	vertexInputs[pipename_name] = std::make_shared<Vulkan::VertexInput>();
 }
 
