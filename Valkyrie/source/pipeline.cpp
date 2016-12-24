@@ -34,7 +34,6 @@ PipelineModule::PipelineModule() {
 	initializeDynamicState();
 
 	m_pipeline_create.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-	m_pipeline_create.layout = layout;
 	m_pipeline_create.pVertexInputState = &m_vertex_input_state;
 	m_pipeline_create.pInputAssemblyState = &m_input_assembly_state;
 	m_pipeline_create.pTessellationState = nullptr;
