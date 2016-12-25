@@ -68,8 +68,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	mvp.projection = glm::perspective(60 * 3.14f / 180.0f, (float)width / (float)height, 0.1f, 256.0f);
 	mvp.view = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, -5.0f));
 
-	Vulkan::MemoryBuffer normal_vertex_buffer;
-	Vulkan::MemoryBuffer normal_index_buffer;
+	Vulkan::MemoryBuffer normal_object_buffer;
 	Vulkan::MemoryBuffer normal_uniform_buffer;
 	Vulkan::MemoryBuffer imgui_vertex_buffer;
 	Vulkan::MemoryBuffer imgui_index_buffer;
@@ -90,22 +89,27 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	ImGui::Render();
 	auto draw_data = ImGui::GetDrawData();
 
-	valkyrie.allocateMemoryBuffer(normal_vertex_buffer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertexs.size() * sizeof(Vertex));
-	valkyrie.allocateMemoryBuffer(normal_index_buffer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indices.size() * sizeof(uint32_t));
-	valkyrie.allocateMemoryBuffer(normal_uniform_buffer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(mvp));
+	normal_object_buffer.allocate(
+		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT },
+		{ vertexs.size() * sizeof(Vertex), indices.size() * sizeof(uint32_t) });
+	normal_uniform_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, { sizeof(mvp) });
 
-	valkyrie.writeMemoryBuffer(normal_vertex_buffer, vertexs.data());
-	valkyrie.writeMemoryBuffer(normal_index_buffer, indices.data());
-	valkyrie.writeMemoryBuffer(normal_uniform_buffer, &mvp);
+	normal_object_buffer.write(vertexs.data(), 0);
+	normal_object_buffer.write(indices.data(), 1);
+	normal_uniform_buffer.write(&mvp, 0);
 
 	size_t total_vertex_size = draw_data->TotalVtxCount * sizeof(ImDrawVert);
-	valkyrie.allocateMemoryBuffer(imgui_vertex_buffer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, total_vertex_size);
+	imgui_vertex_buffer.allocate(
+		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT }, 
+		{ total_vertex_size });
 
 	size_t total_index_size = draw_data->TotalIdxCount * sizeof(ImDrawIdx);
-	valkyrie.allocateMemoryBuffer(imgui_index_buffer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, total_index_size);
+	imgui_index_buffer.allocate(
+		{ VK_BUFFER_USAGE_INDEX_BUFFER_BIT }, 
+		{ total_index_size });
 
-	ImDrawVert* vertex_memory_destination = (ImDrawVert*)valkyrie.startWritingMemoryBuffer(imgui_vertex_buffer);
-	ImDrawIdx* index_memory_destination = (ImDrawIdx*)valkyrie.startWritingMemoryBuffer(imgui_index_buffer);
+	ImDrawVert* vertex_memory_destination = (ImDrawVert*)imgui_vertex_buffer.startWriting(0);
+	ImDrawIdx* index_memory_destination = (ImDrawIdx*)imgui_index_buffer.startWriting(0);
 	for (int n = 0; n < draw_data->CmdListsCount; n++) {
 		const auto command_list = draw_data->CmdLists[n];
 		memcpy(vertex_memory_destination, command_list->VtxBuffer.Data, command_list->VtxBuffer.Size * sizeof(ImDrawVert));
@@ -113,8 +117,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		vertex_memory_destination += command_list->VtxBuffer.Size;
 		index_memory_destination += command_list->IdxBuffer.Size;
 	}
-	valkyrie.endWritingMemoryBuffer(imgui_vertex_buffer);
-	valkyrie.endWritingMemoryBuffer(imgui_index_buffer);
+	imgui_vertex_buffer.endWriting();
+	imgui_index_buffer.endWriting();
 
 #pragma endregion INITIALIZE_VARIABLE
 
@@ -182,7 +186,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	shader_uniform.dstSet = valkyrie.descriptorPool.getSet(NORMAL_PIPELINE);
 	shader_uniform.descriptorCount = 1;
 	shader_uniform.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	shader_uniform.pBufferInfo = normal_uniform_buffer.getInformationPointer();
+	shader_uniform.pBufferInfo = normal_uniform_buffer.getInformationPointer(0);
 	shader_uniform.dstBinding = 0;
 
 	shader_samplers = {};
@@ -249,9 +253,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 			0, nullptr);
 		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->handle);
 
-		const VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindVertexBuffers(command.handle, 0, 1, &normal_vertex_buffer.handle, offsets);
-		vkCmdBindIndexBuffer(command.handle, normal_index_buffer.handle, 0, VK_INDEX_TYPE_UINT32);
+		const VkDeviceSize normal_offsets[1] = { normal_object_buffer.getOffset(0) };
+		vkCmdBindVertexBuffers(command.handle, 0, 1, &normal_object_buffer.handle, normal_offsets);
+		vkCmdBindIndexBuffer(command.handle, normal_object_buffer.handle, normal_object_buffer.getOffset(1), VK_INDEX_TYPE_UINT32);
 		vkCmdDrawIndexed(command.handle, indices.size(), 1, 0, 0, 1);
 		
 		vkCmdBindDescriptorSets(
@@ -262,11 +266,12 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 			valkyrie.descriptorPool.getSetsSize(), valkyrie.descriptorPool.getSets(),
 			0, nullptr);
 		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_imgui_pipeline->handle);
-		
+
 		vkCmdPushConstants(command.handle, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
 		vkCmdPushConstants(command.handle, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
 		
-		vkCmdBindVertexBuffers(command.handle, 0, 1, &imgui_vertex_buffer.handle, offsets);
+		const VkDeviceSize imgui_offsets[1] = { 0 };
+		vkCmdBindVertexBuffers(command.handle, 0, 1, &imgui_vertex_buffer.handle, imgui_offsets);
 		vkCmdBindIndexBuffer(command.handle, imgui_index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
 		
 		int vertex_offset = 0;
@@ -283,7 +288,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 					scissor.offset.x = (int32_t)(p_command->ClipRect.x);
 					scissor.offset.y = (int32_t)(p_command->ClipRect.y);
 					scissor.extent.width = (uint32_t)(p_command->ClipRect.z - p_command->ClipRect.x);
-					scissor.extent.height = (uint32_t)(p_command->ClipRect.w - p_command->ClipRect.y + 1); // TODO: + 1??????
+					scissor.extent.height = (uint32_t)(p_command->ClipRect.w - p_command->ClipRect.y + 1);
 					vkCmdSetScissor(command.handle, 0, 1, &scissor);
 					vkCmdDrawIndexed(command.handle, p_command->ElemCount, 1, index_offset, vertex_offset, 0);
 				}
@@ -324,7 +329,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = glm::rotate(mvp.model, rotation.x * 3.14f / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-		valkyrie.writeMemoryBuffer(normal_uniform_buffer, &mvp);
+		normal_uniform_buffer.write(&mvp, 0);
 	}
 	return 0;
 }

@@ -1,6 +1,7 @@
 #ifndef _VULKAN_MEMORY_BUFFER_H
 #define _VULKAN_MEMORY_BUFFER_H
 #include "utility.h"
+#include "valkyrie/default_create_info.h"
 
 namespace Vulkan {
 	struct PhysicalDevice;
@@ -10,22 +11,24 @@ namespace Vulkan {
 		MemoryBuffer();
 		~MemoryBuffer();
 
-		VkResult allocate(PhysicalDevice& physical_device, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create);
-		VkResult write(const void *data, uint32_t offset = 0);
-		void* startWriting(uint32_t offset = 0);
-		VkResult endWriting();
-		VkDescriptorBufferInfo* getInformationPointer();
-		inline uint32_t getSize() { return m_size; }
-		inline uint32_t getOffset() { return m_size; }
+		VkResult allocate(const std::vector<VkBufferUsageFlags>& usages, const std::vector<uint32_t>& sizes, VkBufferCreateInfo buffer_create = VK_DEFAULT_BUFFER_CREATE_INFO);
+		VkResult write(const void *data, int index);
+		void* startWriting(int index);
+		void endWriting();
+		VkDescriptorBufferInfo* getInformationPointer(int index);
+		inline uint32_t getSize(int index) { return m_sizes[index]; }
+		inline uint32_t getOffset(int index) { return m_offsets[index]; }
 
 		VkBuffer handle = NULL;
 		VkDeviceMemory memory = NULL;
 	private:
-		uint32_t m_size;
-		uint32_t m_offset;
-		VkDescriptorBufferInfo* mp_information;
+		std::vector<uint32_t> m_sizes;
+		std::vector<uint32_t> m_offsets;
+		std::vector<VkDescriptorBufferInfo*> m_information_pointers;
 		bool m_writing_state = false;
 	};
+
+	void DestroyMemoryBuffer(MemoryBuffer& buffer);
 }
 
 #endif

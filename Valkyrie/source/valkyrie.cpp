@@ -260,34 +260,6 @@ void Valkyrie::createPipelineModule(const std::string & pipename_name) {
 	vertexInputs[pipename_name] = std::make_shared<Vulkan::VertexInput>();
 }
 
-void Valkyrie::allocateMemoryBuffer(Vulkan::MemoryBuffer& buffer, const VkBufferUsageFlags usage, uint32_t size, VkBufferCreateInfo buffer_create) {
-	VkResult result = buffer.allocate(m_physical_device, usage, size, buffer_create);
-	assert(result == VK_SUCCESS);
-}
-
-void Valkyrie::destroyMemoryBuffer(Vulkan::MemoryBuffer& buffer) {
-	if(buffer.handle != VK_NULL_HANDLE)
-		vkDestroyBuffer(m_device.handle, buffer.handle, nullptr);
-	if(buffer.memory != VK_NULL_HANDLE)
-		vkFreeMemory(m_device.handle, buffer.memory, nullptr);
-	buffer.handle = VK_NULL_HANDLE;
-	buffer.memory = VK_NULL_HANDLE;
-}
-
-void Valkyrie::writeMemoryBuffer(Vulkan::MemoryBuffer& buffer, const void *data, uint32_t offset) {
-	VkResult result = buffer.write(data, offset);
-	assert(result == VK_SUCCESS);
-}
-
-void* Valkyrie::startWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer, uint32_t offset) {
-	return buffer.startWriting();
-}
-
-void Valkyrie::endWritingMemoryBuffer(Vulkan::MemoryBuffer& buffer) {
-	VkResult result = buffer.endWriting();
-	assert(result == VK_SUCCESS);
-}
-
 void Valkyrie::initializeShaderModules() {
 	VkResult result;
 	for (auto& key_value : shaders) {
