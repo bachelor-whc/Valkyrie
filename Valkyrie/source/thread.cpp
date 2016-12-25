@@ -29,7 +29,7 @@ Vulkan::CommandBuffer ValkyrieThread::createCommandBuffer() {
 	return command_buffer;
 }
 
-Vulkan::SecondaryCommandBuffers ValkyrieThread::createSecondaryCommandBuffer(const uint32_t count) {
+Vulkan::SecondaryCommandBuffers ValkyrieThread::createSecondaryCommandBuffers(const uint32_t count) {
 	Vulkan::SecondaryCommandBuffers command_buffers;
 	VkCommandBufferAllocateInfo command_buffer_allocate = {};
 	command_buffers.resize(count);

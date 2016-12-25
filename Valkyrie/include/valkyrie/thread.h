@@ -15,7 +15,7 @@ struct ValkyrieThread {
 	virtual ~ValkyrieThread();
 
 	Vulkan::CommandBuffer createCommandBuffer();
-	Vulkan::SecondaryCommandBuffers ValkyrieThread::createSecondaryCommandBuffer(const uint32_t count);
+	Vulkan::SecondaryCommandBuffers ValkyrieThread::createSecondaryCommandBuffers(const uint32_t count);
 
 private:
 	VkDevice m_device = VK_NULL_HANDLE;

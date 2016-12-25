@@ -349,3 +349,6 @@ Vulkan::CommandBuffer Valkyrie::createCommandBuffer() {
 	return m_thread_ptrs[0]->createCommandBuffer();
 }
 
+Vulkan::SecondaryCommandBuffers Valkyrie::createSecondaryCommandBuffers(uint32_t count) {
+	return m_thread_ptrs[0]->createSecondaryCommandBuffers(count);
+}

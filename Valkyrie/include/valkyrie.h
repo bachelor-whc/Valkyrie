@@ -57,6 +57,7 @@ public:
 	bool registerRenderFunction(std::string name, ValkyrieRenderPFN pfn);
 	void executeRenderFunction(std::string name, const std::vector<void*>& data);
 	Vulkan::CommandBuffer createCommandBuffer();
+	Vulkan::SecondaryCommandBuffers createSecondaryCommandBuffers(uint32_t count);
 
 	inline VkRenderPass getRenderPassHandle() { return m_render_pass.handle; }
 	inline VkFramebuffer getFramebuffer(int index) { return mp_swapchain->getFramebuffers()->handles[index]; }

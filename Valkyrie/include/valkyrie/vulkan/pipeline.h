@@ -24,6 +24,7 @@ namespace Vulkan {
 		VkPipelineLayout layout = VK_NULL_HANDLE;
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStageCreates;
 		std::vector<VkPushConstantRange> pushConstantRanges;
+		std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments;
 
 	private:
 		void initializeVertexInputState();
@@ -36,7 +37,6 @@ namespace Vulkan {
 		void initializeColorBlendState();
 		void initializeDynamicState();
 
-
 		VkGraphicsPipelineCreateInfo m_pipeline_create = {};
 
 		VkPipelineVertexInputStateCreateInfo m_vertex_input_state = {};
@@ -47,7 +47,6 @@ namespace Vulkan {
 		VkPipelineMultisampleStateCreateInfo m_multisample_state = {};
 		VkPipelineDepthStencilStateCreateInfo m_depth_state = {};
 		VkPipelineColorBlendStateCreateInfo m_color_blend_state = {};
-		std::vector<VkPipelineColorBlendAttachmentState> m_color_blend_attachments;
 		VkPipelineDynamicStateCreateInfo m_dynamic_state = {};
 		std::vector<VkDynamicState> m_dynamic_state_enables;
 	};

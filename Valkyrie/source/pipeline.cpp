@@ -28,14 +28,7 @@ VkResult PipelineModule::initializeLayout(const std::vector<VkDescriptorSetLayou
 PipelineModule::PipelineModule() :
 	shaderStageCreates(),
 	pushConstantRanges() {
-	initializeVertexInputState();
-	initializeInputAssemblyState();
-	initializeViewportState();
-	initializeRasterizationState();
-	initializeMultisampleState();
-	initializeDepthStencilState();
-	initializeColorBlendState();
-	initializeDynamicState();
+	
 
 	m_pipeline_create.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	m_pipeline_create.pVertexInputState = &m_vertex_input_state;
@@ -47,6 +40,8 @@ PipelineModule::PipelineModule() :
 	m_pipeline_create.pDepthStencilState = &m_depth_state;
 	m_pipeline_create.pColorBlendState = &m_color_blend_state;
 	m_pipeline_create.pDynamicState = &m_dynamic_state;
+	colorBlendAttachments.resize(1);
+	colorBlendAttachments[0] = VK_DEFAULT_COLOR_BLEND_ATTACHMENT_STATE;
 }
 
 PipelineModule::~PipelineModule() {
@@ -55,6 +50,14 @@ PipelineModule::~PipelineModule() {
 
 VkResult PipelineModule::initialize() {
 	assert(cache != VK_NULL_HANDLE);
+	initializeVertexInputState();
+	initializeInputAssemblyState();
+	initializeViewportState();
+	initializeRasterizationState();
+	initializeMultisampleState();
+	initializeDepthStencilState();
+	initializeColorBlendState();
+	initializeDynamicState();
 	m_pipeline_create.stageCount = (uint32_t)shaderStageCreates.size();
 	m_pipeline_create.pStages = shaderStageCreates.data();
 	m_pipeline_create.layout = layout;
@@ -125,17 +128,8 @@ void PipelineModule::initializeDepthStencilState() {
 
 void PipelineModule::initializeColorBlendState() {
 	m_color_blend_state.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	m_color_blend_attachments.resize(1);
-	m_color_blend_attachments[0].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-	m_color_blend_attachments[0].blendEnable = VK_TRUE;
-	m_color_blend_attachments[0].alphaBlendOp = VK_BLEND_OP_ADD;
-	m_color_blend_attachments[0].colorBlendOp = VK_BLEND_OP_ADD;
-	m_color_blend_attachments[0].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-	m_color_blend_attachments[0].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-	m_color_blend_attachments[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-	m_color_blend_attachments[0].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-	m_color_blend_state.attachmentCount = (uint32_t)m_color_blend_attachments.size();
-	m_color_blend_state.pAttachments = m_color_blend_attachments.data();;
+	m_color_blend_state.attachmentCount = (uint32_t)colorBlendAttachments.size();
+	m_color_blend_state.pAttachments = colorBlendAttachments.data();
 	m_color_blend_state.blendConstants[0] = 0.0f;
 	m_color_blend_state.blendConstants[1] = 0.0f;
 	m_color_blend_state.blendConstants[2] = 0.0f;
