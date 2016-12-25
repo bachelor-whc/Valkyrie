@@ -126,13 +126,13 @@ void PipelineModule::initializeDepthStencilState() {
 void PipelineModule::initializeColorBlendState() {
 	m_color_blend_state.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 	m_color_blend_attachments.resize(1);
-	m_color_blend_attachments[0].colorWriteMask = 0xF;
-	m_color_blend_attachments[0].blendEnable = VK_FALSE;
+	m_color_blend_attachments[0].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+	m_color_blend_attachments[0].blendEnable = VK_TRUE;
 	m_color_blend_attachments[0].alphaBlendOp = VK_BLEND_OP_ADD;
 	m_color_blend_attachments[0].colorBlendOp = VK_BLEND_OP_ADD;
-	m_color_blend_attachments[0].srcColorBlendFactor = VK_BLEND_FACTOR_ZERO;
-	m_color_blend_attachments[0].dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
-	m_color_blend_attachments[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+	m_color_blend_attachments[0].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+	m_color_blend_attachments[0].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+	m_color_blend_attachments[0].srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
 	m_color_blend_attachments[0].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 	m_color_blend_state.attachmentCount = (uint32_t)m_color_blend_attachments.size();
 	m_color_blend_state.pAttachments = m_color_blend_attachments.data();;
