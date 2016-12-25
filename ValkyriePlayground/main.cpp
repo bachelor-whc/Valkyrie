@@ -14,7 +14,6 @@ const std::string IMGUI_PIPELINE = "IMGUI";
 
 struct Vertex {
 	float position[3];
-	//float color[3];
 	float UV[2];
 };
 
@@ -246,13 +245,21 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	valkyrie.createPipelineModule(NORMAL_PIPELINE);
 	valkyrie.createPipelineModule(IMGUI_PIPELINE);
-	valkyrie.initializePipelineLayout(NORMAL_PIPELINE);
-	valkyrie.initializePipelineLayout(IMGUI_PIPELINE);
+	
 	auto p_normal_pipeline = valkyrie.pipelines[NORMAL_PIPELINE];
 	auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
 	valkyrie.vertexInputs[NORMAL_PIPELINE]->setBindingDescription(0, sizeof(Vertex));
 	valkyrie.vertexInputs[NORMAL_PIPELINE]->setAttributeDescription(0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0);
 	valkyrie.vertexInputs[NORMAL_PIPELINE]->setAttributeDescription(0, 1, VK_FORMAT_R32G32_SFLOAT, 3 * sizeof(float));
+	valkyrie.vertexInputs[IMGUI_PIPELINE]->setBindingDescription(0, sizeof(ImDrawVert));
+	valkyrie.vertexInputs[IMGUI_PIPELINE]->setAttributeDescription(0, 0, VK_FORMAT_R32G32_SFLOAT, 0);
+	valkyrie.vertexInputs[IMGUI_PIPELINE]->setAttributeDescription(0, 1, VK_FORMAT_R32G32_SFLOAT, sizeof(ImVec2));
+	valkyrie.vertexInputs[IMGUI_PIPELINE]->setAttributeDescription(0, 2, VK_FORMAT_R8G8B8A8_UNORM, 2 * sizeof(ImVec2));
+
+	VkPushConstantRange imgui_push_constant = {};
+	imgui_push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	imgui_push_constant.size = sizeof(float) * 4;
+	p_imgui_pipeline->pushConstantRanges.push_back(imgui_push_constant);
 
 	std::string normal_vertex_code = Vulkan::Shader::LoadSPVBinaryCode("shader.vert.spv");
 	std::string normal_fragment_code = Vulkan::Shader::LoadSPVBinaryCode("shader.frag.spv");
@@ -271,7 +278,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_VERTEX"]->createPipelineShaderStage());
 	p_imgui_pipeline->shaderStageCreates.push_back(valkyrie.shaders["IMGUI_FRAGMENT"]->createPipelineShaderStage());
 
+	valkyrie.initializePipelineLayout(NORMAL_PIPELINE);
+	valkyrie.initializePipelineLayout(IMGUI_PIPELINE);
 	valkyrie.initializePipeline(NORMAL_PIPELINE);
+	valkyrie.initializePipeline(IMGUI_PIPELINE);
 	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
 	valkyrie.descriptorPool.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 	valkyrie.descriptorPool.registerSet(IMGUI_PIPELINE, 1);

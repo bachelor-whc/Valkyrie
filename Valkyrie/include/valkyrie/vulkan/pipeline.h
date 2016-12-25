@@ -23,6 +23,7 @@ namespace Vulkan {
 		VkPipeline handle = VK_NULL_HANDLE;
 		VkPipelineLayout layout = VK_NULL_HANDLE;
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStageCreates;
+		std::vector<VkPushConstantRange> pushConstantRanges;
 
 	private:
 		void initializeVertexInputState();

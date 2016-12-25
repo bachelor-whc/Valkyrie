@@ -19,11 +19,15 @@ VkResult PipelineModule::initializeLayout(const std::vector<VkDescriptorSetLayou
 	pipeline_layout_create.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipeline_layout_create.setLayoutCount = (uint32_t)layout_count;
 	pipeline_layout_create.pSetLayouts = descriptor_set_layouts.data();
+	pipeline_layout_create.pushConstantRangeCount = pushConstantRanges.size();
+	pipeline_layout_create.pPushConstantRanges = pushConstantRanges.data();
 	VkResult result = vkCreatePipelineLayout(g_device_handle, &pipeline_layout_create, nullptr, &layout);
 	return result;
 }
 
-PipelineModule::PipelineModule() {
+PipelineModule::PipelineModule() :
+	shaderStageCreates(),
+	pushConstantRanges() {
 	initializeVertexInputState();
 	initializeInputAssemblyState();
 	initializeViewportState();
