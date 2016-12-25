@@ -56,6 +56,7 @@ public:
 	void initailizeTexture(Vulkan::Texture& texture);
 	bool registerRenderFunction(std::string name, ValkyrieRenderPFN pfn);
 	void executeRenderFunction(std::string name, const std::vector<void*>& data);
+	inline int getCurrentBuffer() { return mp_swapchain->getCurrent(); }
 	Vulkan::CommandBuffer createCommandBuffer();
 	Vulkan::SecondaryCommandBuffers createSecondaryCommandBuffers(uint32_t count);
 

@@ -81,12 +81,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::MemoryTexture memory_texture = CreateImGuiFontsTexture(valkyrie, imgui_io);
 	imgui_io.Fonts->TexID = (void*)memory_texture.image;
 
-	ImGui::NewFrame();
-	bool y = true;
-	ImGui::ShowTestWindow(&y);
-	ImGui::Render();
-	auto draw_data = ImGui::GetDrawData();
-
 	normal_object_buffer.allocate(
 		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT },
 		{ vertexs.size() * sizeof(Vertex), indices.size() * sizeof(uint32_t) });
@@ -95,28 +89,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	normal_object_buffer.write(vertexs.data(), 0);
 	normal_object_buffer.write(indices.data(), 1);
 	normal_uniform_buffer.write(&mvp, 0);
-
-	size_t total_vertex_size = draw_data->TotalVtxCount * sizeof(ImDrawVert);
-	imgui_vertex_buffer.allocate(
-		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT }, 
-		{ total_vertex_size });
-
-	size_t total_index_size = draw_data->TotalIdxCount * sizeof(ImDrawIdx);
-	imgui_index_buffer.allocate(
-		{ VK_BUFFER_USAGE_INDEX_BUFFER_BIT }, 
-		{ total_index_size });
-
-	ImDrawVert* vertex_memory_destination = (ImDrawVert*)imgui_vertex_buffer.startWriting(0);
-	ImDrawIdx* index_memory_destination = (ImDrawIdx*)imgui_index_buffer.startWriting(0);
-	for (int n = 0; n < draw_data->CmdListsCount; n++) {
-		const auto command_list = draw_data->CmdLists[n];
-		memcpy(vertex_memory_destination, command_list->VtxBuffer.Data, command_list->VtxBuffer.Size * sizeof(ImDrawVert));
-		memcpy(index_memory_destination, command_list->IdxBuffer.Data, command_list->IdxBuffer.Size * sizeof(ImDrawIdx));
-		vertex_memory_destination += command_list->VtxBuffer.Size;
-		index_memory_destination += command_list->IdxBuffer.Size;
-	}
-	imgui_vertex_buffer.endWriting();
-	imgui_index_buffer.endWriting();
 
 #pragma endregion INITIALIZE_VARIABLE
 
@@ -234,6 +206,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	
 	VkResult result;
 	int render_command_size = valkyrie.renderCommands.size();
+	Vulkan::SecondaryCommandBuffers& secondary_buffers = valkyrie.createSecondaryCommandBuffers(2);
 	for (int i = 0; i < render_command_size; ++i) {
 		auto& command = valkyrie.renderCommands[i];
 		valkyrie.renderCommands[i].begin();
@@ -244,51 +217,21 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		valkyrie.commandSetScissor(command);
 
 		const VkDeviceSize normal_offsets[1] = { normal_object_buffer.getOffset(0) };
-		const VkDeviceSize imgui_offsets[1] = { 0 };
-
+		
 		vkCmdBindDescriptorSets(
 			command.handle, 
 			VK_PIPELINE_BIND_POINT_GRAPHICS, 
 			p_normal_pipeline->layout, 
 			0, 
 			valkyrie.descriptorPool.getSetsSize(), valkyrie.descriptorPool.getSets(), 
-			0, nullptr);
+			0, nullptr
+		);
 		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->handle);
 		vkCmdBindVertexBuffers(command.handle, 0, 1, &normal_object_buffer.handle, normal_offsets);
 		vkCmdBindIndexBuffer(command.handle, normal_object_buffer.handle, normal_object_buffer.getOffset(1), VK_INDEX_TYPE_UINT32);
 		vkCmdDrawIndexed(command.handle, indices.size(), 1, 0, 0, 1);
 		
-		vkCmdBindDescriptorSets(
-			command.handle,
-			VK_PIPELINE_BIND_POINT_GRAPHICS,
-			p_imgui_pipeline->layout,
-			0,
-			valkyrie.descriptorPool.getSetsSize(), valkyrie.descriptorPool.getSets(),
-			0, nullptr);
-		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_imgui_pipeline->handle);
-
-		vkCmdPushConstants(command.handle, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
-		vkCmdPushConstants(command.handle, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
-		
-		vkCmdBindVertexBuffers(command.handle, 0, 1, &imgui_vertex_buffer.handle, imgui_offsets);
-		vkCmdBindIndexBuffer(command.handle, imgui_index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
-		
-		int vertex_offset = 0;
-		int index_offset = 0;
-		for (int n = 0; n < draw_data->CmdListsCount; n++) {
-			const ImDrawList* command_list = draw_data->CmdLists[n];
-			for (int cmd_i = 0; cmd_i < command_list->CmdBuffer.Size; cmd_i++) {
-				const ImDrawCmd* p_command = &command_list->CmdBuffer[cmd_i];
-				if (p_command->UserCallback) {
-					p_command->UserCallback(command_list, p_command);
-				}
-				else {
-					vkCmdDrawIndexed(command.handle, p_command->ElemCount, 1, index_offset, vertex_offset, 0);
-				}
-				index_offset += p_command->ElemCount;
-			}
-			vertex_offset += command_list->VtxBuffer.Size;
-		}
+		vkCmdExecuteCommands(command.handle, 1, secondary_buffers.data() + i);
 
 		vkCmdEndRenderPass(command.handle);
 		
@@ -314,7 +257,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	glm::vec3 rotation = glm::vec3();
 	std::vector<void*> parameter({ &valkyrie, &p_normal_pipeline });
+	const VkDeviceSize imgui_offsets[1] = { 0 };
 
+	int count = 0;
 	while (valkyrie.execute()) {
 		rotation.x += 0.01f;
 		rotation.y += 0.01f;
@@ -323,6 +268,88 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = glm::rotate(mvp.model, rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 		normal_uniform_buffer.write(&mvp, 0);
+
+		ImGui::NewFrame();
+		ImGui::Text(std::to_string(count++).c_str());
+		ImGui::Render();
+		auto draw_data = ImGui::GetDrawData();
+
+		size_t total_vertex_size = draw_data->TotalVtxCount * sizeof(ImDrawVert);
+		imgui_vertex_buffer.allocate(
+		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT },
+		{ total_vertex_size });
+
+		size_t total_index_size = draw_data->TotalIdxCount * sizeof(ImDrawIdx);
+		imgui_index_buffer.allocate(
+		{ VK_BUFFER_USAGE_INDEX_BUFFER_BIT },
+		{ total_index_size });
+
+		ImDrawVert* vertex_memory_destination = (ImDrawVert*)imgui_vertex_buffer.startWriting(0);
+		ImDrawIdx* index_memory_destination = (ImDrawIdx*)imgui_index_buffer.startWriting(0);
+
+		for (int n = 0; n < draw_data->CmdListsCount; n++) {
+			const auto command_list = draw_data->CmdLists[n];
+			memcpy(vertex_memory_destination, command_list->VtxBuffer.Data, command_list->VtxBuffer.Size * sizeof(ImDrawVert));
+			memcpy(index_memory_destination, command_list->IdxBuffer.Data, command_list->IdxBuffer.Size * sizeof(ImDrawIdx));
+			vertex_memory_destination += command_list->VtxBuffer.Size;
+			index_memory_destination += command_list->IdxBuffer.Size;
+		}
+		imgui_vertex_buffer.endWriting();
+		imgui_index_buffer.endWriting();
+
+		VkCommandBufferInheritanceInfo command_buffer_inheritance = {};
+		command_buffer_inheritance.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+		command_buffer_inheritance.pNext = NULL;
+		command_buffer_inheritance.renderPass = valkyrie.getRenderPassHandle();
+		command_buffer_inheritance.subpass = 0;
+		command_buffer_inheritance.framebuffer = valkyrie.getFramebuffer(valkyrie.getCurrentBuffer());
+		command_buffer_inheritance.occlusionQueryEnable = VK_FALSE;
+		command_buffer_inheritance.queryFlags = 0;
+		command_buffer_inheritance.pipelineStatistics = 0;
+
+		VkCommandBufferBeginInfo secondary_begin = {};
+		secondary_begin.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		secondary_begin.pNext = NULL;
+		secondary_begin.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT |
+			VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
+		secondary_begin.pInheritanceInfo = &command_buffer_inheritance;
+
+		VkCommandBuffer command = secondary_buffers[valkyrie.getCurrentBuffer()];
+
+		vkBeginCommandBuffer(command, &secondary_begin);
+		vkCmdBindDescriptorSets(
+			command,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			p_imgui_pipeline->layout,
+			0,
+			valkyrie.descriptorPool.getSetsSize(), valkyrie.descriptorPool.getSets(),
+			0, nullptr
+		);
+		vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, p_imgui_pipeline->handle);
+
+		vkCmdPushConstants(command, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
+		vkCmdPushConstants(command, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
+
+		vkCmdBindVertexBuffers(command, 0, 1, &imgui_vertex_buffer.handle, imgui_offsets);
+		vkCmdBindIndexBuffer(command, imgui_index_buffer.handle, 0, VK_INDEX_TYPE_UINT16);
+
+		int vertex_offset = 0;
+		int index_offset = 0;
+		for (int n = 0; n < draw_data->CmdListsCount; n++) {
+			const ImDrawList* command_list = draw_data->CmdLists[n];
+			for (int cmd_i = 0; cmd_i < command_list->CmdBuffer.Size; cmd_i++) {
+				const ImDrawCmd* p_command = &command_list->CmdBuffer[cmd_i];
+				if (p_command->UserCallback) {
+					p_command->UserCallback(command_list, p_command);
+				}
+				else {
+					vkCmdDrawIndexed(command, p_command->ElemCount, 1, index_offset, vertex_offset, 0);
+				}
+				index_offset += p_command->ElemCount;
+			}
+			vertex_offset += command_list->VtxBuffer.Size;
+		}
+		vkEndCommandBuffer(command);
 	}
 	return 0;
 }
