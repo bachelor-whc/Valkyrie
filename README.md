@@ -3,6 +3,7 @@ Valkyrie利用Vulkan進行3D Rendering，目標是要作為一個遊戲引擎提
 
 ### Valkyrie使用的第三方函式庫或代碼
 Valkyrie所使用的第三方函式庫或代碼都放置於`license`資料夾內，本專案目前所使用的如下：
+* electron
 * GLM
 * zlib
 * libpng
