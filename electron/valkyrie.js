@@ -8,8 +8,6 @@ let win
 
 function createWindow() {
   win = new BrowserWindow({ width: 800, height: 600 , frame: false})
-
-  console.log(win.getNativeWindowHandle())
   valkyrie_addon.InitializeValkyrie(800, 600, win.getNativeWindowHandle())
 
   win.on('closed', () => {
