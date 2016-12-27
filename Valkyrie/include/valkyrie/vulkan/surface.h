@@ -16,7 +16,9 @@ namespace Vulkan {
 		virtual VkAttachmentDescription getAttachmentDescription() const;
 	};
 
-#ifdef WIN32
+#ifdef _ELECTRON_WIN32
+	VkResult setSurface(Surface& surface, const Wendy::ElectronWin32Window& window, const Instance& instance);
+#elif _WIN32
 	VkResult setSurface(Surface& surface, const Wendy::Win32Window& window, const Instance& instance);
 #endif
 	void DestroySurface(Instance& instance, Surface& surface);

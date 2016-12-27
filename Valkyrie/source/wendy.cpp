@@ -36,7 +36,10 @@ int Window::getHeight() const {
 	return m_height;
 }
 
-Win32Window::Win32Window(const int width, const int height, const HINSTANCE instance_handle, PnfWindowProcesse pnf_window_processe) : Window(width, height), m_instance_handle(instance_handle), mpnf_window_processe(pnf_window_processe)
+Win32Window::Win32Window(const int width, const int height, const HINSTANCE instance_handle, PnfWindowProcesse pnf_window_processe) : 
+	Window(width, height), 
+	m_instance_handle(instance_handle), 
+	mpnf_window_processe(pnf_window_processe)
 {
 
 }
@@ -87,5 +90,23 @@ HINSTANCE Win32Window::getInstanceHandle() const {
 }
 
 HWND Win32Window::getWindowHandle() const {
+	return m_window_handle;
+}
+
+ElectronWin32Window::ElectronWin32Window(const int width, const int height, const HWND window_handle) :
+	Window(width, height),
+	m_window_handle(window_handle) {
+
+}
+
+ElectronWin32Window::~ElectronWin32Window() {
+
+}
+
+HINSTANCE Wendy::ElectronWin32Window::getInstanceHandle() const {
+	return (HINSTANCE)GetWindowLongPtr(m_window_handle, GWLP_HINSTANCE);
+}
+
+HWND ElectronWin32Window::getWindowHandle() const {
 	return m_window_handle;
 }

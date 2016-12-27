@@ -1,3 +1,5 @@
+#include <node.h>
+#include <node_buffer.h>
 #include <iostream>
 #include <Valkyrie.h>
 #include <glm/glm.hpp>
@@ -5,6 +7,14 @@
 #include <vulkan/vulkan.h>
 #include <cassert>
 #include <imgui.h>
+#include <stdlib.h>
+
+using v8::FunctionCallbackInfo;
+using v8::Isolate;
+using v8::Local;
+using v8::Object;
+using v8::String;
+using v8::Value;
 
 const std::string NORMAL_PIPELINE = "NORMAL";
 const std::string IMGUI_PIPELINE = "IMGUI";
@@ -33,15 +43,13 @@ Vulkan::MemoryTexture CreateImGuiFontsTexture(Valkyrie& valkyrie, ImGuiIO& imgui
 	return fonts_texture;
 }
 
-int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, int command_show) {
+void InitializeValkyrie(const FunctionCallbackInfo<Value>& args) {
 #pragma region INITIALIZE_VALKYRIE
-	const int width = 800;
-	const int height = 600;
-
-	Wendy::Win32Window window(width, height, instance_handle);
-	std::string title("Playground");
-	window.create(title);
+	const int width = (int)args[0]->NumberValue();
+	const int height = (int)args[1]->NumberValue();
+	HWND* p_window_handle = (HWND*)node::Buffer::Data(args[2]);
 	Valkyrie valkyrie("Valkyrie");
+	Wendy::ElectronWin32Window window(width, height, *p_window_handle);
 	valkyrie.setWindowPointer(&window);
 	valkyrie.initialize();
 	auto& imgui_io = ImGui::GetIO();
@@ -348,5 +356,12 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		}
 		vkEndCommandBuffer(command);
 	}
-	return 0;
+	Isolate* isolate = args.GetIsolate();
+	args.GetReturnValue().Set(0);
 }
+
+void init(Local<Object> exports) {
+  NODE_SET_METHOD(exports, "InitializeValkyrie", InitializeValkyrie);
+}
+
+NODE_MODULE(addon, init)

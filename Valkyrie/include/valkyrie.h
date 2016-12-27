@@ -40,8 +40,10 @@ public:
 	virtual VkResult initialize();
 	virtual VkResult render();
 	virtual bool execute();
-#ifdef WIN32
-	void setWindowPointer(Wendy::Win32Window* window_ptr);
+#ifdef _ELECTRON_WIN32
+	void Valkyrie::setWindowPointer(Wendy::ElectronWin32Window* window_ptr);
+#elif _WIN32
+	void Valkyrie::setWindowPointer(Wendy::Win32Window* window_ptr);
 #endif
 	void initializePipelineLayout(const std::string& pipeline_name);
 	void initializeDescriptorSetLayouts();
@@ -108,9 +110,12 @@ private:
 private:
 	State m_state = UNINITIALIZED;
 	std::string m_application_name;
-#ifdef WIN32
+#ifdef _ELECTRON_WIN32
+	Wendy::ElectronWin32Window* mp_window;
+#elif _WIN32
 	Wendy::Win32Window* mp_window;
 #endif
+
 };
 
 #endif

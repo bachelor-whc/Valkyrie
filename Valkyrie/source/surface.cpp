@@ -3,7 +3,11 @@
 #include "valkyrie/vulkan/physical_device.h"
 using namespace Vulkan;
 
+#ifdef _ELECTRON_WIN32
+VkResult Vulkan::setSurface(Surface& surface, const Wendy::ElectronWin32Window& window, const Instance& instance) {
+#elif _WIN32
 VkResult Vulkan::setSurface(Surface& surface, const Wendy::Win32Window& window, const Instance& instance) {
+#endif
 	VkResult result;
 #ifdef _WIN32
 	VkWin32SurfaceCreateInfoKHR surface_create = {};
