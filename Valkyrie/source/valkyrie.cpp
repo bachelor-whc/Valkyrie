@@ -234,12 +234,8 @@ bool Valkyrie::execute() {
 	return m_state == EXECUTE;
 }
 
-#ifdef _ELECTRON_WIN32
-void Valkyrie::setWindowPointer(Wendy::ElectronWin32Window* window_ptr) {
-#elif _WIN32
-void Valkyrie::setWindowPointer(Wendy::Win32Window* window_ptr) {
-#endif
-	if(window_ptr != nullptr)
+void Valkyrie::setWindowPointer(Wendy::Window* window_ptr) {
+	if (window_ptr != nullptr)
 		mp_window = window_ptr;
 }
 

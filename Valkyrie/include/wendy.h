@@ -20,6 +20,9 @@ namespace Wendy {
 		int getWidth() const;
 		int getHeight() const;
 
+		virtual HINSTANCE getHINSTANCE() const = 0;
+		virtual HWND getHWND() const = 0;
+
 	private:
 		int m_width;
 		int m_height;
@@ -32,8 +35,8 @@ namespace Wendy {
 		virtual ~Win32Window();
 		virtual bool create(const std::string& window_title);
 
-		HINSTANCE getInstanceHandle() const;
-		HWND getWindowHandle() const;
+		virtual HINSTANCE getHINSTANCE() const;
+		virtual HWND getHWND() const;
 
 	private:
 		HINSTANCE m_instance_handle;
@@ -48,8 +51,8 @@ namespace Wendy {
 		virtual ~ElectronWin32Window();
 		virtual bool create(const std::string& window_title) { return true; };
 
-		HINSTANCE getInstanceHandle() const;
-		HWND getWindowHandle() const;
+		virtual HINSTANCE getHINSTANCE() const;
+		virtual HWND getHWND() const;
 
 	private:
 		HINSTANCE m_instance_handle;

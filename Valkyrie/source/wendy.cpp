@@ -85,11 +85,11 @@ bool Win32Window::create(const std::string& window_title) {
 	return m_window_handle != NULL;
 }
 
-HINSTANCE Win32Window::getInstanceHandle() const {
+HINSTANCE Win32Window::getHINSTANCE() const {
 	return m_instance_handle;
 }
 
-HWND Win32Window::getWindowHandle() const {
+HWND Win32Window::getHWND() const {
 	return m_window_handle;
 }
 
@@ -103,10 +103,10 @@ ElectronWin32Window::~ElectronWin32Window() {
 
 }
 
-HINSTANCE Wendy::ElectronWin32Window::getInstanceHandle() const {
+HINSTANCE Wendy::ElectronWin32Window::getHINSTANCE() const {
 	return (HINSTANCE)GetWindowLongPtr(m_window_handle, GWLP_HINSTANCE);
 }
 
-HWND ElectronWin32Window::getWindowHandle() const {
+HWND ElectronWin32Window::getHWND() const {
 	return m_window_handle;
 }
