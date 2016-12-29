@@ -254,6 +254,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	std::vector<void*> parameter({ &valkyrie, &p_normal_pipeline });
 	const VkDeviceSize imgui_offsets[1] = { 0 };
 
+	bool test_window = true;
+
 	int count = 0;
 	while (valkyrie.execute()) {
 		rotation.x += 0.01f;
@@ -264,8 +266,11 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = glm::rotate(mvp.model, rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 		normal_uniform_buffer.write(&mvp, 0);
 
+		const auto& mouse_pos = imgui_io.MousePos;
 		ImGui::NewFrame();
 		ImGui::Text(std::to_string(count++).c_str());
+		ImGui::Text((std::to_string(mouse_pos.x) + ", " + std::to_string(mouse_pos.y)).c_str());
+		ImGui::ShowTestWindow(&test_window);
 		ImGui::Render();
 		auto draw_data = ImGui::GetDrawData();
 

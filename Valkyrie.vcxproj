@@ -25,6 +25,7 @@
     <ClInclude Include="Valkyrie\include\valkyrie\image.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\render_function.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\thread.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\UI\user_input.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\attachment.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_buffer.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\debug.h" />
@@ -76,6 +77,7 @@
     <ClCompile Include="Valkyrie\source\texture.cpp" />
     <ClCompile Include="Valkyrie\source\thread.cpp" />
     <ClCompile Include="Valkyrie\source\tool.cpp" />
+    <ClCompile Include="Valkyrie\source\user_input.cpp" />
     <ClCompile Include="Valkyrie\source\valkyrie.cpp" />
     <ClCompile Include="Valkyrie\source\vertex_input.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan_debug.cpp" />

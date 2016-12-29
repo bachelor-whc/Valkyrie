@@ -1,6 +1,8 @@
+#include <imgui.h>
 #include "valkyrie.h"
 #include "valkyrie/vulkan/tool.h"
 #include "valkyrie/vulkan/debug.h"
+#include "valkyrie/UI/user_input.h"
 using namespace Vulkan;
 
 Valkyrie* Valkyrie::gp_valkyrie = nullptr;
@@ -117,9 +119,53 @@ void Valkyrie::initializePipelineCache() {
 	assert(result == VK_SUCCESS);
 }
 
+void Valkyrie::initializeImGuiInput() {
+	auto& imgui_io = ImGui::GetIO();
+	imgui_io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
+	imgui_io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
+	imgui_io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
+	imgui_io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
+	imgui_io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
+	imgui_io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
+	imgui_io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
+	imgui_io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
+	imgui_io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
+	imgui_io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
+	imgui_io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
+	imgui_io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
+	imgui_io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
+	imgui_io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
+	imgui_io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
+	imgui_io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
+	imgui_io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
+	imgui_io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
+	imgui_io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+
+	glfwSetKeyCallback(mp_window, GLFWKeyBoardCallback);
+	glfwSetMouseButtonCallback(mp_window, GLFWMouseButtonCallback);
+	glfwSetScrollCallback(mp_window, GLFWScrollCallback);
+}
+
+void Valkyrie::updateUserInput() {
+	auto& imgui_io = ImGui::GetIO();
+	if(glfwGetWindowAttrib(mp_window, GLFW_FOCUSED)) {
+		double mouse_x, mouse_y;
+		glfwGetCursorPos(mp_window, &mouse_x, &mouse_y);
+		imgui_io.MousePos = ImVec2((float)mouse_x, (float)mouse_y);
+	}
+	else
+		imgui_io.MousePos = ImVec2(-1, -1);
+	for (int i = 0; i < 3; ++i) {
+		imgui_io.MouseDown[i] = userInput.mousePressed[i];
+	}
+	imgui_io.MouseWheel = userInput.mouseWheel;
+	userInput.mouseWheel = 0.0f;
+}
+
 bool Valkyrie::execute() {
 	if(!glfwWindowShouldClose(mp_window)) {
 		glfwPollEvents();
+		updateUserInput();
 		render();
 		return true;
 	}
@@ -160,6 +206,8 @@ VkResult Valkyrie::initialize() {
 	for (auto& command : renderCommands) {
 		command = m_thread_ptrs[0]->createCommandBuffer();
 	}
+
+	initializeImGuiInput();
 
 	return VK_SUCCESS;
 }

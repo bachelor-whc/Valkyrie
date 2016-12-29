@@ -22,6 +22,7 @@
 #include "valkyrie/vulkan/image_texture.h"
 #include "valkyrie/vulkan/memory_texture.h"
 #include "valkyrie/render_function.h"
+#include "valkyrie/UI/user_input.h"
 
 class ValkyrieWindow;
 
@@ -71,6 +72,7 @@ public:
 	std::map<std::string, Vulkan::PipelinePointer> pipelines;
 	std::map<std::string, Vulkan::ShaderPointer> shaders;
 	Vulkan::DescriptorPool descriptorPool;
+	UserInput userInput = {};
 	
 private:
 	static Valkyrie* gp_valkyrie;
@@ -87,6 +89,9 @@ private:
 	void initializeRenderPass();
 	void initializeFramebuffers();
 	void initializePipelineCache();
+	void initializeImGuiInput();
+	
+	void updateUserInput();
 
 private:
 	Vulkan::Instance m_instatnce;

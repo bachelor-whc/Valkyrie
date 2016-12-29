@@ -141,6 +141,9 @@
     <ClInclude Include="Valkyrie\third_party\GLFW\glfw3native.h">
       <Filter>Header Files\third_party\glfw</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\UI\user_input.h">
+      <Filter>Header Files\valkyrie\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\source\valkyrie.cpp">
@@ -222,6 +225,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\render_function.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\user_input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
