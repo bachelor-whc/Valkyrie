@@ -270,6 +270,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		ImGui::NewFrame();
 		ImGui::Text(std::to_string(count++).c_str());
 		ImGui::Text((std::to_string(mouse_pos.x) + ", " + std::to_string(mouse_pos.y)).c_str());
+		ImGui::Text(std::to_string(valkyrie.getFPS()).c_str());
 		ImGui::ShowTestWindow(&test_window);
 		ImGui::Render();
 		auto draw_data = ImGui::GetDrawData();

@@ -143,6 +143,7 @@ void Valkyrie::initializeImGuiInput() {
 
 	glfwSetKeyCallback(mp_window, GLFWKeyBoardCallback);
 	glfwSetMouseButtonCallback(mp_window, GLFWMouseButtonCallback);
+	glfwSetCharCallback(mp_window, GLFWCharCallback);
 	glfwSetScrollCallback(mp_window, GLFWScrollCallback);
 }
 
@@ -162,10 +163,19 @@ void Valkyrie::updateUserInput() {
 	userInput.mouseWheel = 0.0f;
 }
 
+void Valkyrie::updateTime() {
+	m_current_timestamp = glfwGetTime();
+	m_deltatime = m_current_timestamp - m_previous_timestamp;
+	m_previous_timestamp = m_current_timestamp;
+	auto& imgui_io = ImGui::GetIO();
+	imgui_io.DeltaTime = (float)m_deltatime;
+}
+
 bool Valkyrie::execute() {
 	if(!glfwWindowShouldClose(mp_window)) {
 		glfwPollEvents();
 		updateUserInput();
+		updateTime();
 		render();
 		return true;
 	}

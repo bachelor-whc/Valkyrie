@@ -63,8 +63,9 @@ public:
 	inline VkRenderPass getRenderPassHandle() { return m_render_pass.handle; }
 	inline VkFramebuffer getFramebuffer(int index) { return mp_swapchain->getFramebuffers()->handles[index]; }
 	inline VkImage getSwapChainImage(int index) { return mp_swapchain->getImage(index); }
-
 	inline Vulkan::Queue& getGraphicsQueue() { return m_graphics_queue; }
+
+	inline double getFPS() { return (1 / m_deltatime); }
 
 	std::vector<Vulkan::CommandBuffer> renderCommands;
 	std::map<std::string, Vulkan::VertexInputPointer> vertexInputs;
@@ -92,6 +93,7 @@ private:
 	void initializeImGuiInput();
 	
 	void updateUserInput();
+	void updateTime();
 
 private:
 	Vulkan::Instance m_instatnce;
@@ -112,6 +114,9 @@ private:
 private:
 	std::string m_application_name;
 	GLFWwindow* mp_window;
+	double m_previous_timestamp = 0.0;
+	double m_current_timestamp = 0.0;
+	double m_deltatime = 0.0;
 };
 
 #endif
