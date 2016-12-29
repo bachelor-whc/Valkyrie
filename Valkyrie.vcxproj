@@ -51,6 +51,8 @@
     <ClInclude Include="Valkyrie\third_party\imconfig.h" />
     <ClInclude Include="Valkyrie\third_party\imgui.h" />
     <ClInclude Include="Valkyrie\third_party\imgui_internal.h" />
+    <ClInclude Include="Valkyrie\third_party\json.hpp" />
+    <ClInclude Include="Valkyrie\third_party\stb_image.h" />
     <ClInclude Include="Valkyrie\third_party\stb_rect_pack.h" />
     <ClInclude Include="Valkyrie\third_party\stb_textedit.h" />
     <ClInclude Include="Valkyrie\third_party\stb_truetype.h" />
@@ -65,7 +67,7 @@
     <ClCompile Include="Valkyrie\source\memory_texture.cpp" />
     <ClCompile Include="Valkyrie\source\physical_device.cpp" />
     <ClCompile Include="Valkyrie\source\pipeline.cpp" />
-    <ClCompile Include="Valkyrie\source\png.cpp" />
+    <ClCompile Include="Valkyrie\source\valkyrie_stb.cpp" />
     <ClCompile Include="Valkyrie\source\png_texture.cpp" />
     <ClCompile Include="Valkyrie\source\queue.cpp" />
     <ClCompile Include="Valkyrie\source\render_function.cpp" />
@@ -165,7 +167,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -179,7 +181,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -195,7 +197,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -213,7 +215,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

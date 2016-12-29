@@ -1,6 +1,5 @@
 #ifndef _VALKYRIE_IMAGE_H 
-#define _VALKYRIE_IMAGE_H  
-#include <png.h>
+#define _VALKYRIE_IMAGE_H 
 #include "utility.h"
 
 class ValkyrieRGBA32 {
@@ -42,10 +41,10 @@ public:
 	virtual ~ValkyrieImageFile() {};
 };
 
-class ValkyriePNG : public ValkyrieImageFile {
+class ValkyrieSTB : public ValkyrieImageFile {
 public:
-	ValkyriePNG();
-	virtual ~ValkyriePNG();
+	ValkyrieSTB();
+	virtual ~ValkyrieSTB();
 
 	virtual bool load(const std::string file_path);
 	virtual int getWidth() const { return m_width; }
@@ -55,11 +54,10 @@ public:
 	virtual size_t getSize() const { return m_size; }
 
 private:
-	png_bytep mp_data;
+	unsigned char* mp_data;
 	int m_width;
 	int m_height;
-	png_byte m_color;
-	png_byte m_depth;
+	int m_channels;
 	size_t m_size;
 };
 

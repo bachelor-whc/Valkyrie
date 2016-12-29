@@ -67,7 +67,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::MemoryBuffer normal_uniform_buffer;
 	Vulkan::MemoryBuffer imgui_vertex_buffer;
 	Vulkan::MemoryBuffer imgui_index_buffer;
-	ValkyrieImageFilePointer png_ptr = std::make_shared<ValkyriePNG>();
+	ValkyrieImageFilePointer png_ptr = std::make_shared<ValkyrieSTB>();
 	Vulkan::ImageTexture texture(png_ptr);
 	
 	texture.load("wang.png");
