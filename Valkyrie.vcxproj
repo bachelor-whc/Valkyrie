@@ -45,7 +45,8 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\texture.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\tool.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\vertex_input.h" />
-    <ClInclude Include="Valkyrie\include\wendy.h" />
+    <ClInclude Include="Valkyrie\third_party\GLFW\glfw3.h" />
+    <ClInclude Include="Valkyrie\third_party\GLFW\glfw3native.h" />
     <ClInclude Include="Valkyrie\third_party\imconfig.h" />
     <ClInclude Include="Valkyrie\third_party\imgui.h" />
     <ClInclude Include="Valkyrie\third_party\imgui_internal.h" />
@@ -78,7 +79,6 @@
     <ClCompile Include="Valkyrie\source\valkyrie.cpp" />
     <ClCompile Include="Valkyrie\source\vertex_input.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan_debug.cpp" />
-    <ClCompile Include="Valkyrie\source\wendy.cpp" />
     <ClCompile Include="Valkyrie\third_party\imgui.cpp" />
     <ClCompile Include="Valkyrie\third_party\imgui_demo.cpp" />
     <ClCompile Include="Valkyrie\third_party\imgui_draw.cpp" />

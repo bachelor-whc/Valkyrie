@@ -1,5 +1,6 @@
 #ifndef _VALKYRIE_H 
 #define _VALKYRIE_H
+#define GLFW_INCLUDE_VULKAN
 #include "utility.h"
 #include "valkyrie/vulkan/instance.h"
 #include "valkyrie/vulkan/physical_device.h"
@@ -21,7 +22,6 @@
 #include "valkyrie/vulkan/image_texture.h"
 #include "valkyrie/vulkan/memory_texture.h"
 #include "valkyrie/render_function.h"
-#include "wendy.h"
 
 class ValkyrieWindow;
 
@@ -37,11 +37,11 @@ public:
 	Valkyrie(std::string application_name);
 	virtual ~Valkyrie();
 
+	virtual bool execute();
 	virtual VkResult initialize();
 	virtual VkResult render();
-	virtual bool execute();
 
-	void setWindowPointer(Wendy::Window* window_ptr);
+	void initializeWindow(int width, int height, const std::string& title);
 	void initializePipelineLayout(const std::string& pipeline_name);
 	void initializeDescriptorSetLayouts();
 	void createPipelineModule(const std::string& pipename_name);
@@ -105,10 +105,8 @@ private:
 	std::map<std::string, ValkyrieRenderPFN> m_render_pfns;
 
 private:
-	State m_state = UNINITIALIZED;
 	std::string m_application_name;
-	Wendy::Window* mp_window;
-
+	GLFWwindow* mp_window;
 };
 
 #endif

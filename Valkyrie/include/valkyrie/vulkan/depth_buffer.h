@@ -1,7 +1,6 @@
 #ifndef _VULKAN_DEPTH_BUFFER_H
 #define _VULKAN_DEPTH_BUFFER_H
 #include "utility.h"
-#include "wendy.h"
 #include "valkyrie/vulkan/attachment.h"
 
 namespace Vulkan{
@@ -13,7 +12,7 @@ namespace Vulkan{
 		DepthBuffer();
 		virtual ~DepthBuffer();
 
-		VkResult initializeImages(CommandBuffer& buffer, const Wendy::Window& window);
+		VkResult initializeImages(CommandBuffer& buffer, GLFWwindow* p_window);
 		virtual VkAttachmentDescription getAttachmentDescription() const;
 
 		VkFormat format = VK_FORMAT_UNDEFINED;

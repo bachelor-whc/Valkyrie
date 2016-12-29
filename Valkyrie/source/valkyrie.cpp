@@ -7,6 +7,10 @@ Valkyrie* Valkyrie::gp_valkyrie = nullptr;
 VkDevice g_device_handle = VK_NULL_HANDLE;
 VkPhysicalDevice g_physical_device_handle = VK_NULL_HANDLE;
 
+void glfwRefreshCallback(GLFWwindow * window) {
+	Valkyrie::getGlobalValkyriePtr()->render();
+}
+
 Valkyrie::Valkyrie(std::string application_name) :
 	m_application_name(application_name),
 	mp_window(nullptr),
@@ -14,9 +18,7 @@ Valkyrie::Valkyrie(std::string application_name) :
 	mp_depth_buffer(nullptr),
 	descriptorPool(8),
 	m_render_pfns() {
-#ifdef _WIN32
-	
-#endif
+
 }
 
 Valkyrie::~Valkyrie() {
@@ -30,6 +32,7 @@ Valkyrie::~Valkyrie() {
 	DestroyInstance(m_instatnce);
 	delete mp_swapchain;
 	delete mp_depth_buffer;
+	glfwDestroyWindow(mp_window);
 }
 
 void Valkyrie::initializeInstance() {
@@ -54,7 +57,7 @@ void Valkyrie::initializeDevice() {
 
 void Valkyrie::initializeSurface() {
 	VkResult result;
-	result = setSurface(m_surface, *mp_window, m_instatnce);
+	result = setSurface(m_surface, mp_window, m_instatnce);
 	assert(result == VK_SUCCESS);
 }
 
@@ -68,7 +71,7 @@ void Valkyrie::initializeThreads() {
 
 void Valkyrie::initializeSwapChain(CommandBuffer& command_bufer) {
 	VkResult result;
-	mp_swapchain = NEW_NT SwapChain(m_surface, *mp_window);
+	mp_swapchain = NEW_NT SwapChain(m_surface, mp_window);
 	result = mp_swapchain->initializeImages(m_surface, command_bufer);
 	assert(result == VK_SUCCESS);
 }
@@ -76,7 +79,7 @@ void Valkyrie::initializeSwapChain(CommandBuffer& command_bufer) {
 void Valkyrie::initializeDepthBuffer(CommandBuffer& command_bufer) {
 	VkResult result;
 	mp_depth_buffer = NEW_NT DepthBuffer();
-	result = mp_depth_buffer->initializeImages(command_bufer, *mp_window);
+	result = mp_depth_buffer->initializeImages(command_bufer, mp_window);
 	assert(result == VK_SUCCESS);
 }
 
@@ -114,14 +117,21 @@ void Valkyrie::initializePipelineCache() {
 	assert(result == VK_SUCCESS);
 }
 
+bool Valkyrie::execute() {
+	if(!glfwWindowShouldClose(mp_window)) {
+		glfwPollEvents();
+		render();
+		return true;
+	}
+	return false;
+}
+
 VkResult Valkyrie::initialize() {
 	VkResult result;
 	gp_valkyrie = this;
 
 	assert(mp_window != nullptr);
 	initializeInstance();
-
-	//Vulkan::SetupDebug(m_instatnce, VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT, NULL);
 
 	initializePhysicalDevice();
 	initializeDevice();
@@ -151,7 +161,6 @@ VkResult Valkyrie::initialize() {
 		command = m_thread_ptrs[0]->createCommandBuffer();
 	}
 
-	m_state = INITIALIZED;
 	return VK_SUCCESS;
 }
 
@@ -216,27 +225,10 @@ VkResult Valkyrie::render() {
 	return VK_SUCCESS;
 }
 
-bool Valkyrie::execute() {
-	if (m_state == INITIALIZED)
-		m_state = EXECUTE;
-
-	static MSG message;
-	PeekMessage(&message, NULL, 0, 0, PM_REMOVE);
-	if (message.message == WM_QUIT) {
-		return false;
-	}
-	else {
-		TranslateMessage(&message);
-		DispatchMessage(&message);
-		VkResult result = render();
-		assert(result == VK_SUCCESS);
-	}
-	return m_state == EXECUTE;
-}
-
-void Valkyrie::setWindowPointer(Wendy::Window* window_ptr) {
-	if (window_ptr != nullptr)
-		mp_window = window_ptr;
+void Valkyrie::initializeWindow(int width, int height, const std::string & title) {
+	glfwInit();
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	mp_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 }
 
 void Valkyrie::initializePipelineLayout(const std::string& pipeline_name) {
@@ -293,8 +285,11 @@ void Valkyrie::writeSets(const std::vector<VkWriteDescriptorSet>& writes) {
 }
 
 void Valkyrie::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
-	m_viewport.width = (float)mp_window->getWidth();
-	m_viewport.height = (float)mp_window->getHeight();
+	int width;
+	int height;
+	glfwGetWindowSize(mp_window, &width, &height);
+	m_viewport.width = (float)width;
+	m_viewport.height = (float)height;
 	m_viewport.minDepth = 0.0f;
 	m_viewport.maxDepth = 1.0f;
 	m_viewport.x = 0;
@@ -303,8 +298,11 @@ void Valkyrie::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
 }
 
 void Valkyrie::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
-	m_scissor.extent.width = (uint32_t)mp_window->getWidth();
-	m_scissor.extent.height = (uint32_t)mp_window->getHeight();
+	int width;
+	int height;
+	glfwGetWindowSize(mp_window, &width, &height);
+	m_scissor.extent.width = (uint32_t)width;
+	m_scissor.extent.height = (uint32_t)height;
 	m_scissor.offset.x = 0;
 	m_scissor.offset.y = 0;
 	vkCmdSetScissor(command_buffer.handle, 0, 1, &m_scissor);

@@ -3,19 +3,11 @@
 #include "valkyrie/vulkan/physical_device.h"
 using namespace Vulkan;
 
-VkResult Vulkan::setSurface(Surface& surface, const Wendy::Window& window, const Instance& instance) {
+VkResult Vulkan::setSurface(Surface& surface, GLFWwindow* p_window, const Instance& instance) {
 	VkResult result;
-#ifdef _WIN32
-	VkWin32SurfaceCreateInfoKHR surface_create = {};
-	surface_create.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	surface_create.hinstance = window.getHINSTANCE();
-	surface_create.hwnd = window.getHWND();
-	result = vkCreateWin32SurfaceKHR(instance.handle, &surface_create, nullptr, &surface.handle);
-#elif
+	glfwCreateWindowSurface(instance.handle, p_window, nullptr, &surface.handle);
 
-#endif
 	uint32_t format_count;
-	//result = vkGetPhysicalDeviceSurfaceFormatsKHR(g_physical_device_handle, surface.handle, &format_count, NULL);
 	result = vkGetPhysicalDeviceSurfaceFormatsKHR(g_physical_device_handle, surface.handle, &format_count, NULL);
 	
 	VkSurfaceFormatKHR* surface_format = NEW_NT VkSurfaceFormatKHR[format_count];

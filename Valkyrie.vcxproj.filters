@@ -34,6 +34,9 @@
     <Filter Include="Source Files\third_party\imgui">
       <UniqueIdentifier>{81a2e7e2-2013-4cca-81ac-e074aa225673}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\third_party\glfw">
+      <UniqueIdentifier>{d9581b31-91f9-41b4-b4c1-387ab69bf6ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Valkyrie\include\valkyrie.h">
@@ -65,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\tool.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Valkyrie\include\wendy.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_buffer.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
@@ -135,6 +135,12 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\third_party\GLFW\glfw3.h">
+      <Filter>Header Files\third_party\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\third_party\GLFW\glfw3native.h">
+      <Filter>Header Files\third_party\glfw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\source\valkyrie.cpp">
@@ -156,9 +162,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\swapchain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\wendy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\command_buffer.cpp">

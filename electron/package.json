@@ -1,8 +1,0 @@
-{
-  "name": "valkyrie-electron",
-  "version": "0.0.1",
-  "main": "valkyrie.js",
-  "devDependencies": {
-    "electron-rebuild": "^1.4.0"
-  }
-}

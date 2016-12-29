@@ -35,14 +35,12 @@ Vulkan::MemoryTexture CreateImGuiFontsTexture(Valkyrie& valkyrie, ImGuiIO& imgui
 
 int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, int command_show) {
 #pragma region INITIALIZE_VALKYRIE
-	const int width = 800;
-	const int height = 600;
+	const int width = 1024;
+	const int height = 768;
 
-	Wendy::Win32Window window(width, height, instance_handle);
 	std::string title("Playground");
-	window.create(title);
 	Valkyrie valkyrie("Valkyrie");
-	valkyrie.setWindowPointer(&window);
+	valkyrie.initializeWindow(width, height, title);
 	valkyrie.initialize();
 	auto& imgui_io = ImGui::GetIO();
 	imgui_io.DisplaySize.x = width;

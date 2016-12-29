@@ -47,15 +47,16 @@ void Framebuffers::initialize(const RenderPass& render_pass, const int width, co
 	}
 }
 
-SwapChain::SwapChain(const Surface& surface, const Wendy::Window& window) :
+SwapChain::SwapChain(const Surface& surface, GLFWwindow* window) :
 	mp_framebuffers(nullptr),
 	m_current_buffer(-1),
-	m_width(window.getWidth()),
-	m_height(window.getHeight()),
+	m_width(0),
+	m_height(0),
 	m_images_initialized(false) {
 	VkResult result = VK_SUCCESS;
 	VkSurfaceCapabilitiesKHR surface_capabilities = {};
 
+	glfwGetWindowSize(window, &m_width, &m_height);
 	// Specification:
 	// To query the basic capabilities of a surface, needed in order to create a swapchain.
 	result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(g_physical_device_handle, surface.handle, &surface_capabilities);

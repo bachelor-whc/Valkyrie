@@ -31,15 +31,19 @@ DepthBuffer::~DepthBuffer() {
 
 }
 
-VkResult DepthBuffer::initializeImages(CommandBuffer& buffer, const Wendy::Window& window) {
+VkResult DepthBuffer::initializeImages(CommandBuffer& buffer, GLFWwindow* p_window) {
 	VkResult result;
 	
+	int width;
+	int height;
+	glfwGetWindowSize(p_window, &width, &height);
+
 	VkImageCreateInfo image_create = {};
 	image_create.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	image_create.imageType = VK_IMAGE_TYPE_2D;
 	image_create.format = format;
-	image_create.extent.width = window.getWidth();
-	image_create.extent.height = window.getHeight();
+	image_create.extent.width = width;
+	image_create.extent.height = height;
 	image_create.extent.depth = 1;
 	image_create.mipLevels = 1;
 	image_create.arrayLayers = 1;

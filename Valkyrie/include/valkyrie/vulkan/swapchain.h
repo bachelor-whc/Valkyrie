@@ -1,7 +1,6 @@
 #ifndef _VULKAN_SWAPCHAIN_H
 #define _VULKAN_SWAPCHAIN_H
 #include "utility.h"
-#include "wendy.h"
 
 namespace Vulkan {
 	struct Device;
@@ -33,7 +32,7 @@ namespace Vulkan {
 	class SwapChain {
 	public:
 		SwapChain() = delete;
-		SwapChain(const Surface& surface, const Wendy::Window& window);
+		SwapChain(const Surface& surface, GLFWwindow* p_window);
 		virtual ~SwapChain();
 
 		VkResult initializeImages(const Surface& surface, CommandBuffer& buffer);

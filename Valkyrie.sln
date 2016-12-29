@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Valkyrie", "Valkyrie.vcxproj", "{56B138DF-ABBC-4FBB-A41D-DBDF69B799AD}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -19,6 +19,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "libpng\libpng.vcxproj", "{6833AE17-33A3-47FC-A86F-A2881BA2D393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcxproj", "{6137B3F7-CDFC-4308-98EE-69B9F7A86541}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfw", "glfw\glfw.vcxproj", "{610C4190-0530-4C1E-9955-3F1747246CE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,14 @@ Global
 		{6137B3F7-CDFC-4308-98EE-69B9F7A86541}.Release|x64.Build.0 = Release|x64
 		{6137B3F7-CDFC-4308-98EE-69B9F7A86541}.Release|x86.ActiveCfg = Release|Win32
 		{6137B3F7-CDFC-4308-98EE-69B9F7A86541}.Release|x86.Build.0 = Release|Win32
+		{610C4190-0530-4C1E-9955-3F1747246CE6}.Debug|x64.ActiveCfg = Debug|x64
+		{610C4190-0530-4C1E-9955-3F1747246CE6}.Debug|x64.Build.0 = Debug|x64
+		{610C4190-0530-4C1E-9955-3F1747246CE6}.Debug|x86.ActiveCfg = Debug|Win32
+		{610C4190-0530-4C1E-9955-3F1747246CE6}.Debug|x86.Build.0 = Debug|Win32
+		{610C4190-0530-4C1E-9955-3F1747246CE6}.Release|x64.ActiveCfg = Release|x64
+		{610C4190-0530-4C1E-9955-3F1747246CE6}.Release|x64.Build.0 = Release|x64
+		{610C4190-0530-4C1E-9955-3F1747246CE6}.Release|x86.ActiveCfg = Release|Win32
+		{610C4190-0530-4C1E-9955-3F1747246CE6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
