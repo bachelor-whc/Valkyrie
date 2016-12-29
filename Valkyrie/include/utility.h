@@ -37,5 +37,4 @@ public:
 	virtual bool load(const std::string file_path) = 0;
 };
 
-
 #endif
