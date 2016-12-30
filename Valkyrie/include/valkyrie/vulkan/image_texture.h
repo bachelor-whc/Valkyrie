@@ -7,7 +7,7 @@ namespace Vulkan {
 	class ImageTexture : public Texture {
 	public:
 		ImageTexture() = delete;
-		ImageTexture(const ValkyrieImageFilePointer& texture_ptr);
+		ImageTexture(const Valkyrie::ImageFilePointer& texture_ptr);
 		virtual VkResult initializeImage() override;
 		virtual VkResult allocate()  override;
 		virtual VkResult write()  override;
@@ -15,7 +15,7 @@ namespace Vulkan {
 
 		virtual bool load(const std::string& file_path) { return mp_image->load(file_path); };
 	private:
-		ValkyrieImageFilePointer mp_image = nullptr;
+		Valkyrie::ImageFilePointer mp_image = nullptr;
 		uint32_t m_size;
 	};
 }

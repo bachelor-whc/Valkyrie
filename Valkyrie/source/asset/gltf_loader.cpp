@@ -1,11 +1,11 @@
 #include "valkyrie/asset/gltf_loader.h"
 #include "valkyrie/asset/gltf_asset.h"
 
-ValkyrieglTFPtr glTFLoader::load(const std::string& filename) {
+Valkyrie::glTFAssetPtr Valkyrie::glTFLoader::load(const std::string& filename) {
 	JSON json;
 	std::ifstream file(filename);
 	assert(file.is_open());
 	file >> json;
-	ValkyrieglTFPtr ptr = std::make_shared<ValkyrieglTF>(json);
+	Valkyrie::glTFAssetPtr ptr = std::make_shared<Valkyrie::glTFAsset>(json);
 	return ptr;
 }

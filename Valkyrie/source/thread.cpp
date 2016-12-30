@@ -2,7 +2,7 @@
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/queue.h"
 
-ValkyrieThread::ValkyrieThread(const Vulkan::Queue& queue) {
+Valkyrie::Thread::Thread(const Vulkan::Queue& queue) {
 	VkResult result;
 	VkCommandPoolCreateInfo command_pool_create = {};
 	command_pool_create.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -13,11 +13,11 @@ ValkyrieThread::ValkyrieThread(const Vulkan::Queue& queue) {
 	assert(result == VK_SUCCESS);
 }
 
-ValkyrieThread::~ValkyrieThread() {
+Valkyrie::Thread::~Thread() {
 	vkDestroyCommandPool(m_device, m_command_pool, nullptr);
 }
 
-Vulkan::CommandBuffer ValkyrieThread::createCommandBuffer() {
+Vulkan::CommandBuffer Valkyrie::Thread::createCommandBuffer() {
 	Vulkan::CommandBuffer command_buffer;
 	VkCommandBufferAllocateInfo command_buffer_allocate = {};
 	command_buffer_allocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -29,7 +29,7 @@ Vulkan::CommandBuffer ValkyrieThread::createCommandBuffer() {
 	return command_buffer;
 }
 
-Vulkan::SecondaryCommandBuffers ValkyrieThread::createSecondaryCommandBuffers(const uint32_t count) {
+Vulkan::SecondaryCommandBuffers Valkyrie::Thread::createSecondaryCommandBuffers(const uint32_t count) {
 	Vulkan::SecondaryCommandBuffers command_buffers;
 	VkCommandBufferAllocateInfo command_buffer_allocate = {};
 	command_buffers.resize(count);

@@ -4,12 +4,14 @@
 #include "utility.h"
 #include "gltf_asset.h"
 
-class glTFLoader {
-public:
-	glTFLoader() {};
-	virtual ~glTFLoader() {};
+namespace Valkyrie {
+	class glTFLoader {
+	public:
+		glTFLoader() {};
+		virtual ~glTFLoader() {};
 
-	ValkyrieglTFPtr load(const std::string& filename);
-};
+		glTFAssetPtr load(const std::string& filename);
+	};
+}
 
 #endif

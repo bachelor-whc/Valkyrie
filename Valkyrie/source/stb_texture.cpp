@@ -3,7 +3,7 @@
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/physical_device.h"
 
-Vulkan::ImageTexture::ImageTexture(const ValkyrieImageFilePointer& texture_ptr) : Texture(), mp_image(texture_ptr) {
+Vulkan::ImageTexture::ImageTexture(const Valkyrie::ImageFilePointer& texture_ptr) : Texture(), mp_image(texture_ptr) {
 
 }
 

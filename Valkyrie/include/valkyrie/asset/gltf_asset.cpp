@@ -1,9 +1,9 @@
 #include "gltf_asset.h"
 
-ValkyrieglTF::ValkyrieglTF(const JSON& src) : m_json(src) {
+Valkyrie::glTFAsset::glTFAsset(const JSON& src) : m_json(src) {
 
 }
 
-void ValkyrieglTF::setJSON(const JSON& src) {
+void Valkyrie::glTFAsset::setJSON(const JSON& src) {
 	m_json = src;
 }

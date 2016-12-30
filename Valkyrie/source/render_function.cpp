@@ -1,14 +1,14 @@
 #include "utility.h"
 #include "valkyrie/render_function.h"
 
-ValkyrieRenderFunction::ValkyrieRenderFunction() {
+Valkyrie::RenderFunction::RenderFunction() {
 
 }
 
-ValkyrieRenderFunction::~ValkyrieRenderFunction() {
+Valkyrie::RenderFunction::~RenderFunction() {
 
 }
 
-void ValkyrieRenderFunction::render(const std::vector<void*>& data, uint32_t current_buffer) {
+void Valkyrie::RenderFunction::render(const std::vector<void*>& data, uint32_t current_buffer) {
 	implement(data, current_buffer);
 }

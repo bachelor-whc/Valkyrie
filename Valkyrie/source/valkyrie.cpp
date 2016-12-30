@@ -5,15 +5,15 @@
 #include "valkyrie/UI/user_input.h"
 using namespace Vulkan;
 
-Valkyrie* Valkyrie::gp_valkyrie = nullptr;
+ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
 VkDevice g_device_handle = VK_NULL_HANDLE;
 VkPhysicalDevice g_physical_device_handle = VK_NULL_HANDLE;
 
 void glfwRefreshCallback(GLFWwindow * window) {
-	Valkyrie::getGlobalValkyriePtr()->render();
+	ValkyrieEngine::getGlobalValkyriePtr()->render();
 }
 
-Valkyrie::Valkyrie(std::string application_name) :
+ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	m_application_name(application_name),
 	mp_window(nullptr),
 	mp_swapchain(nullptr),
@@ -23,7 +23,7 @@ Valkyrie::Valkyrie(std::string application_name) :
 
 }
 
-Valkyrie::~Valkyrie() {
+ValkyrieEngine::~ValkyrieEngine() {
 	DestroyPipelineCache();
 	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
 	DestroySwapChain(*mp_swapchain);
@@ -37,55 +37,55 @@ Valkyrie::~Valkyrie() {
 	glfwDestroyWindow(mp_window);
 }
 
-void Valkyrie::initializeInstance() {
+void ValkyrieEngine::initializeInstance() {
 	VkResult result;
 	result = CreateInstance(m_application_name.c_str(), m_instatnce);
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializePhysicalDevice() {
+void ValkyrieEngine::initializePhysicalDevice() {
 	VkResult result;
 	result = CreatePhysicalDevice(m_instatnce, m_physical_device);
 	g_physical_device_handle = m_physical_device.handle;
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeDevice() {
+void ValkyrieEngine::initializeDevice() {
 	VkResult result;
 	result = CreateDevice(m_device);
 	g_device_handle = m_device.handle;
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeSurface() {
+void ValkyrieEngine::initializeSurface() {
 	VkResult result;
 	result = setSurface(m_surface, mp_window, m_instatnce);
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeThreads() {
+void ValkyrieEngine::initializeThreads() {
 	bool queue_got = GetQueue(VK_QUEUE_GRAPHICS_BIT, m_graphics_queue);
 	assert(queue_got == true);
 
-	ThreadPointer p_thread = NEW_NT ValkyrieThread(m_graphics_queue);
+	ThreadPointer p_thread = NEW_NT Valkyrie::Thread(m_graphics_queue);
 	m_thread_ptrs.push_back(p_thread);
 }
 
-void Valkyrie::initializeSwapChain(CommandBuffer& command_bufer) {
+void ValkyrieEngine::initializeSwapChain(CommandBuffer& command_bufer) {
 	VkResult result;
 	mp_swapchain = NEW_NT SwapChain(m_surface, mp_window);
 	result = mp_swapchain->initializeImages(m_surface, command_bufer);
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeDepthBuffer(CommandBuffer& command_bufer) {
+void ValkyrieEngine::initializeDepthBuffer(CommandBuffer& command_bufer) {
 	VkResult result;
 	mp_depth_buffer = NEW_NT DepthBuffer();
 	result = mp_depth_buffer->initializeImages(command_bufer, mp_window);
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeRenderPass() {
+void ValkyrieEngine::initializeRenderPass() {
 	m_render_pass.attachments.push_back(m_surface.getAttachmentDescription());
 	m_render_pass.attachments.push_back(mp_depth_buffer->getAttachmentDescription());
 
@@ -109,17 +109,17 @@ void Valkyrie::initializeRenderPass() {
 	assert(initialized);
 }
 
-void Valkyrie::initializeFramebuffers() {
+void ValkyrieEngine::initializeFramebuffers() {
 	mp_swapchain->initializeFramebuffers(m_render_pass, &(mp_depth_buffer->view), 1);
 }
 
-void Valkyrie::initializePipelineCache() {
+void ValkyrieEngine::initializePipelineCache() {
 	VkResult result;
 	result = PipelineModule::initializeCache();
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeImGuiInput() {
+void ValkyrieEngine::initializeImGuiInput() {
 	auto& imgui_io = ImGui::GetIO();
 	imgui_io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
 	imgui_io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
@@ -147,7 +147,7 @@ void Valkyrie::initializeImGuiInput() {
 	glfwSetScrollCallback(mp_window, GLFWScrollCallback);
 }
 
-void Valkyrie::updateUserInput() {
+void ValkyrieEngine::updateUserInput() {
 	auto& imgui_io = ImGui::GetIO();
 	if(glfwGetWindowAttrib(mp_window, GLFW_FOCUSED)) {
 		double mouse_x, mouse_y;
@@ -163,7 +163,7 @@ void Valkyrie::updateUserInput() {
 	userInput.mouseWheel = 0.0f;
 }
 
-void Valkyrie::updateTime() {
+void ValkyrieEngine::updateTime() {
 	m_current_timestamp = glfwGetTime();
 	m_deltatime = m_current_timestamp - m_previous_timestamp;
 	m_previous_timestamp = m_current_timestamp;
@@ -171,7 +171,7 @@ void Valkyrie::updateTime() {
 	imgui_io.DeltaTime = (float)m_deltatime;
 }
 
-bool Valkyrie::execute() {
+bool ValkyrieEngine::execute() {
 	if(!glfwWindowShouldClose(mp_window)) {
 		glfwPollEvents();
 		updateUserInput();
@@ -182,7 +182,7 @@ bool Valkyrie::execute() {
 	return false;
 }
 
-VkResult Valkyrie::initialize() {
+VkResult ValkyrieEngine::initialize() {
 	VkResult result;
 	gp_valkyrie = this;
 
@@ -222,7 +222,7 @@ VkResult Valkyrie::initialize() {
 	return VK_SUCCESS;
 }
 
-VkResult Valkyrie::render() {
+VkResult ValkyrieEngine::render() {
 	VkResult result;
 
 	VkSemaphore present_semaphore;
@@ -283,13 +283,13 @@ VkResult Valkyrie::render() {
 	return VK_SUCCESS;
 }
 
-void Valkyrie::initializeWindow(int width, int height, const std::string & title) {
+void ValkyrieEngine::initializeWindow(int width, int height, const std::string & title) {
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	mp_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 }
 
-void Valkyrie::initializePipelineLayout(const std::string& pipeline_name) {
+void ValkyrieEngine::initializePipelineLayout(const std::string& pipeline_name) {
 	VkResult result;
 	assert(pipelines.count(pipeline_name) > 0);
 	std::vector<VkDescriptorSetLayout>& set_layouts = descriptorPool.getSetLayoutHandles();
@@ -297,18 +297,18 @@ void Valkyrie::initializePipelineLayout(const std::string& pipeline_name) {
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeDescriptorSetLayouts() {
+void ValkyrieEngine::initializeDescriptorSetLayouts() {
 	VkResult result;
 	result = descriptorPool.initializeSetLayouts();
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::createPipelineModule(const std::string & pipename_name) {
+void ValkyrieEngine::createPipelineModule(const std::string & pipename_name) {
 	pipelines[pipename_name] = std::make_shared<Vulkan::PipelineModule>();
 	vertexInputs[pipename_name] = std::make_shared<Vulkan::VertexInput>();
 }
 
-void Valkyrie::initializeShaderModules() {
+void ValkyrieEngine::initializeShaderModules() {
 	VkResult result;
 	for (auto& key_value : shaders) {
 		auto& shader_ptr = key_value.second;
@@ -317,7 +317,7 @@ void Valkyrie::initializeShaderModules() {
 	}
 }
 
-void Valkyrie::initializePipeline(const std::string& pipename_name) {
+void ValkyrieEngine::initializePipeline(const std::string& pipename_name) {
 	VkResult result;
 	if (pipelines.find(pipename_name) != pipelines.end() && vertexInputs.find(pipename_name) != vertexInputs.end()) {
 		auto& pipeline_ptr = pipelines[pipename_name];
@@ -328,21 +328,21 @@ void Valkyrie::initializePipeline(const std::string& pipename_name) {
 	}
 }
 
-void Valkyrie::initializeDescriptorPool() {
+void ValkyrieEngine::initializeDescriptorPool() {
 	VkResult result = descriptorPool.initializePool();
 	assert(result == VK_SUCCESS);
 }
 
-void Valkyrie::initializeDescriptorSets() {
+void ValkyrieEngine::initializeDescriptorSets() {
 	VkResult result;
 	result = descriptorPool.initializeSets();
 	assert(result == VK_SUCCESS);
 }
-void Valkyrie::writeSets(const std::vector<VkWriteDescriptorSet>& writes) {
+void ValkyrieEngine::writeSets(const std::vector<VkWriteDescriptorSet>& writes) {
 	vkUpdateDescriptorSets(m_device.handle, writes.size(), writes.data(), 0, NULL);
 }
 
-void Valkyrie::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
+void ValkyrieEngine::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
 	int width;
 	int height;
 	glfwGetWindowSize(mp_window, &width, &height);
@@ -355,7 +355,7 @@ void Valkyrie::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
 	vkCmdSetViewport(command_buffer.handle, 0, 1, &m_viewport);
 }
 
-void Valkyrie::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
+void ValkyrieEngine::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
 	int width;
 	int height;
 	glfwGetWindowSize(mp_window, &width, &height);
@@ -366,7 +366,7 @@ void Valkyrie::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
 	vkCmdSetScissor(command_buffer.handle, 0, 1, &m_scissor);
 }
 
-void Valkyrie::initailizeTexture(Vulkan::Texture& texture) {
+void ValkyrieEngine::initailizeTexture(Vulkan::Texture& texture) {
 	VkResult result;
 	result = texture.initializeImage();
 	assert(result == VK_SUCCESS);
@@ -386,7 +386,7 @@ void Valkyrie::initailizeTexture(Vulkan::Texture& texture) {
 	assert(result == VK_SUCCESS);
 }
 
-bool Valkyrie::registerRenderFunction(std::string name, ValkyrieRenderPFN pfn) {
+bool ValkyrieEngine::registerRenderFunction(std::string name, Valkyrie::RenderPFN pfn) {
 	if(m_render_pfns.find(name) != m_render_pfns.end())
 		return false;
 	else {
@@ -395,14 +395,14 @@ bool Valkyrie::registerRenderFunction(std::string name, ValkyrieRenderPFN pfn) {
 	return true;
 }
 
-void Valkyrie::executeRenderFunction(std::string name, const std::vector<void*>& data) {
+void ValkyrieEngine::executeRenderFunction(std::string name, const std::vector<void*>& data) {
 	m_render_pfns[name]->render(data, mp_swapchain->getCurrent());
 }
 
-Vulkan::CommandBuffer Valkyrie::createCommandBuffer() {
+Vulkan::CommandBuffer ValkyrieEngine::createCommandBuffer() {
 	return m_thread_ptrs[0]->createCommandBuffer();
 }
 
-Vulkan::SecondaryCommandBuffers Valkyrie::createSecondaryCommandBuffers(uint32_t count) {
+Vulkan::SecondaryCommandBuffers ValkyrieEngine::createSecondaryCommandBuffers(uint32_t count) {
 	return m_thread_ptrs[0]->createSecondaryCommandBuffers(count);
 }

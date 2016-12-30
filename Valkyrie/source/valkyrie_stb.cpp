@@ -3,7 +3,7 @@
 #include <cstdio>
 #include "valkyrie/image.h"
 
-ValkyrieSTB::ValkyrieSTB() :
+Valkyrie::STB::STB() :
 	mp_data(nullptr),
 	m_width(0),
 	m_height(0),
@@ -11,12 +11,12 @@ ValkyrieSTB::ValkyrieSTB() :
 
 }
 
-ValkyrieSTB::~ValkyrieSTB() {
+Valkyrie::STB::~STB() {
 	if (mp_data != nullptr)
 		stbi_image_free(mp_data);
 }
 
-bool ValkyrieSTB::load(const std::string file_path) {
+bool Valkyrie::STB::load(const std::string file_path) {
 	FILE* file_ptr = fopen(file_path.c_str(), "rb");
 	if (file_ptr == nullptr) {
 		fclose(file_ptr);

@@ -4,20 +4,21 @@
 #include "asset.h"
 #include <json.hpp>
 
-class ValkyrieglTF : public ValkyrieAsset {
-public:
-	ValkyrieglTF() {};
-	ValkyrieglTF(const JSON& src);
-	virtual ~ValkyrieglTF() {};
+namespace Valkyrie {
+	class glTFAsset : public Asset {
+	public:
+		glTFAsset() {};
+		glTFAsset(const JSON& src);
+		virtual ~glTFAsset() {};
 
-	virtual void* getData() { return &m_json; };
-	virtual uint32_t getSize() const { return 0; };
-	void setJSON(const JSON& src);
+		virtual void* getData() { return &m_json; };
+		virtual uint32_t getSize() const { return 0; };
+		void setJSON(const JSON& src);
 
-private:
-	JSON m_json;
-};
-
-typedef std::shared_ptr<ValkyrieglTF> ValkyrieglTFPtr;
+	private:
+		JSON m_json;
+	};
+	typedef std::shared_ptr<glTFAsset> glTFAssetPtr;
+}
 
 #endif

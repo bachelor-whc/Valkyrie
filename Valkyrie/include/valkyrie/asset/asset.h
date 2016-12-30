@@ -2,13 +2,15 @@
 #define _VALKYRIE_ASSET_H 
 #include "utility.h"
 
-class ValkyrieAsset {
-public:
-	ValkyrieAsset() {};
-	virtual ~ValkyrieAsset() {};
+namespace Valkyrie {
+	class Asset {
+	public:
+		Asset() {};
+		virtual ~Asset() {};
 
-	virtual void* getData() = 0;
-	virtual uint32_t getSize() const = 0;
-};
+		virtual void* getData() = 0;
+		virtual uint32_t getSize() const = 0;
+	};
+}
 
 #endif

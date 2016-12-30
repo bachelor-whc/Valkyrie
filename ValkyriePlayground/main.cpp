@@ -8,6 +8,7 @@
 
 const std::string NORMAL_PIPELINE = "NORMAL";
 const std::string IMGUI_PIPELINE = "IMGUI";
+using namespace Valkyrie;
 
 struct Vertex {
 	float position[3];
@@ -21,13 +22,13 @@ struct ModelViewProjection {
 };
 
 
-Vulkan::MemoryTexture CreateImGuiFontsTexture(Valkyrie& valkyrie, ImGuiIO& imgui_io) {
+Vulkan::MemoryTexture CreateImGuiFontsTexture(ValkyrieEngine& valkyrie, ImGuiIO& imgui_io) {
 	unsigned char* pixels;
 	int texture_width;
 	int texture_height;
 	imgui_io.Fonts->GetTexDataAsRGBA32(&pixels, &texture_width, &texture_height);
 
-	ValkyrieImageMemoryPointer p_fonts_image = std::make_shared<ValkyrieRGBA32Memory>(texture_width, texture_height, pixels);
+	ImageMemoryPointer p_fonts_image = std::make_shared<RGBA32Memory>(texture_width, texture_height, pixels);
 	Vulkan::MemoryTexture fonts_texture(p_fonts_image);
 	valkyrie.initailizeTexture(fonts_texture);
 	return fonts_texture;
@@ -38,11 +39,11 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	const int width = 1024;
 	const int height = 768;
 
-	glTFLoader gltfLoader;
-	ValkyrieglTFPtr gltf_ptr = gltfLoader.load("test.gltf");
+	Valkyrie::glTFLoader gltfLoader;
+	Valkyrie::glTFAssetPtr gltf_ptr = gltfLoader.load("gltf/test.gltf");
 
 	std::string title("Playground");
-	Valkyrie valkyrie("Valkyrie");
+	ValkyrieEngine valkyrie("Valkyrie");
 	valkyrie.initializeWindow(width, height, title);
 	valkyrie.initialize();
 	auto& imgui_io = ImGui::GetIO();
@@ -70,7 +71,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::MemoryBuffer normal_uniform_buffer;
 	Vulkan::MemoryBuffer imgui_vertex_buffer;
 	Vulkan::MemoryBuffer imgui_index_buffer;
-	ValkyrieImageFilePointer png_ptr = std::make_shared<ValkyrieSTB>();
+	ImageFilePointer png_ptr = std::make_shared<STB>();
 	Vulkan::ImageTexture texture(png_ptr);
 	
 	texture.load("wang.png");

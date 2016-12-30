@@ -4,7 +4,7 @@
 
 void GLFWMouseButtonCallback(GLFWwindow* p_window, int button, int action, int mods) {
 	if (button >= 0 && button < 3) {
-		auto& user_input = Valkyrie::getGlobalValkyriePtr()->userInput;
+		auto& user_input = ValkyrieEngine::getGlobalValkyriePtr()->userInput;
 		if(action == GLFW_PRESS)
 			user_input.mousePressed[button] = true;
 		else if(action == GLFW_RELEASE)
@@ -32,6 +32,6 @@ void GLFWCharCallback(GLFWwindow *, unsigned int c) {
 }
 
 void GLFWScrollCallback(GLFWwindow*, double x_offset, double y_offset) {
-	auto& user_input = Valkyrie::getGlobalValkyriePtr()->userInput;
+	auto& user_input = ValkyrieEngine::getGlobalValkyriePtr()->userInput;
 	user_input.mouseWheel += (float)y_offset;
 }

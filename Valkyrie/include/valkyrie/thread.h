@@ -9,18 +9,20 @@ namespace Vulkan {
 	typedef std::vector<VkCommandBuffer> SecondaryCommandBuffers;
 }
 
-struct ValkyrieThread {
-	ValkyrieThread() = delete;
-	ValkyrieThread(const Vulkan::Queue& queue);
-	virtual ~ValkyrieThread();
+namespace Valkyrie {
+	struct Thread {
+		Thread() = delete;
+		Thread(const Vulkan::Queue& queue);
+		virtual ~Thread();
 
-	Vulkan::CommandBuffer createCommandBuffer();
-	Vulkan::SecondaryCommandBuffers ValkyrieThread::createSecondaryCommandBuffers(const uint32_t count);
+		Vulkan::CommandBuffer createCommandBuffer();
+		Vulkan::SecondaryCommandBuffers Thread::createSecondaryCommandBuffers(const uint32_t count);
 
-private:
-	VkDevice m_device = VK_NULL_HANDLE;
-	VkCommandPool m_command_pool = VK_NULL_HANDLE;
-	VkCommandBufferLevel m_level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-};
+	private:
+		VkDevice m_device = VK_NULL_HANDLE;
+		VkCommandPool m_command_pool = VK_NULL_HANDLE;
+		VkCommandBufferLevel m_level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	};
+}
 
 #endif

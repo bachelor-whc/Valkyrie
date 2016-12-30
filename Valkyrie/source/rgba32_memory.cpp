@@ -1,7 +1,7 @@
 #include "utility.h"
 #include "valkyrie/image.h"
 
-ValkyrieRGBA32Memory::ValkyrieRGBA32Memory(int width, int height, void* src_data) :
+Valkyrie::RGBA32Memory::RGBA32Memory(int width, int height, void* src_data) :
 	m_width(width),
 	m_height(height),
 	m_size(0)
@@ -17,7 +17,7 @@ ValkyrieRGBA32Memory::ValkyrieRGBA32Memory(int width, int height, void* src_data
 	memcpy(mp_data, src_data, m_size);
 }
 
-ValkyrieRGBA32Memory::~ValkyrieRGBA32Memory() {
+Valkyrie::RGBA32Memory::~RGBA32Memory() {
 	if (mp_data != nullptr)
 		delete[] mp_data;
 }

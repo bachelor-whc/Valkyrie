@@ -3,7 +3,7 @@
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/physical_device.h"
 
-Vulkan::MemoryTexture::MemoryTexture(const ValkyrieImageMemoryPointer& texture_ptr) : Texture(), mp_memory(texture_ptr) {
+Vulkan::MemoryTexture::MemoryTexture(const Valkyrie::ImageMemoryPointer& texture_ptr) : Texture(), mp_memory(texture_ptr) {
 
 }
 

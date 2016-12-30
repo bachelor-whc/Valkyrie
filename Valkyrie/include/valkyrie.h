@@ -25,19 +25,17 @@
 #include "valkyrie/UI/user_input.h"
 #include "valkyrie/asset/gltf_loader.h"
 
-class ValkyrieWindow;
-
-class Valkyrie {
+class ValkyrieEngine {
 public:
 	enum State {
 		UNINITIALIZED, INITIALIZING, INITIALIZED, EXECUTE, EXIT
 	};
-	static Valkyrie* getGlobalValkyriePtr() { return gp_valkyrie; };
+	static ValkyrieEngine* getGlobalValkyriePtr() { return gp_valkyrie; };
 	
 public:
-	Valkyrie() = delete;
-	Valkyrie(std::string application_name);
-	virtual ~Valkyrie();
+	ValkyrieEngine() = delete;
+	ValkyrieEngine(std::string application_name);
+	virtual ~ValkyrieEngine();
 
 	virtual bool execute();
 	virtual VkResult initialize();
@@ -55,7 +53,7 @@ public:
 	void commandSetViewport(const Vulkan::CommandBuffer& command_buffer);
 	void commandSetScissor(const Vulkan::CommandBuffer& command_buffer);
 	void initailizeTexture(Vulkan::Texture& texture);
-	bool registerRenderFunction(std::string name, ValkyrieRenderPFN pfn);
+	bool registerRenderFunction(std::string name, Valkyrie::RenderPFN pfn);
 	void executeRenderFunction(std::string name, const std::vector<void*>& data);
 	inline int getCurrentBuffer() { return mp_swapchain->getCurrent(); }
 	Vulkan::CommandBuffer createCommandBuffer();
@@ -77,8 +75,8 @@ public:
 	UserInput userInput = {};
 	
 private:
-	static Valkyrie* gp_valkyrie;
-	typedef ValkyrieThread* ThreadPointer;
+	static ValkyrieEngine* gp_valkyrie;
+	typedef Valkyrie::Thread* ThreadPointer;
 
 private:
 	void initializeInstance();
@@ -110,7 +108,7 @@ private:
 	Vulkan::CommandBuffer m_present_command_buffer;
 	VkViewport m_viewport = {};
 	VkRect2D m_scissor = {};
-	std::map<std::string, ValkyrieRenderPFN> m_render_pfns;
+	std::map<std::string, Valkyrie::RenderPFN> m_render_pfns;
 
 private:
 	std::string m_application_name;
