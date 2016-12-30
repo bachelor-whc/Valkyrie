@@ -29,6 +29,7 @@ namespace Vulkan {
 	};
 
 	void DestroyMemoryBuffer(MemoryBuffer& buffer);
+	typedef std::shared_ptr<MemoryBuffer> MemoryBufferPtr;
 }
 
 #endif

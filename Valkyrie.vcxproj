@@ -26,6 +26,7 @@
     <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_loader.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\default_create_info.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\image.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\memory_chunk.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\render_function.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\thread.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\UI\user_input.h" />
@@ -63,6 +64,7 @@
   <ItemGroup>
     <ClCompile Include="Valkyrie\include\valkyrie\asset\gltf_asset.cpp" />
     <ClCompile Include="Valkyrie\source\asset\gltf_loader.cpp" />
+    <ClCompile Include="Valkyrie\source\memory_chunk.cpp" />
     <ClCompile Include="Valkyrie\source\render_function.cpp" />
     <ClCompile Include="Valkyrie\source\rgba32_memory.cpp" />
     <ClCompile Include="Valkyrie\source\stb_texture.cpp" />

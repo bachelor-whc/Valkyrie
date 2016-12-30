@@ -171,6 +171,9 @@
     <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_asset.h">
       <Filter>Header Files\valkyrie\asset</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\memory_chunk.h">
+      <Filter>Header Files\valkyrie</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\third_party\imgui.cpp">
@@ -261,6 +264,9 @@
       <Filter>Source Files\asset</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\include\valkyrie\asset\gltf_asset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\memory_chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

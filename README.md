@@ -8,6 +8,7 @@ Valkyrie所使用的第三方函式庫或代碼都放置於`license`資料夾內
 * Dear ImGui
 * GLM
 * GLFW
+* googletest
 * nlohmann/json
 * zlib
 

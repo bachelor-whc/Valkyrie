@@ -24,6 +24,7 @@
 #include "valkyrie/render_function.h"
 #include "valkyrie/UI/user_input.h"
 #include "valkyrie/asset/gltf_loader.h"
+#include "valkyrie/memory_chunk.h"
 
 class ValkyrieEngine {
 public:
