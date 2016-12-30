@@ -22,6 +22,7 @@
 #include <memory>
 #include <set>
 #include <unordered_set>
+#include <json.hpp>
 #include <GLFW/glfw3.h>
 #include "valkyrie/default_create_info.h"
 #define NEW_NT new(std::nothrow)
@@ -29,6 +30,7 @@
 const int VALKYRIE_FRAME_BUFFER_COUNT = 2;
 extern VkDevice g_device_handle;
 extern VkPhysicalDevice g_physical_device_handle;
+using JSON = nlohmann::json;
 
 class FileSystem {
 public:

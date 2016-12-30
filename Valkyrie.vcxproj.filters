@@ -37,6 +37,18 @@
     <Filter Include="Header Files\third_party\glfw">
       <UniqueIdentifier>{d9581b31-91f9-41b4-b4c1-387ab69bf6ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\valkyrie\asset">
+      <UniqueIdentifier>{a29032b0-d549-4bbc-aeaa-7b51f659353a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{ffca1190-e815-4834-9b4c-744c55dee09b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vulkan">
+      <UniqueIdentifier>{cedd868d-c3f3-4781-9b91-ab832d7f2e9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\asset">
+      <UniqueIdentifier>{038ce5ca-166a-4a66-887b-0d75e08fd6cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Valkyrie\include\valkyrie.h">
@@ -150,59 +162,17 @@
     <ClInclude Include="Valkyrie\third_party\stb_image.h">
       <Filter>Header Files\third_party</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\asset\asset.h">
+      <Filter>Header Files\valkyrie\asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_loader.h">
+      <Filter>Header Files\valkyrie\asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_asset.h">
+      <Filter>Header Files\valkyrie\asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Valkyrie\source\valkyrie.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\instance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\physical_device.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\device.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\queue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\thread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\swapchain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\command_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\depth_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\render_pass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\pipeline.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\vertex_input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\memory_buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\descriptor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan_debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Valkyrie\third_party\imgui.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
@@ -212,28 +182,85 @@
     <ClCompile Include="Valkyrie\third_party\imgui_draw.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\png_texture.cpp">
+    <ClCompile Include="Valkyrie\source\vulkan\command_buffer.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\debug.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\depth_buffer.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\descriptor.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\device.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\instance.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\memory_buffer.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\memory_texture.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\physical_device.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\pipeline.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\queue.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\render_pass.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\shader.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\surface.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\swapchain.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\texture.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\tool.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\vertex_input.cpp">
+      <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\UI\user_input.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\render_function.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\rgba32_memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\memory_texture.cpp">
+    <ClCompile Include="Valkyrie\source\stb_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\surface.cpp">
+    <ClCompile Include="Valkyrie\source\thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\tool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\render_function.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\user_input.cpp">
+    <ClCompile Include="Valkyrie\source\valkyrie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\valkyrie_stb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\asset\gltf_loader.cpp">
+      <Filter>Source Files\asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\include\valkyrie\asset\gltf_asset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -38,6 +38,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	const int width = 1024;
 	const int height = 768;
 
+	glTFLoader gltfLoader;
+	ValkyrieglTFPtr gltf_ptr = gltfLoader.load("test.gltf");
+
 	std::string title("Playground");
 	Valkyrie valkyrie("Valkyrie");
 	valkyrie.initializeWindow(width, height, title);
