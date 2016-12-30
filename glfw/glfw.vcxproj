@@ -36,8 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="egl_context.h" />
-    <ClInclude Include="include\glfw3.h" />
-    <ClInclude Include="include\glfw3native.h" />
+    <ClInclude Include="include\GLFW\glfw3.h" />
+    <ClInclude Include="include\GLFW\glfw3native.h" />
     <ClInclude Include="internal.h" />
     <ClInclude Include="wgl_context.h" />
     <ClInclude Include="win32_joystick.h" />
