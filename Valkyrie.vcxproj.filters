@@ -282,7 +282,7 @@
       <Filter>Source Files\graphics_api_support</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\asset</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
