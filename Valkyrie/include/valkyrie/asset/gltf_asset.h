@@ -94,11 +94,18 @@ namespace Valkyrie {
 		std::set<std::string> bufferViewSet;
 		std::set<std::string> accessorSet;
 		std::set<std::string> uriSet;
+
+		void setBuffer(const std::string& name, const glTFBufferPtr& buffer);
+		void setBufferView(const std::string& name, const glTFBufferViewPtr& buffer_view);
+		void setAccessor(const std::string& name, const glTFAccessorPtr& accessor);
+
+		glTFAccessorPtr getAccessor(const std::string& name) throw(...);
+
 	private:
 		JSON m_json;
-		std::map <std::string, glTFBufferPtr> m_buffer_ptrs;
-		std::map <std::string, glTFBufferViewPtr> m_buffer_view_ptrs;
-		std::map <std::string, glTFAccessorPtr> m_accessor_ptrs;
+		std::map<std::string, glTFBufferPtr> m_buffer_ptrs;
+		std::map<std::string, glTFBufferViewPtr> m_buffer_view_ptrs;
+		std::map<std::string, glTFAccessorPtr> m_accessor_ptrs;
 	};
 
 	typedef std::shared_ptr<glTFAsset> glTFAssetPtr;

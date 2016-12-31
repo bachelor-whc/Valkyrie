@@ -15,6 +15,7 @@
 #include <memory>
 #include <set>
 #include <unordered_set>
+#include <exception>
 #include <json.hpp>
 #include <GLFW/glfw3.h>
 #include "valkyrie/default_create_info.h"

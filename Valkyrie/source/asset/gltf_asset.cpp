@@ -9,6 +9,29 @@ void Valkyrie::glTFAsset::setJSON(const JSON& src) {
 	m_json = src;
 }
 
+void Valkyrie::glTFAsset::setBuffer(const std::string & name, const glTFBufferPtr & buffer) {
+	if (bufferSet.count(name) > 0)
+		m_buffer_ptrs[name] = buffer;
+}
+
+void Valkyrie::glTFAsset::setBufferView(const std::string & name, const glTFBufferViewPtr & buffer_view) {
+	if (bufferViewSet.count(name) > 0)
+		m_buffer_view_ptrs[name] = buffer_view;
+}
+
+void Valkyrie::glTFAsset::setAccessor(const std::string & name, const glTFAccessorPtr & accessor) {
+	if (accessorSet.count(name) > 0)
+		m_accessor_ptrs[name] = accessor;
+}
+
+Valkyrie::glTFAccessorPtr Valkyrie::glTFAsset::getAccessor(const std::string& name) throw(...) {
+	if (m_accessor_ptrs.count(name) < 1) {
+		std::string ex_message = name + " accessor not found.";
+		throw std::exception(ex_message.c_str());
+	}
+	return m_accessor_ptrs[name];
+}
+
 Valkyrie::glTFBuffer::glTFBuffer(const Valkyrie::MemoryChunkPtr& mcptr) : m_memory_chunk_ptr(mcptr) {
 
 }
