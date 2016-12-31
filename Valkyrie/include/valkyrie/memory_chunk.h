@@ -3,17 +3,18 @@
 #include "utility.h"
 
 namespace Valkyrie {
-	class MemoryChunk {
+	class MemoryChunk : public MemoryAccess {
 	public:
 		MemoryChunk();
 		MemoryChunk(const MemoryChunk& src) = delete;
 		virtual ~MemoryChunk();
 
+		virtual void* getData() { return mp_data; }
+		virtual uint32_t getSize() const { return m_size; }
+
 		MemoryChunk& operator=(const MemoryChunk& src) = delete;
-		void allocate(uint32_t size);
-		inline uint32_t getSize() { return m_size; }
+		virtual void allocate(uint32_t size);
 		inline uint32_t getMaxSize() { return m_max_size; }
-		inline void* getData() { return mp_data; }
 		inline bool avaliable() { return mp_data != nullptr; }
 		
 	private:
@@ -21,6 +22,8 @@ namespace Valkyrie {
 		uint32_t m_max_size;
 		unsigned char* mp_data = nullptr;
 	};
+
+	typedef std::shared_ptr<MemoryChunk> MemoryChunkPtr;
 }
 
 #endif

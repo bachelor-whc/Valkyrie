@@ -49,6 +49,12 @@
     <Filter Include="Source Files\asset">
       <UniqueIdentifier>{038ce5ca-166a-4a66-887b-0d75e08fd6cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\valkyrie\graphics_api_support">
+      <UniqueIdentifier>{9b25445f-54ab-44de-ac99-ad4e632a3c0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics_api_support">
+      <UniqueIdentifier>{c677f384-55ed-4ed0-b5b7-00790eb74809}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Valkyrie\include\valkyrie.h">
@@ -174,6 +180,12 @@
     <ClInclude Include="Valkyrie\include\valkyrie\memory_chunk.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\asset\mesh.h">
+      <Filter>Header Files\valkyrie\asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\graphics_api_support\attribute.h">
+      <Filter>Header Files\valkyrie\graphics_api_support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\third_party\imgui.cpp">
@@ -263,10 +275,13 @@
     <ClCompile Include="Valkyrie\source\asset\gltf_loader.cpp">
       <Filter>Source Files\asset</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\include\valkyrie\asset\gltf_asset.cpp">
+    <ClCompile Include="Valkyrie\source\memory_chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\memory_chunk.cpp">
+    <ClCompile Include="Valkyrie\source\graphics_api_support\attribute.cpp">
+      <Filter>Source Files\graphics_api_support</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

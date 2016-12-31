@@ -1,9 +1,19 @@
 #include <iostream>
 #include <gtest/gtest.h>
 #include "valkyrie.h"
+#include "valkyrie/asset/gltf_asset.h"
+
+using Valkyrie::MemoryChunk;
+using Valkyrie::MemoryChunkPtr;
+using Valkyrie::glTFBuffer;
+using Valkyrie::glTFBufferPtr;
+using Valkyrie::glTFBufferView;
+using Valkyrie::glTFBufferViewPtr;
+using Valkyrie::glTFAccessor;
+using Valkyrie::glTFAccessorPtr;
 
 TEST(MemoryChunckCheck, Normal) {
-	Valkyrie::MemoryChunk c1;
+	MemoryChunk c1;
 	ASSERT_EQ(c1.getData(), nullptr);
 	c1.allocate(128);
 	void* prev_ptr = c1.getData();
@@ -13,9 +23,9 @@ TEST(MemoryChunckCheck, Normal) {
 }
 
 TEST(MemoryChunckCheck, SharedPtr) {
-	std::shared_ptr<Valkyrie::MemoryChunk> cptr = std::make_shared<Valkyrie::MemoryChunk>();
-	std::shared_ptr<Valkyrie::MemoryChunk> cptr_copy_1 = cptr;
-	std::shared_ptr<Valkyrie::MemoryChunk> cptr_copy_2 = cptr_copy_1;
+	MemoryChunkPtr cptr = std::make_shared<MemoryChunk>();
+	MemoryChunkPtr cptr_copy_1 = cptr;
+	MemoryChunkPtr cptr_copy_2 = cptr_copy_1;
 	ASSERT_EQ(cptr->getData(), nullptr);
 	ASSERT_EQ(cptr_copy_1->getData(), nullptr);
 	ASSERT_EQ(cptr_copy_2->getData(), nullptr);
@@ -31,6 +41,16 @@ TEST(MemoryChunckCheck, SharedPtr) {
 	ASSERT_EQ(cptr_copy_1->getData(), prev_ptr);
 	ASSERT_EQ(cptr_copy_2->getData(), prev_ptr);
 }
+
+TEST(glTFAssetCheck, Initialization) {
+	MemoryChunkPtr cptr = std::make_shared<Valkyrie::MemoryChunk>();
+	glTFBufferPtr buffer_ptr = std::make_shared<glTFBuffer>(cptr);
+	glTFBufferViewPtr buffer_view_ptr_1 = std::make_shared<glTFBufferView>(buffer_ptr, 48, 0);
+	glTFBufferViewPtr buffer_view_ptr_2 = std::make_shared<glTFBufferView>(buffer_ptr, 128, 48);
+	glTFBufferViewPtr buffer_view_ptr_3 = std::make_shared<glTFBufferView>(buffer_ptr, 256, 256);
+	glTFAccessorPtr accessor_ptr_1 = std::make_shared<glTFAccessor>(buffer_view_ptr_1, 0, 0, )
+	//cptr
+};
 
 int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);

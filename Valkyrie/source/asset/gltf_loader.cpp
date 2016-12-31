@@ -9,7 +9,7 @@ Valkyrie::glTFAssetPtr Valkyrie::glTFLoader::load(const std::string& filename) {
 	Valkyrie::glTFAssetPtr ptr = std::make_shared<Valkyrie::glTFAsset>(json);
 	for (auto it = json["buffers"].begin(); it != json["buffers"].end(); ++it) {
 		auto& j = it.value();
-		ptr->buffersSet.insert(it.key());
+		ptr->bufferSet.insert(it.key());
 		ptr->uriSet.insert(j["uri"].get<std::string>());
 	}
 	return ptr;
