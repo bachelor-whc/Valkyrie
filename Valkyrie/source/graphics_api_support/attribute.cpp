@@ -21,14 +21,17 @@ Valkyrie::GrpahicsAPIAttribute<T>::GrpahicsAPIAttribute(const MemoryAccessPtr& p
 	m_stride(stride),
 	m_count(count) {
 	unsigned char* base_ptr = (unsigned char*)ptr->getData();
-	mp_implement = (T*)(base_ptr + offset);
+	base_ptr += m_offset;
+	mp_implement = (T*)base_ptr;
+	initializeFormats();
 }
 
 template<typename T>
-T& Valkyrie::GrpahicsAPIAttribute<T>::getInstance(uint32_t index) {
+void* Valkyrie::GrpahicsAPIAttribute<T>::getInstance(uint32_t index) {
 	assert(index < m_count);
 	uint32_t stride = m_stride == 0 ? m_type_size : m_stride;
-	return *(mp_implement + m_offset + index * stride);
+	unsigned char* p_implement = (unsigned char*)mp_implement;
+	return p_implement + index * stride;
 }
 
 void Valkyrie::GrpahicsAPIAttribute<uint16_t>::initializeFormats() {

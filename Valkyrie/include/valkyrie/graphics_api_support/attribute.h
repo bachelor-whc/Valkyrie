@@ -13,6 +13,7 @@ namespace Valkyrie {
 		virtual uint32_t getCount() const = 0;
 		virtual VkFormat getFormat() const = 0;
 		virtual VkIndexType getIndexFormat() const = 0;
+		virtual void* getInstance(uint32_t index) = 0;
 	};
 
 	typedef std::shared_ptr<GrpahicsAPIAttributeSupport> GAPIAttributeSupportPtr;
@@ -29,7 +30,7 @@ namespace Valkyrie {
 		virtual uint32_t getCount() const { return m_count; }
 		virtual VkFormat getFormat() const { return m_format; }
 		virtual VkIndexType getIndexFormat() const { return m_index_format; }
-		virtual T& getInstance(uint32_t index);
+		virtual void* getInstance(uint32_t index);
 
 	private:
 		void initializeFormats();

@@ -69,6 +69,7 @@ namespace Valkyrie {
 		virtual VkIndexType getIndexFormat() const { return m_attribute_ptr->getIndexFormat(); }
 		inline GLTF_TYPE getglTFType() const { return m_type; }
 		inline GLTF_COMPONENT_TYPE getglTFComponentType() const { return m_component_type; }
+		virtual void* getInstance(uint32_t index) { return m_attribute_ptr->getInstance(index); }
 
 	private:
 		glTFBufferViewPtr m_buffer_view_ptr;
