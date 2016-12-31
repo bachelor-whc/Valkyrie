@@ -136,7 +136,7 @@ VkResult SwapChain::initializeImages(const Surface& surface, CommandBuffer& buff
 	if (result != VK_SUCCESS)
 		return result;
 
-	VkImage *swapchain_images = NEW_NT VkImage[buffer_count];
+	VkImage *swapchain_images = NEW_NT VkImage[buffer_count]();
 	assert(swapchain_images);
 
 	result = vkGetSwapchainImagesKHR(g_device_handle, handle, &buffer_count, swapchain_images);
@@ -178,6 +178,7 @@ VkResult SwapChain::initializeImages(const Surface& surface, CommandBuffer& buff
 	}
 	m_current_buffer = 0;
 	m_images_initialized = true;
+	delete[] swapchain_images;
 	return result;
 }
 

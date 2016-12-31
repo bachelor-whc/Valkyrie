@@ -11,7 +11,7 @@ Valkyrie::RGBA32Memory::RGBA32Memory(int width, int height, void* src_data) :
 	assert(src_data != nullptr);
 
 	m_size = width * height * 4;
-	mp_data = NEW_NT unsigned char[m_size];
+	mp_data = NEW_NT unsigned char[m_size]();
 	assert(mp_data != nullptr);
 
 	memcpy(mp_data, src_data, m_size);

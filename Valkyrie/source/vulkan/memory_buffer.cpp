@@ -14,7 +14,6 @@ MemoryBuffer::~MemoryBuffer() {
 	for(auto& p_information : m_information_pointers) {
 		if (p_information != nullptr) {
 			delete p_information;
-			p_information = nullptr;
 		}
 	}
 }

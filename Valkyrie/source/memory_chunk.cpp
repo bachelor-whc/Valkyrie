@@ -22,5 +22,5 @@ void Valkyrie::MemoryChunk::allocate(uint32_t size) {
 		mp_data = nullptr;
 	}
 	m_size = size;
-	mp_data = NEW_NT unsigned char[m_size];
+	mp_data = NEW_NT unsigned char[m_size]();
 }
