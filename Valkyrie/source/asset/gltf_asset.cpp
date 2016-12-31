@@ -32,7 +32,7 @@ Valkyrie::glTFAccessor::glTFAccessor(const glTFBufferViewPtr & buffer_view_ptr, 
 	m_buffer_view_ptr(buffer_view_ptr),
 	m_type(type),
 	m_component_type(component_type),
-	m_attribute_ptr(m_attribute_ptr) {
+	m_attribute_ptr(gaas_ptr) {
 	
 }
 

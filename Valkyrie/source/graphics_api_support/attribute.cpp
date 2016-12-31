@@ -27,7 +27,8 @@ Valkyrie::GrpahicsAPIAttribute<T>::GrpahicsAPIAttribute(const MemoryAccessPtr& p
 template<typename T>
 T& Valkyrie::GrpahicsAPIAttribute<T>::getInstance(uint32_t index) {
 	assert(index < m_count);
-	return *(mp_implement + index);
+	uint32_t stride = m_stride == 0 ? m_type_size : m_stride;
+	return *(mp_implement + m_offset + index * stride);
 }
 
 void Valkyrie::GrpahicsAPIAttribute<uint16_t>::initializeFormats() {

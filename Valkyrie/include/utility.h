@@ -19,6 +19,7 @@
 #include <GLFW/glfw3.h>
 #include "valkyrie/default_create_info.h"
 #define NEW_NT new(std::nothrow)
+#define MAKE_SHARED(t) std::make_shared<t>
 
 const int VALKYRIE_FRAME_BUFFER_COUNT = 2;
 extern VkDevice g_device_handle;
