@@ -8,6 +8,17 @@
 #include "valkyrie/graphics_api_support/attribute.h"
 
 namespace Valkyrie {
+	enum GLTF_COMPONENT_TYPE {
+		BYTE = 5120,
+		UNSIGNED_BYTE = 5121,
+		SHORT = 5122,
+		UNSIGNED_SHORT = 5123,
+		FLOAT = 5126
+	};
+	enum GLTF_TYPE {
+		SCALAR, VEC2, VEC3, VEC4, MAT2, MAT3, MAT4
+	};
+
 	class glTFBuffer : public Asset, public MemoryAccess {
 	public:
 		glTFBuffer() = delete;
@@ -43,17 +54,6 @@ namespace Valkyrie {
 	class glTFAccessor : 
 		public GrpahicsAPIAttributeSupport {
 	public:
-		enum GLTF_COMPONENT_TYPE {
-			BYTE = 5120, 
-			UNSIGNED_BYTE = 5121, 
-			SHORT = 5122, 
-			UNSIGNED_SHORT = 5123, 
-			FLOAT = 5126
-		};
-		enum GLTF_TYPE {
-			SCALAR, VEC2, VEC3, VEC4, MAT2, MAT3, MAT4
-		};
-
 		glTFAccessor() = delete;
 		glTFAccessor(const GAPIAttributeSupportPtr& gaas_ptr, GLTF_TYPE type, GLTF_COMPONENT_TYPE component_type);
 		virtual ~glTFAccessor();

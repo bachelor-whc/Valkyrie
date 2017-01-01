@@ -304,8 +304,8 @@ void ValkyrieEngine::initializeDescriptorSetLayouts() {
 }
 
 void ValkyrieEngine::createPipelineModule(const std::string & pipename_name) {
-	pipelines[pipename_name] = std::make_shared<Vulkan::PipelineModule>();
-	vertexInputs[pipename_name] = std::make_shared<Vulkan::VertexInput>();
+	pipelines[pipename_name] = MAKE_SHARED(Vulkan::PipelineModule)();
+	vertexInputs[pipename_name] = MAKE_SHARED(Vulkan::VertexInput)();
 }
 
 void ValkyrieEngine::initializeShaderModules() {
