@@ -51,8 +51,7 @@ Valkyrie::glTFBufferView::~glTFBufferView() {
 
 }
 
-Valkyrie::glTFAccessor::glTFAccessor(const glTFBufferViewPtr & buffer_view_ptr, const GAPIAttributeSupportPtr& gaas_ptr, GLTF_TYPE type, GLTF_COMPONENT_TYPE component_type) :
-	m_buffer_view_ptr(buffer_view_ptr),
+Valkyrie::glTFAccessor::glTFAccessor(const GAPIAttributeSupportPtr& gaas_ptr, GLTF_TYPE type, GLTF_COMPONENT_TYPE component_type) :
 	m_type(type),
 	m_component_type(component_type),
 	m_attribute_ptr(gaas_ptr) {

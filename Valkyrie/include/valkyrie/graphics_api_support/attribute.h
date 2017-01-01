@@ -3,7 +3,7 @@
 #include "utility.h"
 
 namespace Valkyrie {
-	class GrpahicsAPIAttributeSupport {
+	class GrpahicsAPIAttributeSupport : public MemoryAccess {
 	public:
 		GrpahicsAPIAttributeSupport() {}
 		virtual ~GrpahicsAPIAttributeSupport() {};
@@ -24,6 +24,9 @@ namespace Valkyrie {
 		GrpahicsAPIAttribute() = delete;
 		GrpahicsAPIAttribute(const MemoryAccessPtr& ptr, const uint32_t offset = 0, const uint32_t stride = 0, const uint32_t count = 1);
 		virtual ~GrpahicsAPIAttribute() {};
+
+		virtual void* getData() { return mp_implement; }
+		virtual uint32_t getSize() const { return m_count * m_type_size; }
 		virtual uint32_t getTypeSize() const { return m_type_size; };
 		virtual uint32_t getOffset() const { return m_offset; }
 		virtual uint32_t getStride() const { return m_stride; }

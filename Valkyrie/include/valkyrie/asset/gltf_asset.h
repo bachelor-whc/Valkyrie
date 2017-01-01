@@ -41,7 +41,6 @@ namespace Valkyrie {
 	typedef std::shared_ptr<glTFBufferView> glTFBufferViewPtr;
 
 	class glTFAccessor : 
-		public MemoryAccess, 
 		public GrpahicsAPIAttributeSupport {
 	public:
 		enum GLTF_COMPONENT_TYPE {
@@ -56,11 +55,11 @@ namespace Valkyrie {
 		};
 
 		glTFAccessor() = delete;
-		glTFAccessor(const glTFBufferViewPtr& buffer_view_ptr, const GAPIAttributeSupportPtr& gaas_ptr, GLTF_TYPE type, GLTF_COMPONENT_TYPE component_type);
+		glTFAccessor(const GAPIAttributeSupportPtr& gaas_ptr, GLTF_TYPE type, GLTF_COMPONENT_TYPE component_type);
 		virtual ~glTFAccessor();
 
-		virtual void* getData() { return (unsigned char*)m_buffer_view_ptr->getData() + m_attribute_ptr->getOffset(); }
-		virtual uint32_t getSize() const { return m_buffer_view_ptr->getSize(); }
+		virtual void* getData() { return m_attribute_ptr->getData(); }
+		virtual uint32_t getSize() const { return m_attribute_ptr->getSize(); }
 		virtual uint32_t getTypeSize() const { return m_attribute_ptr->getTypeSize(); }
 		virtual uint32_t getOffset() const { return m_attribute_ptr->getOffset(); }
 		virtual uint32_t getStride() const { return m_attribute_ptr->getStride(); }
@@ -72,7 +71,6 @@ namespace Valkyrie {
 		virtual void* getInstance(uint32_t index) { return m_attribute_ptr->getInstance(index); }
 
 	private:
-		glTFBufferViewPtr m_buffer_view_ptr;
 		GLTF_TYPE m_type;
 		GLTF_COMPONENT_TYPE m_component_type;
 		GAPIAttributeSupportPtr m_attribute_ptr;
