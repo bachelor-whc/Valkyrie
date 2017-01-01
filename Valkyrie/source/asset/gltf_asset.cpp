@@ -9,17 +9,17 @@ void Valkyrie::glTFAsset::setJSON(const JSON& src) {
 	m_json = src;
 }
 
-void Valkyrie::glTFAsset::setBuffer(const std::string & name, const glTFBufferPtr & buffer) {
+void Valkyrie::glTFAsset::setBuffer(const std::string & name, const glTFBufferPtr& buffer) {
 	if (bufferSet.count(name) > 0)
 		m_buffer_ptrs[name] = buffer;
 }
 
-void Valkyrie::glTFAsset::setBufferView(const std::string & name, const glTFBufferViewPtr & buffer_view) {
+void Valkyrie::glTFAsset::setBufferView(const std::string & name, const glTFBufferViewPtr& buffer_view) {
 	if (bufferViewSet.count(name) > 0)
 		m_buffer_view_ptrs[name] = buffer_view;
 }
 
-void Valkyrie::glTFAsset::setAccessor(const std::string & name, const glTFAccessorPtr & accessor) {
+void Valkyrie::glTFAsset::setAccessor(const std::string & name, const glTFAccessorPtr& accessor) {
 	if (accessorSet.count(name) > 0)
 		m_accessor_ptrs[name] = accessor;
 }
