@@ -1,13 +1,28 @@
+#include <SDL.h>
+#include <SDL_syswm.h>
 #include "valkyrie/vulkan/surface.h"
 #include "valkyrie/vulkan/instance.h"
 #include "valkyrie/vulkan/physical_device.h"
 using namespace Vulkan;
 
-VkResult Vulkan::setSurface(Surface& surface, GLFWwindow* p_window, const Instance& instance) {
+VkResult Vulkan::setSurface(Surface& surface, SDL_Window* p_window, const Instance& instance) {
 	VkResult result;
-	glfwCreateWindowSurface(instance.handle, p_window, nullptr, &surface.handle);
-
-	uint32_t format_count;
+	SDL_SysWMinfo window_info = {};
+	SDL_GetWindowWMInfo(p_window, &window_info);
+#ifdef _WIN32
+	VkWin32SurfaceCreateInfoKHR surface_create = {};
+	HWND window_handle = window_info.info.win.window;
+	HINSTANCE instance_handle = (HINSTANCE)GetWindowLongPtr(window_handle, GWLP_HINSTANCE);
+	surface_create.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+	surface_create.hinstance = instance_handle;
+	surface_create.hwnd = window_handle;
+	result = vkCreateWin32SurfaceKHR(instance.handle, &surface_create, nullptr, &surface.handle);
+#elif __ANDROID__
+	
+#elif __linux__
+	
+#endif
+	uint32_t format_count = 0;
 	result = vkGetPhysicalDeviceSurfaceFormatsKHR(g_physical_device_handle, surface.handle, &format_count, NULL);
 	
 	VkSurfaceFormatKHR* surface_format = NEW_NT VkSurfaceFormatKHR[format_count];

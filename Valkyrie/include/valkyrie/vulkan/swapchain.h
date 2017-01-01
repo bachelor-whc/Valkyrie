@@ -32,7 +32,7 @@ namespace Vulkan {
 	class SwapChain {
 	public:
 		SwapChain() = delete;
-		SwapChain(const Surface& surface, GLFWwindow* p_window);
+		SwapChain(const Surface& surface, SDL_Window* p_window);
 		virtual ~SwapChain();
 
 		VkResult initializeImages(const Surface& surface, CommandBuffer& buffer);

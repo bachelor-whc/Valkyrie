@@ -31,12 +31,12 @@ DepthBuffer::~DepthBuffer() {
 
 }
 
-VkResult DepthBuffer::initializeImages(CommandBuffer& buffer, GLFWwindow* p_window) {
+VkResult DepthBuffer::initializeImages(CommandBuffer& buffer, SDL_Window* p_window) {
 	VkResult result;
 	
 	int width;
 	int height;
-	glfwGetWindowSize(p_window, &width, &height);
+	SDL_GetWindowSize(p_window, &width, &height);
 
 	VkImageCreateInfo image_create = {};
 	image_create.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;

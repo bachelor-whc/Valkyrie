@@ -69,29 +69,29 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)Valkyrie\third_party\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)Valkyrie\third_party\;$(SolutionDir)SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)executable\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)Valkyrie\third_party\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)Valkyrie\third_party\;$(SolutionDir)SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)executable\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)Valkyrie\third_party\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)Valkyrie\third_party\;$(SolutionDir)SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)executable\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)Valkyrie\third_party\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)Valkyrie\third_party\;$(SolutionDir)SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)executable\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)$(Platform)</TargetName>
@@ -106,7 +106,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>vulkan-1.lib;zlib.lib;glfw.lib;Valkyrie.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;zlib.lib;Valkyrie.lib;SDL2Win32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -120,7 +120,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>vulkan-1.lib;zlib.lib;glfw.lib;Valkyrie.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;zlib.lib;Valkyrie.lib;SDL2x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -138,7 +138,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>vulkan-1.lib;zlib.lib;glfw.lib;Valkyrie.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;zlib.lib;Valkyrie.lib;SDL2Win32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -156,7 +156,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>vulkan-1.lib;zlib.lib;glfw.lib;Valkyrie.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;zlib.lib;Valkyrie.lib;SDL2x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>

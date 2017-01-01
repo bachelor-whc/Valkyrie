@@ -9,9 +9,9 @@ ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
 VkDevice g_device_handle = VK_NULL_HANDLE;
 VkPhysicalDevice g_physical_device_handle = VK_NULL_HANDLE;
 
-void glfwRefreshCallback(GLFWwindow * window) {
-	ValkyrieEngine::getGlobalValkyriePtr()->render();
-}
+//void glfwRefreshCallback(GLFWwindow * window) {
+//	ValkyrieEngine::getGlobalValkyriePtr()->render();
+//}
 
 ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	m_application_name(application_name),
@@ -20,7 +20,7 @@ ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	mp_depth_buffer(nullptr),
 	descriptorPool(8),
 	m_render_pfns() {
-
+	assert(SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS) == 0);
 }
 
 ValkyrieEngine::~ValkyrieEngine() {
@@ -34,7 +34,7 @@ ValkyrieEngine::~ValkyrieEngine() {
 	DestroyInstance(m_instatnce);
 	delete mp_swapchain;
 	delete mp_depth_buffer;
-	glfwDestroyWindow(mp_window);
+	SDL_Quit();
 }
 
 void ValkyrieEngine::initializeInstance() {
@@ -121,35 +121,35 @@ void ValkyrieEngine::initializePipelineCache() {
 
 void ValkyrieEngine::initializeImGuiInput() {
 	auto& imgui_io = ImGui::GetIO();
-	imgui_io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-	imgui_io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-	imgui_io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-	imgui_io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-	imgui_io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-	imgui_io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-	imgui_io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-	imgui_io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-	imgui_io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-	imgui_io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-	imgui_io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-	imgui_io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-	imgui_io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-	imgui_io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-	imgui_io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-	imgui_io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-	imgui_io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-	imgui_io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-	imgui_io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+	imgui_io.KeyMap[ImGuiKey_Enter] = SDLK_RETURN;
+	imgui_io.KeyMap[ImGuiKey_Backspace] = SDLK_BACKSPACE;
+	imgui_io.KeyMap[ImGuiKey_Delete] = SDLK_DELETE;
+	imgui_io.KeyMap[ImGuiKey_Escape] = SDLK_ESCAPE;
+	imgui_io.KeyMap[ImGuiKey_Tab] = SDLK_TAB;
+	imgui_io.KeyMap[ImGuiKey_LeftArrow] = SDLK_LEFT;
+	imgui_io.KeyMap[ImGuiKey_RightArrow] = SDLK_RIGHT;
+	imgui_io.KeyMap[ImGuiKey_UpArrow] = SDLK_UP;
+	imgui_io.KeyMap[ImGuiKey_DownArrow] = SDLK_DOWN;
+	imgui_io.KeyMap[ImGuiKey_PageUp] = SDLK_PAGEUP;
+	imgui_io.KeyMap[ImGuiKey_PageDown] = SDLK_PAGEDOWN;
+	imgui_io.KeyMap[ImGuiKey_Home] = SDLK_HOME;
+	imgui_io.KeyMap[ImGuiKey_End] = SDLK_END;
+	imgui_io.KeyMap[ImGuiKey_A] = SDLK_a;
+	imgui_io.KeyMap[ImGuiKey_C] = SDLK_c;
+	imgui_io.KeyMap[ImGuiKey_V] = SDLK_v;
+	imgui_io.KeyMap[ImGuiKey_X] = SDLK_x;
+	imgui_io.KeyMap[ImGuiKey_Y] = SDLK_y;
+	imgui_io.KeyMap[ImGuiKey_Z] = SDLK_z;
 
-	glfwSetKeyCallback(mp_window, GLFWKeyBoardCallback);
+	/*glfwSetKeyCallback(mp_window, GLFWKeyBoardCallback);
 	glfwSetMouseButtonCallback(mp_window, GLFWMouseButtonCallback);
 	glfwSetCharCallback(mp_window, GLFWCharCallback);
-	glfwSetScrollCallback(mp_window, GLFWScrollCallback);
+	glfwSetScrollCallback(mp_window, GLFWScrollCallback);*/
 }
 
 void ValkyrieEngine::updateUserInput() {
 	auto& imgui_io = ImGui::GetIO();
-	if(glfwGetWindowAttrib(mp_window, GLFW_FOCUSED)) {
+	/*if(glfwGetWindowAttrib(mp_window, GLFW_FOCUSED)) {
 		double mouse_x, mouse_y;
 		glfwGetCursorPos(mp_window, &mouse_x, &mouse_y);
 		imgui_io.MousePos = ImVec2((float)mouse_x, (float)mouse_y);
@@ -158,13 +158,14 @@ void ValkyrieEngine::updateUserInput() {
 		imgui_io.MousePos = ImVec2(-1, -1);
 	for (int i = 0; i < 3; ++i) {
 		imgui_io.MouseDown[i] = userInput.mousePressed[i];
-	}
+	}*/
 	imgui_io.MouseWheel = userInput.mouseWheel;
 	userInput.mouseWheel = 0.0f;
 }
 
 void ValkyrieEngine::updateTime() {
-	m_current_timestamp = glfwGetTime();
+	double time = (double)SDL_GetTicks() / 1000.0;
+	m_current_timestamp = time;
 	m_deltatime = m_current_timestamp - m_previous_timestamp;
 	m_previous_timestamp = m_current_timestamp;
 	auto& imgui_io = ImGui::GetIO();
@@ -172,14 +173,19 @@ void ValkyrieEngine::updateTime() {
 }
 
 bool ValkyrieEngine::execute() {
-	if(!glfwWindowShouldClose(mp_window)) {
-		glfwPollEvents();
-		updateUserInput();
-		updateTime();
-		render();
-		return true;
+	static SDL_Event event;
+	while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_QUIT) {
+			return false;
+		}
+		if (event.type == SDL_KEYDOWN) {
+			return false;
+		}
 	}
-	return false;
+	updateUserInput();
+	updateTime();
+	render();
+	return true;
 }
 
 VkResult ValkyrieEngine::initialize() {
@@ -284,9 +290,8 @@ VkResult ValkyrieEngine::render() {
 }
 
 void ValkyrieEngine::initializeWindow(int width, int height, const std::string & title) {
-	glfwInit();
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	mp_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+	const SDL_WindowFlags flags = SDL_WINDOW_SHOWN;
+	mp_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 }
 
 void ValkyrieEngine::initializePipelineLayout(const std::string& pipeline_name) {
@@ -345,7 +350,7 @@ void ValkyrieEngine::writeSets(const std::vector<VkWriteDescriptorSet>& writes) 
 void ValkyrieEngine::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
 	int width;
 	int height;
-	glfwGetWindowSize(mp_window, &width, &height);
+	SDL_GetWindowSize(mp_window, &width, &height);
 	m_viewport.width = (float)width;
 	m_viewport.height = (float)height;
 	m_viewport.minDepth = 0.0f;
@@ -358,7 +363,7 @@ void ValkyrieEngine::commandSetViewport(const Vulkan::CommandBuffer& command_buf
 void ValkyrieEngine::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
 	int width;
 	int height;
-	glfwGetWindowSize(mp_window, &width, &height);
+	SDL_GetWindowSize(mp_window, &width, &height);
 	m_scissor.extent.width = (uint32_t)width;
 	m_scissor.extent.height = (uint32_t)height;
 	m_scissor.offset.x = 0;

@@ -113,7 +113,7 @@ private:
 
 private:
 	std::string m_application_name;
-	GLFWwindow* mp_window;
+	SDL_Window* mp_window;
 	double m_previous_timestamp = 0.0;
 	double m_current_timestamp = 0.0;
 	double m_deltatime = 0.0;

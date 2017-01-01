@@ -2,6 +2,14 @@
 #define _COMMON_H 
 #ifdef _WIN32
 #include <Windows.h>
+#define VK_USE_PLATFORM_WIN32_KHR
+#define SURFACE_EXTENSION_NAME VK_KHR_WIN32_SURFACE_EXTENSION_NAME
+#elif __ANDROID__
+#define VK_USE_PLATFORM_ANDROID_KHR
+#define SURFACE_EXTENSION_NAME VK_KHR_ANDROID_SURFACE_EXTENSION_NAME
+#elif __linux__
+#define VK_USE_PLATFORM_XCB_KHR
+#define SURFACE_EXTENSION_NAME VK_KHR_XCB_SURFACE_EXTENSION_NAME
 #endif
 #include <vulkan/vulkan.h>
 #define GLFW_INCLUDE_VULKAN
@@ -17,7 +25,7 @@
 #include <unordered_set>
 #include <exception>
 #include <json.hpp>
-#include <GLFW/glfw3.h>
+#include <SDL.h>
 #include "valkyrie/default_create_info.h"
 #include "valkyrie/utility/memory_access.h"
 #define NEW_NT new(std::nothrow)

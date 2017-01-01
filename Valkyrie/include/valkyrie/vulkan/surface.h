@@ -15,7 +15,7 @@ namespace Vulkan {
 		virtual VkAttachmentDescription getAttachmentDescription() const;
 	};
 
-	VkResult setSurface(Surface& surface, GLFWwindow* p_window, const Instance& instance);
+	VkResult setSurface(Surface& surface, SDL_Window* p_window, const Instance& instance);
 	void DestroySurface(Instance& instance, Surface& surface);
 }
 

@@ -2,6 +2,7 @@
 #include "valkyrie.h"
 #include "valkyrie/UI/user_input.h"
 
+/*
 void GLFWMouseButtonCallback(GLFWwindow* p_window, int button, int action, int mods) {
 	if (button >= 0 && button < 3) {
 		auto& user_input = ValkyrieEngine::getGlobalValkyriePtr()->userInput;
@@ -25,7 +26,7 @@ void GLFWKeyBoardCallback(GLFWwindow * p_window, int key, int scancode, int acti
 	imgui_io.KeySuper = imgui_io.KeysDown[GLFW_KEY_LEFT_SUPER] || imgui_io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 }
 
-void GLFWCharCallback(GLFWwindow *, unsigned int c) {
+void GLFWCharCallback(SDL_Window*, unsigned int c) {
 	auto& imgui_io = ImGui::GetIO();
 	if (c > 0 && c < 0x10000)
 		imgui_io.AddInputCharacter((unsigned short)c);
@@ -35,3 +36,4 @@ void GLFWScrollCallback(GLFWwindow*, double x_offset, double y_offset) {
 	auto& user_input = ValkyrieEngine::getGlobalValkyriePtr()->userInput;
 	user_input.mouseWheel += (float)y_offset;
 }
+*/

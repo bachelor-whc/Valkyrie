@@ -1,3 +1,4 @@
+#include <SDL.h>
 #include "valkyrie/vulkan/swapchain.h"
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/physical_device.h"
@@ -47,7 +48,7 @@ void Framebuffers::initialize(const RenderPass& render_pass, const int width, co
 	}
 }
 
-SwapChain::SwapChain(const Surface& surface, GLFWwindow* window) :
+SwapChain::SwapChain(const Surface& surface, SDL_Window* p_window) :
 	mp_framebuffers(nullptr),
 	m_current_buffer(-1),
 	m_width(0),
@@ -56,7 +57,7 @@ SwapChain::SwapChain(const Surface& surface, GLFWwindow* window) :
 	VkResult result = VK_SUCCESS;
 	VkSurfaceCapabilitiesKHR surface_capabilities = {};
 
-	glfwGetWindowSize(window, &m_width, &m_height);
+	SDL_GetWindowSize(p_window, &m_width, &m_height);
 	// Specification:
 	// To query the basic capabilities of a surface, needed in order to create a swapchain.
 	result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(g_physical_device_handle, surface.handle, &surface_capabilities);

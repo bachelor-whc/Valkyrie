@@ -12,7 +12,7 @@ namespace Vulkan{
 		DepthBuffer();
 		virtual ~DepthBuffer();
 
-		VkResult initializeImages(CommandBuffer& buffer, GLFWwindow* p_window);
+		VkResult initializeImages(CommandBuffer& buffer, SDL_Window* p_window);
 		virtual VkAttachmentDescription getAttachmentDescription() const;
 
 		VkFormat format = VK_FORMAT_UNDEFINED;

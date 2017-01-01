@@ -34,9 +34,6 @@
     <Filter Include="Source Files\third_party\imgui">
       <UniqueIdentifier>{81a2e7e2-2013-4cca-81ac-e074aa225673}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\third_party\glfw">
-      <UniqueIdentifier>{d9581b31-91f9-41b4-b4c1-387ab69bf6ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\valkyrie\asset">
       <UniqueIdentifier>{a29032b0-d549-4bbc-aeaa-7b51f659353a}</UniqueIdentifier>
     </Filter>
@@ -55,14 +52,14 @@
     <Filter Include="Source Files\graphics_api_support">
       <UniqueIdentifier>{c677f384-55ed-4ed0-b5b7-00790eb74809}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\third_party\file_system">
-      <UniqueIdentifier>{eeed6c10-e29e-4573-8d0c-7dd09009ab06}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\file_system">
       <UniqueIdentifier>{9eed3f17-8fd0-4092-b5b4-85073c6b1963}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\valkyrie\utility">
       <UniqueIdentifier>{8389713a-02e4-44ac-8d6c-6716391b0173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\valkyrie\file_system">
+      <UniqueIdentifier>{eeed6c10-e29e-4573-8d0c-7dd09009ab06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,12 +156,6 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\third_party\GLFW\glfw3.h">
-      <Filter>Header Files\third_party\glfw</Filter>
-    </ClInclude>
-    <ClInclude Include="Valkyrie\third_party\GLFW\glfw3native.h">
-      <Filter>Header Files\third_party\glfw</Filter>
-    </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\UI\user_input.h">
       <Filter>Header Files\valkyrie\UI</Filter>
     </ClInclude>
@@ -196,7 +187,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\file_system\utility.h">
-      <Filter>Header Files\third_party\file_system</Filter>
+      <Filter>Header Files\valkyrie\file_system</Filter>
     </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\utility\memory_access.h">
       <Filter>Header Files\valkyrie\utility</Filter>
