@@ -1,7 +1,7 @@
 #ifndef _VULKAN_SURFACE_H
 #define _VULKAN_SURFACE_H
 #include <memory>
-#include "utility.h"
+#include "common.h"
 #include "valkyrie/vulkan/attachment.h"
 
 namespace Vulkan {

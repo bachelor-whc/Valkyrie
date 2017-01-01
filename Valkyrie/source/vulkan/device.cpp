@@ -1,6 +1,6 @@
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/vulkan/device.h"
-#include "utility.h"
+#include "common.h"
 using namespace Vulkan;
 
 const std::vector<const char*> g_device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };

@@ -1,6 +1,6 @@
 #ifndef _VULKAN_VERTEX_INPUT_H
 #define _VULKAN_VERTEX_INPUT_H
-#include "utility.h"
+#include "common.h"
 
 namespace Vulkan {
 	struct VertexInput {

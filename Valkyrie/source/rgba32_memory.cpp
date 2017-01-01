@@ -1,4 +1,4 @@
-#include "utility.h"
+#include "common.h"
 #include "valkyrie/image.h"
 
 Valkyrie::RGBA32Memory::RGBA32Memory(int width, int height, void* src_data) :

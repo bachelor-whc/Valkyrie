@@ -1,6 +1,6 @@
 #ifndef _VULKAN_SHADER_H
 #define _VULKAN_SHADER_H
-#include "utility.h"
+#include "common.h"
 
 namespace Vulkan {
 	struct Device;

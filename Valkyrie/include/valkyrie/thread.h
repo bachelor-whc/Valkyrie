@@ -1,7 +1,7 @@
 #ifndef _VALKYRIE_THREAD_H 
 #define _VALKYRIE_THREAD_H 
 #include "valkyrie/vulkan/command_buffer.h"
-#include "utility.h"
+#include "common.h"
 
 namespace Vulkan {
 	struct Device;

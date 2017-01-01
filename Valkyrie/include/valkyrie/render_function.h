@@ -1,6 +1,6 @@
 #ifndef _RENDER_FUNCTION_H
 #define _RENDER_FUNCTION_H
-#include "utility.h"
+#include "common.h"
 
 namespace Valkyrie {
 	class RenderFunction {

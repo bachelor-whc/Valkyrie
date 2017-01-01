@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_GRAPHICS_API_ATTRIBUTE_H 
 #define _VALKYRIE_GRAPHICS_API_ATTRIBUTE_H 
-#include "utility.h"
+#include "common.h"
 
 namespace Valkyrie {
 	class GrpahicsAPIAttributeSupport : public MemoryAccess {

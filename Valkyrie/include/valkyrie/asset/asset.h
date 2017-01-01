@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_ASSET_H 
 #define _VALKYRIE_ASSET_H 
-#include "utility.h"
+#include "common.h"
 
 namespace Valkyrie {
 	class Asset {

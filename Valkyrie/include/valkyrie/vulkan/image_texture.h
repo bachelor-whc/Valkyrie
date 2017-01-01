@@ -1,6 +1,6 @@
 #ifndef _VULKAN_IMAGE_TEXTURE_H
 #define _VULKAN_IMAGE_TEXTURE_H
-#include "utility.h"
+#include "common.h"
 #include "valkyrie/vulkan/texture.h"
 
 namespace Vulkan {

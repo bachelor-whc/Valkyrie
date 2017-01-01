@@ -1,6 +1,6 @@
 #ifndef _VULKAN_ATTACHMENT_H
 #define _VULKAN_ATTACHMENT_H
-#include "utility.h"
+#include "common.h"
 
 namespace Vulkan {
 	struct Attachment {

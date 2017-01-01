@@ -1,6 +1,6 @@
 #ifndef _VULKAN_DESCRIPTOR_SET_LAYOUT_H
 #define _VULKAN_DESCRIPTOR_SET_LAYOUT_H
-#include "utility.h"
+#include "common.h"
 
 namespace Vulkan {
 	struct Device;

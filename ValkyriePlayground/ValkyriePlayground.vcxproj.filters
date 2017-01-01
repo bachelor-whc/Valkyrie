@@ -35,9 +35,15 @@
     <None Include="gltf\test.gltf">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="gltf\test.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="wang.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gltf\test.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

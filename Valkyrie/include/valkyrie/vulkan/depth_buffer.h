@@ -1,6 +1,6 @@
 #ifndef _VULKAN_DEPTH_BUFFER_H
 #define _VULKAN_DEPTH_BUFFER_H
-#include "utility.h"
+#include "common.h"
 #include "valkyrie/vulkan/attachment.h"
 
 namespace Vulkan{

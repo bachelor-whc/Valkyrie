@@ -1,6 +1,7 @@
 #ifndef _VALKYRIE_IMAGE_H 
 #define _VALKYRIE_IMAGE_H 
-#include "utility.h"
+#include "common.h"
+#include "file_system/utility.h"
 
 namespace Valkyrie {
 

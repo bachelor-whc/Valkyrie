@@ -1,6 +1,6 @@
 #ifndef _VULKAN_INSTANCE_H 
 #define _VULKAN_INSTANCE_H
-#include "utility.h"
+#include "common.h"
 
 namespace Vulkan {
 

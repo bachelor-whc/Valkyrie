@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_USER_INPUT_H 
 #define _VALKYRIE_USER_INPUT_H  
-#include "utility.h"
+#include "common.h"
 
 struct UserInput {
 	bool mousePressed[3] = { false, false, false };

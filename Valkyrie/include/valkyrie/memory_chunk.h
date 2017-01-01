@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_MEMORY_CHUNK_H
 #define _VALKYRIE_MEMORY_CHUNK_H
-#include "utility.h"
+#include "common.h"
 
 namespace Valkyrie {
 	class MemoryChunk : public MemoryAccess {

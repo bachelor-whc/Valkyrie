@@ -1,6 +1,6 @@
 #ifndef _VULKAN_DEVICE_H 
 #define _VULKAN_DEVICE_H 
-#include "utility.h"
+#include "common.h"
 
 namespace Vulkan {
 	struct PhysicalDevice;

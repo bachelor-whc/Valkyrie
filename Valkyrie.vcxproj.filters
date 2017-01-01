@@ -55,12 +55,18 @@
     <Filter Include="Source Files\graphics_api_support">
       <UniqueIdentifier>{c677f384-55ed-4ed0-b5b7-00790eb74809}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\third_party\file_system">
+      <UniqueIdentifier>{eeed6c10-e29e-4573-8d0c-7dd09009ab06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\file_system">
+      <UniqueIdentifier>{9eed3f17-8fd0-4092-b5b4-85073c6b1963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\valkyrie\utility">
+      <UniqueIdentifier>{8389713a-02e4-44ac-8d6c-6716391b0173}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Valkyrie\include\valkyrie.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Valkyrie\include\utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\instance.h">
@@ -186,6 +192,15 @@
     <ClInclude Include="Valkyrie\include\valkyrie\graphics_api_support\attribute.h">
       <Filter>Header Files\valkyrie\graphics_api_support</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\include\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\file_system\utility.h">
+      <Filter>Header Files\third_party\file_system</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\utility\memory_access.h">
+      <Filter>Header Files\valkyrie\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\third_party\imgui.cpp">
@@ -283,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp">
       <Filter>Source Files\asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\file_system\utility.cpp">
+      <Filter>Source Files\file_system</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

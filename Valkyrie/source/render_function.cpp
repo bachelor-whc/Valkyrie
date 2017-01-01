@@ -1,4 +1,4 @@
-#include "utility.h"
+#include "common.h"
 #include "valkyrie/render_function.h"
 
 Valkyrie::RenderFunction::RenderFunction() {

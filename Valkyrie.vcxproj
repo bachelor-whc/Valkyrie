@@ -19,19 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Valkyrie\include\utility.h" />
+    <ClInclude Include="Valkyrie\include\common.h" />
     <ClInclude Include="Valkyrie\include\valkyrie.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\asset.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_asset.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_loader.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\mesh.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\default_create_info.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\file_system\utility.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\graphics_api_support\attribute.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\image.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\memory_chunk.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\render_function.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\thread.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\UI\user_input.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\utility\memory_access.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\attachment.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_buffer.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\debug.h" />
@@ -66,6 +68,7 @@
   <ItemGroup>
     <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp" />
     <ClCompile Include="Valkyrie\source\asset\gltf_loader.cpp" />
+    <ClCompile Include="Valkyrie\source\file_system\utility.cpp" />
     <ClCompile Include="Valkyrie\source\graphics_api_support\attribute.cpp" />
     <ClCompile Include="Valkyrie\source\memory_chunk.cpp" />
     <ClCompile Include="Valkyrie\source\render_function.cpp" />

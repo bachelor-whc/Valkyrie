@@ -1,7 +1,7 @@
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/queue.h"
-#include "utility.h"
+#include "common.h"
 using namespace Vulkan;
 
 bool Vulkan::GetQueue(VkQueueFlags flag, Queue& queue) {

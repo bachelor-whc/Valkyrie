@@ -16,6 +16,8 @@ using Valkyrie::glTFAccessorPtr;
 using Valkyrie::GrpahicsAPIAttributeSupport;
 using Valkyrie::GAPIAttributeSupportPtr;
 using Valkyrie::GrpahicsAPIAttribute;
+using Valkyrie::GLTF_TYPE;
+using Valkyrie::GLTF_COMPONENT_TYPE;
 
 TEST(MemoryChunckCheck, Normal) {
 	MemoryChunk c1;
@@ -77,13 +79,13 @@ TEST(glTFAssetCheck, Initialization) {
 	GAPIAttributeSupportPtr gaas_ptr_5 = MAKE_SHARED(GrpahicsAPIAttribute<glm::vec3>)(buffer_view_ptr_4, 0, 20, count[4]);
 	GAPIAttributeSupportPtr gaas_ptr_6 = MAKE_SHARED(GrpahicsAPIAttribute<glm::vec2>)(buffer_view_ptr_4, 12, 20, count[5]);
 	GAPIAttributeSupportPtr gaas_ptr_7 = MAKE_SHARED(GrpahicsAPIAttribute<uint16_t>)(buffer_view_ptr_5, 0, 2, count[6]);
-	glTFAccessorPtr accessor_ptr_1 = MAKE_SHARED(glTFAccessor)(gaas_ptr_1, glTFAccessor::GLTF_TYPE::MAT4, (glTFAccessor::GLTF_COMPONENT_TYPE)5126);
-	glTFAccessorPtr accessor_ptr_2 = MAKE_SHARED(glTFAccessor)(gaas_ptr_2, glTFAccessor::GLTF_TYPE::SCALAR, (glTFAccessor::GLTF_COMPONENT_TYPE)5126);
-	glTFAccessorPtr accessor_ptr_3 = MAKE_SHARED(glTFAccessor)(gaas_ptr_3, glTFAccessor::GLTF_TYPE::SCALAR, (glTFAccessor::GLTF_COMPONENT_TYPE)5126);
-	glTFAccessorPtr accessor_ptr_4 = MAKE_SHARED(glTFAccessor)(gaas_ptr_4, glTFAccessor::GLTF_TYPE::VEC3, (glTFAccessor::GLTF_COMPONENT_TYPE)5126);
-	glTFAccessorPtr accessor_ptr_5 = MAKE_SHARED(glTFAccessor)(gaas_ptr_5, glTFAccessor::GLTF_TYPE::VEC3, (glTFAccessor::GLTF_COMPONENT_TYPE)5126);
-	glTFAccessorPtr accessor_ptr_6 = MAKE_SHARED(glTFAccessor)(gaas_ptr_6, glTFAccessor::GLTF_TYPE::VEC2, (glTFAccessor::GLTF_COMPONENT_TYPE)5126);
-	glTFAccessorPtr accessor_ptr_7 = MAKE_SHARED(glTFAccessor)(gaas_ptr_7, glTFAccessor::GLTF_TYPE::SCALAR, (glTFAccessor::GLTF_COMPONENT_TYPE)5123);
+	glTFAccessorPtr accessor_ptr_1 = MAKE_SHARED(glTFAccessor)(gaas_ptr_1, GLTF_TYPE::MAT4, (GLTF_COMPONENT_TYPE)5126);
+	glTFAccessorPtr accessor_ptr_2 = MAKE_SHARED(glTFAccessor)(gaas_ptr_2, GLTF_TYPE::SCALAR, (GLTF_COMPONENT_TYPE)5126);
+	glTFAccessorPtr accessor_ptr_3 = MAKE_SHARED(glTFAccessor)(gaas_ptr_3, GLTF_TYPE::SCALAR, (GLTF_COMPONENT_TYPE)5126);
+	glTFAccessorPtr accessor_ptr_4 = MAKE_SHARED(glTFAccessor)(gaas_ptr_4, GLTF_TYPE::VEC3, (GLTF_COMPONENT_TYPE)5126);
+	glTFAccessorPtr accessor_ptr_5 = MAKE_SHARED(glTFAccessor)(gaas_ptr_5, GLTF_TYPE::VEC3, (GLTF_COMPONENT_TYPE)5126);
+	glTFAccessorPtr accessor_ptr_6 = MAKE_SHARED(glTFAccessor)(gaas_ptr_6, GLTF_TYPE::VEC2, (GLTF_COMPONENT_TYPE)5126);
+	glTFAccessorPtr accessor_ptr_7 = MAKE_SHARED(glTFAccessor)(gaas_ptr_7, GLTF_TYPE::SCALAR, (GLTF_COMPONENT_TYPE)5123);
 	unsigned char* bvptr_1 = (unsigned char*)buffer_view_ptr_1->getData();
 	unsigned char* bvptr_2 = (unsigned char*)buffer_view_ptr_2->getData();
 	unsigned char* bvptr_3 = (unsigned char*)buffer_view_ptr_3->getData();
@@ -113,6 +115,29 @@ TEST(glTFAssetCheck, Initialization) {
 	ASSERT_EQ(*((glm::float32*)accessor_ptr_2->getInstance(count[1] - 2)), glm::float32(1));
 	ASSERT_EQ(*((glm::mat4*)accessor_ptr_1->getInstance(count[0] - 1)), glm::mat4(0));
 };
+
+TEST(FillMemoryCheck, File) {
+	const unsigned char test_bin[] = {
+		0x12, 0x34, 0x56, 0x78, 0x9A,
+		0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+		0xAB, 0xCD, 0xEF
+	};
+	FILE* p_file = fopen("test.bin", "wb");
+	fwrite(test_bin, 1, 13, p_file);
+	fclose(p_file);
+	MemoryChunkPtr cptr_1 = std::make_shared<Valkyrie::MemoryChunk>();
+	MemoryChunkPtr cptr_2 = std::make_shared<Valkyrie::MemoryChunk>();
+	MemoryChunkPtr cptr_3 = std::make_shared<Valkyrie::MemoryChunk>();
+	cptr_1->allocate(13);
+	cptr_2->allocate(12);
+	cptr_3->allocate(14);
+	FillMemoryFromFile(cptr_1, "test.bin");
+	FillMemoryFromFile(cptr_2, "test.bin");
+	FillMemoryFromFile(cptr_3, "test.bin");
+	ASSERT_TRUE(memcmp(cptr_1->getData(), test_bin, cptr_1->getSize()) == 0);
+	ASSERT_TRUE(memcmp(cptr_2->getData(), test_bin, cptr_2->getSize()) == 0);
+	ASSERT_TRUE(memcmp(cptr_3->getData(), test_bin, 13) == 0);
+}
 
 int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);

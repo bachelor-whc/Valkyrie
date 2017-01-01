@@ -1,7 +1,7 @@
 #ifndef _VALKYRIE_H 
 #define _VALKYRIE_H
 #define GLFW_INCLUDE_VULKAN
-#include "utility.h"
+#include "common.h"
 #include "valkyrie/vulkan/instance.h"
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/vulkan/device.h"
