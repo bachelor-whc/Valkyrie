@@ -3,12 +3,12 @@
 #include "common.h"
 
 struct UserInput {
+	void handleSDLMouseButtonEvent(const SDL_Event& s_event);
+	void handleSDLKeyBoardEvent(const SDL_Event& s_event);
+	void handleSDLCharEvent(const SDL_Event& s_event);
+	void handleSDLScrollEvent(const SDL_Event& s_event);
+
 	bool mousePressed[3] = { false, false, false };
 	float mouseWheel = 0.0f;
 };
-
-//void GLFWMouseButtonCallback(GLFWwindow* p_window, int button, int action, int mods);
-//void GLFWKeyBoardCallback(GLFWwindow* p_window, int key, int scancode, int action, int mods);
-//void GLFWCharCallback(GLFWwindow* p_window, unsigned int c);
-//void GLFWScrollCallback(GLFWwindow*, double x_offset, double y_offset);
 #endif

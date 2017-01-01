@@ -32,6 +32,7 @@ public:
 		UNINITIALIZED, INITIALIZING, INITIALIZED, EXECUTE, EXIT
 	};
 	static ValkyrieEngine* getGlobalValkyriePtr() { return gp_valkyrie; };
+	static bool SDLInitialized;
 	
 public:
 	ValkyrieEngine() = delete;
@@ -92,7 +93,7 @@ private:
 	void initializePipelineCache();
 	void initializeImGuiInput();
 	
-	void updateUserInput();
+	void updateUserInput(const SDL_Event& s_event);
 	void updateTime();
 
 private:

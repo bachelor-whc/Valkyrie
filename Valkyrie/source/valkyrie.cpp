@@ -6,12 +6,9 @@
 using namespace Vulkan;
 
 ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
+bool ValkyrieEngine::SDLInitialized = false;
 VkDevice g_device_handle = VK_NULL_HANDLE;
 VkPhysicalDevice g_physical_device_handle = VK_NULL_HANDLE;
-
-//void glfwRefreshCallback(GLFWwindow * window) {
-//	ValkyrieEngine::getGlobalValkyriePtr()->render();
-//}
 
 ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	m_application_name(application_name),
@@ -20,7 +17,11 @@ ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	mp_depth_buffer(nullptr),
 	descriptorPool(8),
 	m_render_pfns() {
-	assert(SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS) == 0);
+	if(!SDLInitialized) {
+		int sdl_result = SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+		assert(sdl_result == 0);
+		SDLInitialized = true;
+	}
 }
 
 ValkyrieEngine::~ValkyrieEngine() {
@@ -121,44 +122,34 @@ void ValkyrieEngine::initializePipelineCache() {
 
 void ValkyrieEngine::initializeImGuiInput() {
 	auto& imgui_io = ImGui::GetIO();
-	imgui_io.KeyMap[ImGuiKey_Enter] = SDLK_RETURN;
-	imgui_io.KeyMap[ImGuiKey_Backspace] = SDLK_BACKSPACE;
-	imgui_io.KeyMap[ImGuiKey_Delete] = SDLK_DELETE;
-	imgui_io.KeyMap[ImGuiKey_Escape] = SDLK_ESCAPE;
-	imgui_io.KeyMap[ImGuiKey_Tab] = SDLK_TAB;
-	imgui_io.KeyMap[ImGuiKey_LeftArrow] = SDLK_LEFT;
-	imgui_io.KeyMap[ImGuiKey_RightArrow] = SDLK_RIGHT;
-	imgui_io.KeyMap[ImGuiKey_UpArrow] = SDLK_UP;
-	imgui_io.KeyMap[ImGuiKey_DownArrow] = SDLK_DOWN;
-	imgui_io.KeyMap[ImGuiKey_PageUp] = SDLK_PAGEUP;
-	imgui_io.KeyMap[ImGuiKey_PageDown] = SDLK_PAGEDOWN;
-	imgui_io.KeyMap[ImGuiKey_Home] = SDLK_HOME;
-	imgui_io.KeyMap[ImGuiKey_End] = SDLK_END;
-	imgui_io.KeyMap[ImGuiKey_A] = SDLK_a;
-	imgui_io.KeyMap[ImGuiKey_C] = SDLK_c;
-	imgui_io.KeyMap[ImGuiKey_V] = SDLK_v;
-	imgui_io.KeyMap[ImGuiKey_X] = SDLK_x;
-	imgui_io.KeyMap[ImGuiKey_Y] = SDLK_y;
-	imgui_io.KeyMap[ImGuiKey_Z] = SDLK_z;
-
-	/*glfwSetKeyCallback(mp_window, GLFWKeyBoardCallback);
-	glfwSetMouseButtonCallback(mp_window, GLFWMouseButtonCallback);
-	glfwSetCharCallback(mp_window, GLFWCharCallback);
-	glfwSetScrollCallback(mp_window, GLFWScrollCallback);*/
+	imgui_io.KeyMap[ImGuiKey_Enter] = SDL_SCANCODE_RETURN;
+	imgui_io.KeyMap[ImGuiKey_Backspace] = SDL_SCANCODE_BACKSPACE;
+	imgui_io.KeyMap[ImGuiKey_Delete] = SDL_SCANCODE_DELETE;
+	imgui_io.KeyMap[ImGuiKey_Escape] = SDL_SCANCODE_ESCAPE;
+	imgui_io.KeyMap[ImGuiKey_Tab] = SDL_SCANCODE_TAB;
+	imgui_io.KeyMap[ImGuiKey_LeftArrow] = SDL_SCANCODE_LEFT;
+	imgui_io.KeyMap[ImGuiKey_RightArrow] = SDL_SCANCODE_RIGHT;
+	imgui_io.KeyMap[ImGuiKey_UpArrow] = SDL_SCANCODE_UP;
+	imgui_io.KeyMap[ImGuiKey_DownArrow] = SDL_SCANCODE_DOWN;
+	imgui_io.KeyMap[ImGuiKey_PageUp] = SDL_SCANCODE_PAGEUP;
+	imgui_io.KeyMap[ImGuiKey_PageDown] = SDL_SCANCODE_PAGEDOWN;
+	imgui_io.KeyMap[ImGuiKey_Home] = SDL_SCANCODE_HOME;
+	imgui_io.KeyMap[ImGuiKey_End] = SDL_SCANCODE_END;
+	imgui_io.KeyMap[ImGuiKey_A] = SDL_SCANCODE_A;
+	imgui_io.KeyMap[ImGuiKey_C] = SDL_SCANCODE_C;
+	imgui_io.KeyMap[ImGuiKey_V] = SDL_SCANCODE_V;
+	imgui_io.KeyMap[ImGuiKey_X] = SDL_SCANCODE_X;
+	imgui_io.KeyMap[ImGuiKey_Y] = SDL_SCANCODE_Y;
+	imgui_io.KeyMap[ImGuiKey_Z] = SDL_SCANCODE_Z;
 }
 
-void ValkyrieEngine::updateUserInput() {
+void ValkyrieEngine::updateUserInput(const SDL_Event& s_event) {
 	auto& imgui_io = ImGui::GetIO();
-	/*if(glfwGetWindowAttrib(mp_window, GLFW_FOCUSED)) {
-		double mouse_x, mouse_y;
-		glfwGetCursorPos(mp_window, &mouse_x, &mouse_y);
-		imgui_io.MousePos = ImVec2((float)mouse_x, (float)mouse_y);
+	if (s_event.type == SDL_MOUSEMOTION) {
+		imgui_io.MousePos.x = s_event.motion.x;
+		imgui_io.MousePos.y = s_event.motion.y;
 	}
-	else
-		imgui_io.MousePos = ImVec2(-1, -1);
-	for (int i = 0; i < 3; ++i) {
-		imgui_io.MouseDown[i] = userInput.mousePressed[i];
-	}*/
+	memcpy(imgui_io.MouseDown, userInput.mousePressed, 3);
 	imgui_io.MouseWheel = userInput.mouseWheel;
 	userInput.mouseWheel = 0.0f;
 }
@@ -173,16 +164,28 @@ void ValkyrieEngine::updateTime() {
 }
 
 bool ValkyrieEngine::execute() {
-	static SDL_Event event;
-	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_QUIT) {
+	static SDL_Event s_event;
+	while (SDL_PollEvent(&s_event)) {
+		switch (s_event.type) {
+		case SDL_QUIT:
 			return false;
+		case SDL_TEXTINPUT:
+			userInput.handleSDLCharEvent(s_event);
+			break;
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+			userInput.handleSDLKeyBoardEvent(s_event);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+			userInput.handleSDLMouseButtonEvent(s_event);
+			break;
+		case SDL_MOUSEWHEEL:
+			userInput.handleSDLScrollEvent(s_event);
+			break;
 		}
-		if (event.type == SDL_KEYDOWN) {
-			return false;
-		}
+		updateUserInput(s_event);
 	}
-	updateUserInput();
 	updateTime();
 	render();
 	return true;
@@ -191,6 +194,8 @@ bool ValkyrieEngine::execute() {
 VkResult ValkyrieEngine::initialize() {
 	VkResult result;
 	gp_valkyrie = this;
+
+	SDL_StartTextInput();
 
 	assert(mp_window != nullptr);
 	initializeInstance();

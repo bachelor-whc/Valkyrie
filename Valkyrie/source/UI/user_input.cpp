@@ -2,38 +2,42 @@
 #include "valkyrie.h"
 #include "valkyrie/UI/user_input.h"
 
-/*
-void GLFWMouseButtonCallback(GLFWwindow* p_window, int button, int action, int mods) {
-	if (button >= 0 && button < 3) {
-		auto& user_input = ValkyrieEngine::getGlobalValkyriePtr()->userInput;
-		if(action == GLFW_PRESS)
-			user_input.mousePressed[button] = true;
-		else if(action == GLFW_RELEASE)
-			user_input.mousePressed[button] = false;
+void UserInput::handleSDLMouseButtonEvent(const SDL_Event& s_event) {
+	bool s = s_event.type == SDL_MOUSEBUTTONDOWN ? true : false;
+	int index;
+	switch (s_event.button.button) {
+	case SDL_BUTTON_LEFT:
+		index = 0;
+		break;
+	case SDL_BUTTON_RIGHT:
+		index = 1;
+		break;
+	case SDL_BUTTON_MIDDLE:
+	default:
+		index = 2;
+		break;
 	}
+	mousePressed[index] = s;
 }
 
-void GLFWKeyBoardCallback(GLFWwindow * p_window, int key, int scancode, int action, int mods) {
+void UserInput::handleSDLKeyBoardEvent(const SDL_Event& s_event) {
 	auto& imgui_io = ImGui::GetIO();
-	if (action == GLFW_PRESS)
-		imgui_io.KeysDown[key] = true;
-	if (action == GLFW_RELEASE)
-		imgui_io.KeysDown[key] = false;
+	if(s_event.type == SDL_KEYDOWN)
+		imgui_io.KeysDown[s_event.key.keysym.scancode] = true;
+	else if(s_event.type == SDL_KEYUP)
+		imgui_io.KeysDown[s_event.key.keysym.scancode] = false;
 
-	imgui_io.KeyCtrl = imgui_io.KeysDown[GLFW_KEY_LEFT_CONTROL] || imgui_io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-	imgui_io.KeyShift = imgui_io.KeysDown[GLFW_KEY_LEFT_SHIFT] || imgui_io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-	imgui_io.KeyAlt = imgui_io.KeysDown[GLFW_KEY_LEFT_ALT] || imgui_io.KeysDown[GLFW_KEY_RIGHT_ALT];
-	imgui_io.KeySuper = imgui_io.KeysDown[GLFW_KEY_LEFT_SUPER] || imgui_io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+	imgui_io.KeyCtrl = imgui_io.KeysDown[SDL_SCANCODE_LCTRL] || imgui_io.KeysDown[SDL_SCANCODE_RCTRL];
+	imgui_io.KeyShift = imgui_io.KeysDown[SDL_SCANCODE_LSHIFT] || imgui_io.KeysDown[SDL_SCANCODE_RSHIFT];
+	imgui_io.KeyAlt = imgui_io.KeysDown[SDL_SCANCODE_LALT] || imgui_io.KeysDown[SDL_SCANCODE_LALT];
 }
 
-void GLFWCharCallback(SDL_Window*, unsigned int c) {
+void UserInput::handleSDLCharEvent(const SDL_Event& s_event) {
 	auto& imgui_io = ImGui::GetIO();
-	if (c > 0 && c < 0x10000)
-		imgui_io.AddInputCharacter((unsigned short)c);
+	const char* c_str = s_event.text.text;
+	imgui_io.AddInputCharactersUTF8(c_str);
 }
 
-void GLFWScrollCallback(GLFWwindow*, double x_offset, double y_offset) {
-	auto& user_input = ValkyrieEngine::getGlobalValkyriePtr()->userInput;
-	user_input.mouseWheel += (float)y_offset;
+void UserInput::handleSDLScrollEvent(const SDL_Event& s_event) {
+	mouseWheel += (float)s_event.wheel.y;
 }
-*/
