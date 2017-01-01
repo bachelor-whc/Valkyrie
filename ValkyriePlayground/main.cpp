@@ -47,9 +47,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	valkyrie.initializeWindow(width, height, title);
 	valkyrie.initialize();
 	auto& imgui_io = ImGui::GetIO();
-	imgui_io.DisplaySize.x = width;
-	imgui_io.DisplaySize.y = height;
-	
+
 #pragma endregion INITIALIZE_VALKYRIE
 
 #pragma region INITIALIZE_VARIABLE

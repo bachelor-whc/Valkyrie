@@ -297,6 +297,9 @@ VkResult ValkyrieEngine::render() {
 void ValkyrieEngine::initializeWindow(int width, int height, const std::string & title) {
 	const SDL_WindowFlags flags = SDL_WINDOW_SHOWN;
 	mp_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+	auto& imgui_io = ImGui::GetIO();
+	imgui_io.DisplaySize.x = width;
+	imgui_io.DisplaySize.y = height;
 }
 
 void ValkyrieEngine::initializePipelineLayout(const std::string& pipeline_name) {
