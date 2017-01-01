@@ -7,7 +7,6 @@ Valkyrie利用Vulkan進行3D Rendering，目標是要作為一個遊戲引擎提
 Valkyrie所使用的第三方函式庫或代碼其版權聲明都放置於`license`資料夾內，本專案目前所使用的如下：
 * Dear ImGui
 * GLM
-* GLFW
 * googletest
 * nlohmann/json
 * SDL2
