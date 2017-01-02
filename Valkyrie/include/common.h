@@ -2,6 +2,7 @@
 #define _COMMON_H 
 #ifdef _WIN32
 #include <Windows.h>
+#define SDL_MAIN_HANDLED
 #define VK_USE_PLATFORM_WIN32_KHR
 #define SURFACE_EXTENSION_NAME VK_KHR_WIN32_SURFACE_EXTENSION_NAME
 #elif __ANDROID__
