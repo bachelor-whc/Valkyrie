@@ -54,14 +54,6 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\texture.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\tool.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\vertex_input.h" />
-    <ClInclude Include="Valkyrie\third_party\imconfig.h" />
-    <ClInclude Include="Valkyrie\third_party\imgui.h" />
-    <ClInclude Include="Valkyrie\third_party\imgui_internal.h" />
-    <ClInclude Include="Valkyrie\third_party\json.hpp" />
-    <ClInclude Include="Valkyrie\third_party\stb_image.h" />
-    <ClInclude Include="Valkyrie\third_party\stb_rect_pack.h" />
-    <ClInclude Include="Valkyrie\third_party\stb_textedit.h" />
-    <ClInclude Include="Valkyrie\third_party\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp" />
@@ -149,25 +141,25 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\third_party;$(SolutionDir)SDL2\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)third_party;$(IncludePath)</IncludePath>
     <LibraryPath>$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\third_party;$(SolutionDir)SDL2\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)third_party;$(IncludePath)</IncludePath>
     <LibraryPath>$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\third_party;$(SolutionDir)SDL2\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)third_party;$(IncludePath)</IncludePath>
     <LibraryPath>$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\third_party;$(SolutionDir)SDL2\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)third_party;$(IncludePath)</IncludePath>
     <LibraryPath>$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\</IntDir>

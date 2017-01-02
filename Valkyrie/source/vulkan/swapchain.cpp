@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "valkyrie/vulkan/swapchain.h"
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/physical_device.h"

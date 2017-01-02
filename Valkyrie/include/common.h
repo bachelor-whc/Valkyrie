@@ -25,7 +25,7 @@
 #include <unordered_set>
 #include <exception>
 #include <json.hpp>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "valkyrie/default_create_info.h"
 #include "valkyrie/utility/memory_access.h"
 #define NEW_NT new(std::nothrow)
