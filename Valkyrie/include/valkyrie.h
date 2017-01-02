@@ -112,6 +112,9 @@ private:
 	VkRect2D m_scissor = {};
 	std::map<std::string, Valkyrie::RenderPFN> m_render_pfns;
 
+	VkFence m_present_fence = VK_NULL_HANDLE;
+	VkSemaphore m_present_semaphore = VK_NULL_HANDLE;
+
 private:
 	std::string m_application_name;
 	SDL_Window* mp_window;

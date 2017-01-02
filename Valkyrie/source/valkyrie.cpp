@@ -25,6 +25,8 @@ ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 }
 
 ValkyrieEngine::~ValkyrieEngine() {
+	vkDestroySemaphore(m_device.handle, m_present_semaphore, nullptr);
+	vkDestroyFence(m_device.handle, m_present_fence, nullptr);
 	DestroyPipelineCache();
 	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
 	DestroySwapChain(*mp_swapchain);
@@ -230,66 +232,47 @@ VkResult ValkyrieEngine::initialize() {
 
 	initializeImGuiInput();
 
+	VkFenceCreateInfo present_fence_create = {};
+	present_fence_create.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	present_fence_create.pNext = nullptr;
+	present_fence_create.flags = 0;
+	result = vkCreateFence(m_device.handle, &present_fence_create, nullptr, &m_present_fence);
+	assert(result == VK_SUCCESS);
+
+	VkSemaphoreCreateInfo present_semaphore_create = {};
+	present_semaphore_create.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+	present_semaphore_create.pNext = nullptr;
+	present_semaphore_create.flags = 0;
+	result = vkCreateSemaphore(m_device.handle, &present_semaphore_create, nullptr, &m_present_semaphore);
+	assert(result == VK_SUCCESS);
+
 	return VK_SUCCESS;
 }
 
 VkResult ValkyrieEngine::render() {
 	VkResult result;
 
-	VkSemaphore present_semaphore;
-	VkSemaphoreCreateInfo present_semaphore_create = {};
-	present_semaphore_create.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-	present_semaphore_create.pNext = NULL;
-	present_semaphore_create.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-	result = vkCreateSemaphore(m_device.handle, &present_semaphore_create, nullptr, &present_semaphore);
-	assert(result == VK_SUCCESS);
-
-	result = mp_swapchain->acquireNextImage(UINT64_MAX, present_semaphore, NULL);
+	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, m_present_fence);
 	assert(result == VK_SUCCESS);
 
 	VkSubmitInfo submit = {};
 	submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submit.waitSemaphoreCount = 1;
-	submit.pWaitSemaphores = &present_semaphore;
+	submit.pWaitSemaphores = &m_present_semaphore;
 	submit.commandBufferCount = 1;
 	submit.pCommandBuffers = &renderCommands[mp_swapchain->getCurrent()].handle;
 
-	result = vkQueueSubmit(m_graphics_queue.handle, 1, &submit, VK_NULL_HANDLE);
+	result = vkQueueSubmit(m_graphics_queue.handle, 1, &submit, m_present_fence);
 	assert(result == VK_SUCCESS);
+
+	do {
+		result = vkWaitForFences(m_device.handle, 1, &m_present_fence, VK_TRUE, 100000000);
+	} while (result == VK_TIMEOUT);
+	assert(result == VK_SUCCESS);
+	vkResetFences(m_device.handle, 1, &m_present_fence);
 
 	result = mp_swapchain->queuePresent(m_graphics_queue);
 	assert(result == VK_SUCCESS);
-
-	VkImageMemoryBarrier present_barrier = {};
-	present_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-	present_barrier.pNext = NULL;
-	present_barrier.srcAccessMask = 0;
-	present_barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-	present_barrier.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-	present_barrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-	present_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-	present_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-	present_barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-	present_barrier.image = mp_swapchain->getCurrentImage();
-
-	result = m_present_command_buffer.begin();
-
-	vkCmdPipelineBarrier(
-		m_present_command_buffer.handle,
-		VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-		VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-		0,
-		0, nullptr,
-		0, nullptr,
-		1, &present_barrier);
-
-	result = m_present_command_buffer.end();
-
-	assert(result == VK_SUCCESS);
-	m_present_command_buffer.submit(m_graphics_queue);
-
-	vkDestroySemaphore(m_device.handle, present_semaphore, nullptr);
 
 	return VK_SUCCESS;
 }
