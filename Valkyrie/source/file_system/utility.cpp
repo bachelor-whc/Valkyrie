@@ -1,4 +1,5 @@
 #include <cstdio>
+#include "valkyrie/utility/memory_access.h"
 #include "common.h"
 
 long GetFileSize(FILE* p_file) throw(...) {

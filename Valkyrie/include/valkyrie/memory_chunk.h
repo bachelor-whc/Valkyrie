@@ -1,5 +1,6 @@
 #ifndef _VALKYRIE_MEMORY_CHUNK_H
 #define _VALKYRIE_MEMORY_CHUNK_H
+#include "valkyrie/utility/memory_access.h"
 #include "common.h"
 
 namespace Valkyrie {
