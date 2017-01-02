@@ -32,6 +32,7 @@
     <ClInclude Include="Valkyrie\include\valkyrie\memory_chunk.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\render_function.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\thread.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\thread\thread_manager.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\UI\user_input.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\utility\memory_access.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\attachment.h" />
@@ -65,6 +66,7 @@
     <ClCompile Include="Valkyrie\source\rgba32_memory.cpp" />
     <ClCompile Include="Valkyrie\source\stb_texture.cpp" />
     <ClCompile Include="Valkyrie\source\thread.cpp" />
+    <ClCompile Include="Valkyrie\source\thread\thread_manager.cpp" />
     <ClCompile Include="Valkyrie\source\UI\user_input.cpp" />
     <ClCompile Include="Valkyrie\source\valkyrie.cpp" />
     <ClCompile Include="Valkyrie\source\valkyrie_stb.cpp" />

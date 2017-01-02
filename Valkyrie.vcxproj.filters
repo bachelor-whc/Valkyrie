@@ -55,6 +55,12 @@
     <Filter Include="Header Files\valkyrie\file_system">
       <UniqueIdentifier>{eeed6c10-e29e-4573-8d0c-7dd09009ab06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\valkyrie\thread">
+      <UniqueIdentifier>{23ea8892-559c-4eff-8f15-9f2e3f6aa42c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\thread">
+      <UniqueIdentifier>{368c82b2-4349-4bc8-8668-f05089806584}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Valkyrie\include\valkyrie.h">
@@ -162,6 +168,9 @@
     <ClInclude Include="Valkyrie\include\valkyrie\utility\memory_access.h">
       <Filter>Header Files\valkyrie\utility</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\thread\thread_manager.h">
+      <Filter>Header Files\valkyrie\thread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\source\vulkan\command_buffer.cpp">
@@ -262,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="Valkyrie\third_party\imgui_draw.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\thread\thread_manager.cpp">
+      <Filter>Source Files\thread</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
