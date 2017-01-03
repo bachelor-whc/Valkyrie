@@ -18,6 +18,7 @@ using Valkyrie::GAPIAttributeSupportPtr;
 using Valkyrie::GrpahicsAPIAttribute;
 using Valkyrie::GLTF_TYPE;
 using Valkyrie::GLTF_COMPONENT_TYPE;
+using Valkyrie::ThreadManager;
 
 TEST(MemoryChunckCheck, Normal) {
 	MemoryChunk c1;
@@ -137,6 +138,11 @@ TEST(FillMemoryCheck, File) {
 	ASSERT_TRUE(memcmp(cptr_1->getData(), test_bin, cptr_1->getSize()) == 0);
 	ASSERT_TRUE(memcmp(cptr_2->getData(), test_bin, cptr_2->getSize()) == 0);
 	ASSERT_TRUE(memcmp(cptr_3->getData(), test_bin, 13) == 0);
+}
+
+TEST(ThreadManager, Initialization) {
+	ThreadManager thread_manager;
+	ASSERT_EQ(thread_manager.getThreadCount(), std::thread::hardware_concurrency());
 }
 
 int main(int argc, char **argv) {
