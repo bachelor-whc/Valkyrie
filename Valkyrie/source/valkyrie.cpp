@@ -30,8 +30,7 @@ ValkyrieEngine::~ValkyrieEngine() {
 	DestroyPipelineCache();
 	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
 	DestroySwapChain(*mp_swapchain);
-	for (auto& ph : m_thread_ptrs)
-		delete ph;
+	DestroyCommandPool(*m_command_pool_ptr);
 	DestroySurface(m_instatnce, m_surface);
 	DestroyDevice(m_device);
 	DestroyInstance(m_instatnce);
@@ -70,8 +69,8 @@ void ValkyrieEngine::initializeThreads() {
 	bool queue_got = GetQueue(VK_QUEUE_GRAPHICS_BIT, m_graphics_queue);
 	assert(queue_got == true);
 
-	ThreadPointer p_thread = NEW_NT Valkyrie::Thread(m_graphics_queue);
-	m_thread_ptrs.push_back(p_thread);
+	m_command_pool_ptr = MAKE_SHARED(Vulkan::CommandPool)(m_graphics_queue);
+	assert(m_command_pool_ptr->handle != VK_NULL_HANDLE);
 }
 
 void ValkyrieEngine::initializeSwapChain(CommandBuffer& command_bufer) {
@@ -207,8 +206,8 @@ VkResult ValkyrieEngine::initialize() {
 	initializeSurface();
 	initializeThreads();
 	
-	m_setup_command_buffer = m_thread_ptrs[0]->createCommandBuffer();
-	m_present_command_buffer = m_thread_ptrs[0]->createCommandBuffer();
+	m_setup_command_buffer = m_command_pool_ptr->createCommandBuffer();
+	m_present_command_buffer = m_command_pool_ptr->createCommandBuffer();
 
 	result = m_setup_command_buffer.begin();
 	assert(result == VK_SUCCESS);
@@ -227,7 +226,7 @@ VkResult ValkyrieEngine::initialize() {
 	initializePipelineCache();
 	renderCommands.resize(mp_swapchain->getImageCount());
 	for (auto& command : renderCommands) {
-		command = m_thread_ptrs[0]->createCommandBuffer();
+		command = m_command_pool_ptr->createCommandBuffer();
 	}
 
 	initializeImGuiInput();
@@ -396,9 +395,9 @@ void ValkyrieEngine::executeRenderFunction(std::string name, const std::vector<v
 }
 
 Vulkan::CommandBuffer ValkyrieEngine::createCommandBuffer() {
-	return m_thread_ptrs[0]->createCommandBuffer();
+	return m_command_pool_ptr->createCommandBuffer();
 }
 
 Vulkan::SecondaryCommandBuffers ValkyrieEngine::createSecondaryCommandBuffers(uint32_t count) {
-	return m_thread_ptrs[0]->createSecondaryCommandBuffers(count);
+	return m_command_pool_ptr->createSecondaryCommandBuffers(count);
 }

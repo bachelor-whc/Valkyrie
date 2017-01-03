@@ -16,7 +16,8 @@
 #include "valkyrie/vulkan/memory_buffer.h"
 #include "valkyrie/vulkan/descriptor.h"
 #include "valkyrie/vulkan/shader.h"
-#include "valkyrie/thread.h"
+#include "valkyrie/vulkan/command_pool.h"
+#include "valkyrie/thread/thread.h"
 #include "valkyrie/image.h"
 #include "valkyrie/vulkan/texture.h"
 #include "valkyrie/vulkan/image_texture.h"
@@ -25,6 +26,7 @@
 #include "valkyrie/UI/user_input.h"
 #include "valkyrie/asset/gltf_loader.h"
 #include "valkyrie/memory_chunk.h"
+#include "valkyrie/thread/thread_manager.h"
 
 class ValkyrieEngine {
 public:
@@ -78,7 +80,6 @@ public:
 	
 private:
 	static ValkyrieEngine* gp_valkyrie;
-	typedef Valkyrie::Thread* ThreadPointer;
 
 private:
 	void initializeInstance();
@@ -105,9 +106,9 @@ private:
 	Vulkan::SwapChain* mp_swapchain;
 	Vulkan::DepthBuffer* mp_depth_buffer;
 	Vulkan::RenderPass m_render_pass;
-	std::vector<ThreadPointer> m_thread_ptrs;
 	Vulkan::CommandBuffer m_setup_command_buffer;
 	Vulkan::CommandBuffer m_present_command_buffer;
+	Vulkan::CommandPoolPtr m_command_pool_ptr;
 	VkViewport m_viewport = {};
 	VkRect2D m_scissor = {};
 	std::map<std::string, Valkyrie::RenderPFN> m_render_pfns;

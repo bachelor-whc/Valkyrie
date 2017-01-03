@@ -78,9 +78,6 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\queue.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\thread.h">
-      <Filter>Header Files\valkyrie</Filter>
-    </ClInclude>
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\swapchain.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
@@ -171,6 +168,12 @@
     <ClInclude Include="Valkyrie\include\valkyrie\thread\thread_manager.h">
       <Filter>Header Files\valkyrie\thread</Filter>
     </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\thread\thread.h">
+      <Filter>Header Files\valkyrie\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_pool.h">
+      <Filter>Header Files\valkyrie\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Valkyrie\source\vulkan\command_buffer.cpp">
@@ -239,9 +242,6 @@
     <ClCompile Include="Valkyrie\source\stb_texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\thread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Valkyrie\source\valkyrie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -273,6 +273,12 @@
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="Valkyrie\source\thread\thread_manager.cpp">
+      <Filter>Source Files\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\vulkan\command_pool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Valkyrie\source\thread\thread.cpp">
       <Filter>Source Files\thread</Filter>
     </ClCompile>
   </ItemGroup>
