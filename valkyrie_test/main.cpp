@@ -142,7 +142,9 @@ TEST(FillMemoryCheck, File) {
 
 TEST(ThreadManager, Initialization) {
 	ThreadManager thread_manager;
-	ASSERT_EQ(thread_manager.getThreadCount(), std::thread::hardware_concurrency());
+	auto hardware_count = std::thread::hardware_concurrency();
+	unsigned int count = hardware_count == 0 ? 2 : hardware_count;
+	ASSERT_EQ(thread_manager.getThreadCount(), count);
 }
 
 int main(int argc, char **argv) {

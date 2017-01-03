@@ -2,7 +2,8 @@
 using namespace Valkyrie;
 
 ThreadManager::ThreadManager() {
-	m_thread_count = std::thread::hardware_concurrency();
+	auto hardware_count = std::thread::hardware_concurrency();
+	m_thread_count = hardware_count == 0 ? 2 : hardware_count;
 }
 
 ThreadManager::~ThreadManager() {
