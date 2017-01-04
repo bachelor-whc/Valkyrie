@@ -43,7 +43,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Valkyrie::glTFAssetPtr gltf_ptr = gltfLoader.load("gltf/test.gltf");
 
 	std::string title("Playground");
-	ValkyrieEngine valkyrie("Valkyrie");
+	ValkyrieEngine::initializeValkyrieEngine();
+	auto& valkyrie = *ValkyrieEngine::getGlobalValkyriePtr();
 	valkyrie.initializeWindow(width, height, title);
 	valkyrie.initialize();
 	auto& imgui_io = ImGui::GetIO();
@@ -354,5 +355,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		}
 		vkEndCommandBuffer(command);
 	}
+	ValkyrieEngine::closeValkyrieEngine();
 	return 0;
 }

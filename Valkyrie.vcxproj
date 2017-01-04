@@ -22,6 +22,7 @@
     <ClInclude Include="Valkyrie\include\common.h" />
     <ClInclude Include="Valkyrie\include\valkyrie.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\asset.h" />
+    <ClInclude Include="Valkyrie\include\valkyrie\asset\asset_manager.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_asset.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_loader.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\mesh.h" />
@@ -58,6 +59,7 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\vertex_input.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Valkyrie\source\asset\asset_manager.cpp" />
     <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp" />
     <ClCompile Include="Valkyrie\source\asset\gltf_loader.cpp" />
     <ClCompile Include="Valkyrie\source\file_system\utility.cpp" />

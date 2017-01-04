@@ -27,18 +27,19 @@
 #include "valkyrie/asset/gltf_loader.h"
 #include "valkyrie/memory_chunk.h"
 #include "valkyrie/thread/thread_manager.h"
+#include "valkyrie/asset/asset_manager.h"
 
 class ValkyrieEngine {
 public:
 	enum State {
 		UNINITIALIZED, INITIALIZING, INITIALIZED, EXECUTE, EXIT
 	};
-	static ValkyrieEngine* getGlobalValkyriePtr() { return gp_valkyrie; };
+	static int initializeValkyrieEngine();
+	static void closeValkyrieEngine();
+	static ValkyrieEngine* getGlobalValkyriePtr() { return gp_valkyrie; }
 	static bool SDLInitialized;
 	
 public:
-	ValkyrieEngine() = delete;
-	ValkyrieEngine(std::string application_name);
 	virtual ~ValkyrieEngine();
 
 	virtual bool execute();
@@ -79,6 +80,8 @@ public:
 	UserInput userInput = {};
 	
 private:
+	ValkyrieEngine() = delete;
+	ValkyrieEngine(std::string application_name);
 	static ValkyrieEngine* gp_valkyrie;
 
 private:

@@ -10,6 +10,30 @@ bool ValkyrieEngine::SDLInitialized = false;
 VkDevice g_device_handle = VK_NULL_HANDLE;
 VkPhysicalDevice g_physical_device_handle = VK_NULL_HANDLE;
 
+int ValkyrieEngine::initializeValkyrieEngine() {
+	if (gp_valkyrie != nullptr)
+		return 0;
+	gp_valkyrie = NEW_NT ValkyrieEngine("Valkyrie");
+	if (gp_valkyrie == nullptr)
+		return 1;
+	int result_tm = Valkyrie::ThreadManager::initialize();
+	int result_am = Valkyrie::AssetManager::initialize();
+	
+	if (result_tm != 0)
+		return 2;
+	if (result_am != 0)
+		return 3;
+	return 0;
+}
+
+void ValkyrieEngine::closeValkyrieEngine() {
+	Valkyrie::ThreadManager::close();
+	Valkyrie::AssetManager::close();
+	if(gp_valkyrie != nullptr)
+		delete gp_valkyrie;
+	gp_valkyrie = nullptr;
+}
+
 ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	m_application_name(application_name),
 	mp_window(nullptr),
@@ -194,7 +218,6 @@ bool ValkyrieEngine::execute() {
 
 VkResult ValkyrieEngine::initialize() {
 	VkResult result;
-	gp_valkyrie = this;
 
 	SDL_StartTextInput();
 

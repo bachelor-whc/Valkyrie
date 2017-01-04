@@ -135,8 +135,8 @@ TEST(FillMemoryCheck, File) {
 	FillMemoryFromFile(cptr_1, "test.bin");
 	FillMemoryFromFile(cptr_2, "test.bin");
 	FillMemoryFromFile(cptr_3, "test.bin");
-	ASSERT_TRUE(memcmp(cptr_1->getData(), test_bin, cptr_1->getSize()) == 0);
-	ASSERT_TRUE(memcmp(cptr_2->getData(), test_bin, cptr_2->getSize()) == 0);
+	ASSERT_TRUE(memcmp(cptr_1->getData(), test_bin, 13) == 0);
+	ASSERT_TRUE(memcmp(cptr_2->getData(), test_bin, 12) == 0);
 	ASSERT_TRUE(memcmp(cptr_3->getData(), test_bin, 13) == 0);
 }
 

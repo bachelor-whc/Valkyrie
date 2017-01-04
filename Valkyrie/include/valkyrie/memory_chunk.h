@@ -19,6 +19,8 @@ namespace Valkyrie {
 		inline bool avaliable() { return mp_data != nullptr; }
 		
 	private:
+		inline uint32_t getAlignedSize(uint32_t size) { return (size / 4 + (size % 4 == 0 ? 0 : 1)) * 4; }
+
 		uint32_t m_size;
 		uint32_t m_max_size;
 		unsigned char* mp_data = nullptr;

@@ -13,7 +13,8 @@ Valkyrie::MemoryChunk::~MemoryChunk() {
 }
 
 void Valkyrie::MemoryChunk::allocate(uint32_t size) {
-	if (avaliable() && size <= getSize()) {
+	uint32_t allocating_size = getAlignedSize(size);
+	if (avaliable() && allocating_size <= getSize()) {
 		m_size = size;
 		return;
 	}
@@ -22,5 +23,5 @@ void Valkyrie::MemoryChunk::allocate(uint32_t size) {
 		mp_data = nullptr;
 	}
 	m_size = size;
-	mp_data = NEW_NT unsigned char[m_size]();
+	mp_data = NEW_NT unsigned char[allocating_size]();
 }
