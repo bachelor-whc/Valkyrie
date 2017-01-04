@@ -14,14 +14,15 @@ Valkyrie::MemoryChunk::~MemoryChunk() {
 
 void Valkyrie::MemoryChunk::allocate(uint32_t size) {
 	uint32_t allocating_size = getAlignedSize(size);
-	if (avaliable() && allocating_size <= getSize()) {
+	if (allocated() && allocating_size <= getSize()) {
 		m_size = size;
 		return;
 	}
-	if (avaliable()) {
+	if (allocated()) {
 		delete[] mp_data;
 		mp_data = nullptr;
 	}
 	m_size = size;
 	mp_data = NEW_NT unsigned char[allocating_size]();
+	setFlags(ALLOCATED);
 }

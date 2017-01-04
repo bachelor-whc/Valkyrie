@@ -29,7 +29,6 @@ glTFAssetPtr glTFLoader::load(const std::string& filename) throw(...) {
 	
 	m_buffer_uri_map.clear();
 	m_uri_memory_chunk_map.clear();
-	m_buffer_map.clear();
 	m_buffer_view_map.clear();
 	m_accessor_map.clear();
 
@@ -73,8 +72,6 @@ void glTFLoader::loadBufferDescriptions(const glTFAssetPtr& asset_ptr, const JSO
 		auto& memory_chunk_ptr = MAKE_SHARED(MemoryChunk)();
 		m_uri_memory_chunk_map[uri] = memory_chunk_ptr;
 		memory_chunk_ptr->allocate(byte_length);
-
-		m_buffer_map[buffer_name] = MAKE_SHARED(glTFBuffer)(memory_chunk_ptr);
 	}
 }
 
@@ -91,7 +88,7 @@ void glTFLoader::loadBufferViewDescriptions(const glTFAssetPtr& asset_ptr, const
 		if(j.count(BYTE_LENGTH))
 			byte_length = j[BYTE_LENGTH].get<uint32_t>();
 		
-		m_buffer_view_map[buffer_view_name] = MAKE_SHARED(glTFBufferView)(m_buffer_map[buffer_name], byte_length, byte_offset);
+		m_buffer_view_map[buffer_view_name] = MAKE_SHARED(glTFBufferView)(m_uri_memory_chunk_map[buffer_name], byte_length, byte_offset);
 	}
 }
 

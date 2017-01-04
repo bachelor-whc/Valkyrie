@@ -16,7 +16,6 @@ namespace Valkyrie {
 		MemoryChunk& operator=(const MemoryChunk& src) = delete;
 		virtual void allocate(uint32_t size);
 		inline uint32_t getMaxSize() { return m_max_size; }
-		inline bool avaliable() { return mp_data != nullptr; }
 		
 	private:
 		inline uint32_t getAlignedSize(uint32_t size) { return (size / 4 + (size % 4 == 0 ? 0 : 1)) * 4; }

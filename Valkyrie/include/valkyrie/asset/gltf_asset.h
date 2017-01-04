@@ -19,32 +19,17 @@ namespace Valkyrie {
 		SCALAR, VEC2, VEC3, VEC4, MAT2, MAT3, MAT4
 	};
 
-	class glTFBuffer : public Asset, public MemoryAccess {
-	public:
-		glTFBuffer() = delete;
-		glTFBuffer(const MemoryChunkPtr& mcptr);
-		virtual ~glTFBuffer();
-
-		virtual void* getData() { return m_memory_chunk_ptr->getData(); }
-		virtual uint32_t getSize() const { return m_memory_chunk_ptr->getSize(); }
-
-	private:
-		MemoryChunkPtr m_memory_chunk_ptr;
-	};
-
-	typedef std::shared_ptr<glTFBuffer> glTFBufferPtr;
-
 	class glTFBufferView : public Asset, public MemoryAccess {
 	public:
 		glTFBufferView() = delete;
-		glTFBufferView(const glTFBufferPtr& buffer_ptr, const uint32_t length, const uint32_t offset);
+		glTFBufferView(const MemoryChunkPtr& buffer_ptr, const uint32_t length, const uint32_t offset);
 		virtual ~glTFBufferView();
 
 		virtual void* getData() { return (unsigned char*)m_buffer_ptr->getData() + m_offset; }
 		virtual uint32_t getSize() const { return m_length; }
 
 	private:
-		glTFBufferPtr m_buffer_ptr;
+		MemoryChunkPtr m_buffer_ptr;
 		uint32_t m_length;
 		uint32_t m_offset;
 	};
@@ -93,7 +78,7 @@ namespace Valkyrie {
 		std::set<std::string> accessorSet;
 		std::set<std::string> uriSet;
 
-		void setBuffer(const std::string& name, const glTFBufferPtr& buffer);
+		void setBuffer(const std::string& name, const MemoryChunkPtr& buffer);
 		void setBufferView(const std::string& name, const glTFBufferViewPtr& buffer_view);
 		void setAccessor(const std::string& name, const glTFAccessorPtr& accessor);
 
@@ -101,7 +86,7 @@ namespace Valkyrie {
 
 	private:
 		JSON m_json;
-		std::map<std::string, glTFBufferPtr> m_buffer_ptrs;
+		std::map<std::string, MemoryChunkPtr> m_buffer_ptrs;
 		std::map<std::string, glTFBufferViewPtr> m_buffer_view_ptrs;
 		std::map<std::string, glTFAccessorPtr> m_accessor_ptrs;
 	};

@@ -31,7 +31,6 @@ namespace Valkyrie {
 
 		std::map<std::string, std::string> m_buffer_uri_map;
 		std::map<std::string, Valkyrie::MemoryChunkPtr> m_uri_memory_chunk_map;
-		std::map<std::string, Valkyrie::glTFBufferPtr> m_buffer_map;
 		std::map<std::string, Valkyrie::glTFBufferViewPtr> m_buffer_view_map;
 		std::map<std::string, Valkyrie::glTFAccessorPtr> m_accessor_map;
 	};

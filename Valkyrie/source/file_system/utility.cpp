@@ -25,6 +25,7 @@ void FillMemoryFromFile(MemoryAccessPtr ptr, const std::string& filename) throw(
 	uint32_t read_size = file_size < memory_size ? file_size : memory_size;
 	fread(ptr->getData(), read_size, 1, p_file);
 	fclose(p_file);
+	ptr->setFlags(MemoryAccess::READY);
 }
 
 void FillMemoryFromPartialFile(MemoryAccessPtr ptr, const std::string& filename) throw(...) {
