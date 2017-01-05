@@ -20,8 +20,6 @@
 #include "valkyrie/thread/thread.h"
 #include "valkyrie/image.h"
 #include "valkyrie/vulkan/texture.h"
-#include "valkyrie/vulkan/image_texture.h"
-#include "valkyrie/vulkan/memory_texture.h"
 #include "valkyrie/render_function.h"
 #include "valkyrie/UI/user_input.h"
 #include "valkyrie/asset/gltf_loader.h"

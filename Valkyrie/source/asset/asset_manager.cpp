@@ -28,7 +28,7 @@ Valkyrie::AssetManager::~AssetManager() {
 
 }
 
-void Valkyrie::AssetManager::load(MemoryChunkPtr & memory_ptr, const std::string& asset_file_name) throw(...) {
+void Valkyrie::AssetManager::load(MemoryChunkPtr& memory_ptr, const std::string& asset_file_name) throw(...) {
 	fillMemoryFromFile(memory_ptr, asset_file_name);
 }
 

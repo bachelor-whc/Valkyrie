@@ -1,3 +1,4 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include <iostream>
 #include <Valkyrie.h>
 #include <glm/glm.hpp>
@@ -5,6 +6,7 @@
 #include <vulkan/vulkan.h>
 #include <cassert>
 #include <imgui.h>
+#include <stb_image.h>
 
 const std::string NORMAL_PIPELINE = "NORMAL";
 const std::string IMGUI_PIPELINE = "IMGUI";
@@ -22,14 +24,16 @@ struct ModelViewProjection {
 };
 
 
-Vulkan::MemoryTexture CreateImGuiFontsTexture(ValkyrieEngine& valkyrie, ImGuiIO& imgui_io) {
+Vulkan::Texture CreateImGuiFontsTexture(ValkyrieEngine& valkyrie, ImGuiIO& imgui_io) {
 	unsigned char* pixels;
 	int texture_width;
 	int texture_height;
 	imgui_io.Fonts->GetTexDataAsRGBA32(&pixels, &texture_width, &texture_height);
 
-	ImageMemoryPointer p_fonts_image = std::make_shared<RGBA32Memory>(texture_width, texture_height, pixels);
-	Vulkan::MemoryTexture fonts_texture(p_fonts_image);
+	ImageMemoryPointer p_fonts_image = std::make_shared<RGBA32Memory>(texture_width, texture_height);
+	memcpy(p_fonts_image->getData(), pixels, p_fonts_image->getSize());
+	p_fonts_image->setFlags(MemoryAccess::READY);
+	Vulkan::Texture fonts_texture(p_fonts_image);
 	valkyrie.initailizeTexture(fonts_texture);
 	return fonts_texture;
 }
@@ -70,13 +74,19 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::MemoryBuffer normal_uniform_buffer;
 	Vulkan::MemoryBuffer imgui_vertex_buffer;
 	Vulkan::MemoryBuffer imgui_index_buffer;
-	ImageFilePointer png_ptr = std::make_shared<STB>();
-	Vulkan::ImageTexture texture(png_ptr);
-	
-	texture.load("wang.png");
+	FILE* wang_png = fopen("wang.png", "rb");
+	int wang_png_w;
+	int wang_png_h;
+	int wang_png_c;
+	void* wang_png_ptr = stbi_load_from_file(wang_png, &wang_png_w, &wang_png_h, &wang_png_c, STBI_rgb_alpha);
+	fclose(wang_png);
+	ImageMemoryPointer p_wang_image = std::make_shared<RGBA32Memory>(wang_png_w, wang_png_h);
+	memcpy(p_wang_image->getData(), wang_png_ptr, p_wang_image->getSize());
+	p_wang_image->setFlags(MemoryAccess::READY);
+	Vulkan::Texture texture(p_wang_image);
 	valkyrie.initailizeTexture(texture);
 
-	Vulkan::MemoryTexture memory_texture = CreateImGuiFontsTexture(valkyrie, imgui_io);
+	Vulkan::Texture memory_texture = CreateImGuiFontsTexture(valkyrie, imgui_io);
 	imgui_io.Fonts->TexID = (void*)memory_texture.image;
 
 	normal_object_buffer.allocate(

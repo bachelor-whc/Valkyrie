@@ -27,7 +27,6 @@
     <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_loader.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\asset\mesh.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\default_create_info.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\file_system\utility.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\graphics_api_support\attribute.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\image.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\memory_chunk.h" />
@@ -45,10 +44,8 @@
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\device.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\instance.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_texture.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\physical_device.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\pipeline.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\image_texture.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\queue.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\render_pass.h" />
     <ClInclude Include="Valkyrie\include\valkyrie\vulkan\shader.h" />
@@ -66,12 +63,10 @@
     <ClCompile Include="Valkyrie\source\memory_chunk.cpp" />
     <ClCompile Include="Valkyrie\source\render_function.cpp" />
     <ClCompile Include="Valkyrie\source\rgba32_memory.cpp" />
-    <ClCompile Include="Valkyrie\source\stb_texture.cpp" />
     <ClCompile Include="Valkyrie\source\thread\thread.cpp" />
     <ClCompile Include="Valkyrie\source\thread\thread_manager.cpp" />
     <ClCompile Include="Valkyrie\source\UI\user_input.cpp" />
     <ClCompile Include="Valkyrie\source\valkyrie.cpp" />
-    <ClCompile Include="Valkyrie\source\valkyrie_stb.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan\command_buffer.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan\command_pool.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan\debug.cpp" />
@@ -80,7 +75,6 @@
     <ClCompile Include="Valkyrie\source\vulkan\device.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan\instance.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan\memory_buffer.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\memory_texture.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan\physical_device.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan\pipeline.cpp" />
     <ClCompile Include="Valkyrie\source\vulkan\queue.cpp" />

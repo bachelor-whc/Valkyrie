@@ -11,14 +11,15 @@ namespace Vulkan {
 
 	class Texture {
 	public:
-		Texture();
+		Texture() = delete;
+		Texture(const Valkyrie::ImageMemoryPointer& image_ptr);
 		virtual ~Texture();
 
-		virtual VkResult initializeImage() = 0;
+		VkResult initializeImage();
 		VkResult initializeSampler();
 		VkResult initializeView();
-		virtual VkResult allocate() = 0;
-		virtual VkResult write() = 0;
+		VkResult allocate();
+		VkResult write();
 		VkDescriptorImageInfo* getInformationPointer();
 
 		VkDeviceMemory memory = NULL;
@@ -28,6 +29,8 @@ namespace Vulkan {
 		VkSampler sampler = NULL;
 	private:
 		VkDescriptorImageInfo* mp_information = nullptr;
+		Valkyrie::ImageMemoryPointer m_image_ptr;
+		uint32_t m_size = 0;
 	};
 }
 
