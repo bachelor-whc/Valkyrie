@@ -33,21 +33,10 @@ void Valkyrie::AssetManager::load(MemoryChunkPtr & memory_ptr, const std::string
 }
 
 Valkyrie::AssetManager::AssetManager() {
-	m_path = current_path().concat("/assets/");
+	m_path = current_path() / "assets";
 	if (!exists(m_path)) {
 		create_directory(m_path);
 	}
-}
-
-long AssetManager::getFileSize(FILE* p_file) throw(...) {
-	if (p_file == nullptr) {
-		std::string ex_message = "File is not opened.";
-		throw std::exception(ex_message.c_str());
-	}
-	fseek(p_file, 0L, SEEK_END);
-	long ret = ftell(p_file);
-	rewind(p_file);
-	return ret;
 }
 
 void AssetManager::fillMemoryFromFile(MemoryChunkPtr& ptr, const std::string& relative_path) throw(...) {

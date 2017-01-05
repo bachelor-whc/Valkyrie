@@ -17,7 +17,6 @@ namespace Valkyrie {
 		static AssetManager* gp_asset_manager;
 		AssetManager();
 
-		long getFileSize(FILE* p_file) throw(...);
 		void fillMemoryFromFile(MemoryChunkPtr& ptr, const std::string& relative_path) throw(...);
 
 		std::tr2::sys::path m_path;
