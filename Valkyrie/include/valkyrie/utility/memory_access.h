@@ -15,8 +15,8 @@ public:
 	virtual uint32_t getSize() const = 0;
 	void setFlags(int flag) { m_status |= flag; }
 	void unsetFlags(int flag) { m_status = m_status & (~flag); }
-	bool allocated() { return (m_status & ALLOCATED) > 0; }
-	bool ready() { return (m_status & READY) > 0; }
+	bool allocated() const { return (m_status & ALLOCATED) > 0; }
+	bool ready() const { return (m_status & READY) > 0; }
 private:
 	int m_status = NONE;
 };

@@ -1,6 +1,11 @@
 #include "valkyrie/asset/asset_manager.h"
 #include "common.h"
 using namespace Valkyrie;
+using std::tr2::sys::path;
+using std::tr2::sys::exists;
+using std::tr2::sys::create_directory;
+using std::tr2::sys::current_path;
+using std::tr2::sys::file_size;
 
 AssetManager* AssetManager::gp_asset_manager = nullptr;
 
@@ -23,7 +28,51 @@ Valkyrie::AssetManager::~AssetManager() {
 
 }
 
-Valkyrie::AssetManager::AssetManager() :
-	m_path(std::tr2::sys::current_path()){
+void Valkyrie::AssetManager::load(MemoryChunkPtr & memory_ptr, const std::string& asset_file_name) throw(...) {
+	fillMemoryFromFile(memory_ptr, asset_file_name);
+}
 
+Valkyrie::AssetManager::AssetManager() {
+	m_path = current_path().concat("/assets/");
+	if (!exists(m_path)) {
+		create_directory(m_path);
+	}
+}
+
+long AssetManager::getFileSize(FILE* p_file) throw(...) {
+	if (p_file == nullptr) {
+		std::string ex_message = "File is not opened.";
+		throw std::exception(ex_message.c_str());
+	}
+	fseek(p_file, 0L, SEEK_END);
+	long ret = ftell(p_file);
+	rewind(p_file);
+	return ret;
+}
+
+void AssetManager::fillMemoryFromFile(MemoryChunkPtr& ptr, const std::string& relative_path) throw(...) {
+	path file_path = m_path / relative_path;
+	if (exists(file_path) && is_regular_file(file_path)) {
+		uint32_t size = file_size(file_path);
+		std::ifstream file_stream(file_path, std::ios::binary | std::ios::binary);
+		if (!file_stream.is_open()) {
+			std::string ex_message = relative_path + " is not avaliable.";
+			throw std::exception(ex_message.c_str());
+		}
+		if (!ptr->allocated()) {
+			ptr->allocate(size);
+		}
+		else if (ptr->getSize() < size) {
+			std::string ex_message = "Memory size is smaller than " + relative_path;
+			throw std::exception(ex_message.c_str());
+		}
+		std::filebuf* p_buffer = file_stream.rdbuf();
+		p_buffer->sgetn((char*)ptr->getData(), size);
+		file_stream.close();
+		ptr->setFlags(MemoryAccess::READY);
+	}
+	else {
+		std::string ex_message = relative_path + " is not avaliable.";
+		throw std::exception(ex_message.c_str());
+	}
 }

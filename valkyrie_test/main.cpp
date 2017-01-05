@@ -17,6 +17,7 @@ using Valkyrie::GrpahicsAPIAttribute;
 using Valkyrie::GLTF_TYPE;
 using Valkyrie::GLTF_COMPONENT_TYPE;
 using Valkyrie::ThreadManager;
+using Valkyrie::AssetManager;
 
 TEST(MemoryChunckCheck, Normal) {
 	MemoryChunk c1;
@@ -111,12 +112,15 @@ TEST(glTFAssetCheck, Initialization) {
 };
 
 TEST(FillMemoryCheck, File) {
+	AssetManager::initialize();
+	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
+
 	const unsigned char test_bin[] = {
 		0x12, 0x34, 0x56, 0x78, 0x9A,
 		0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 		0xAB, 0xCD, 0xEF
 	};
-	FILE* p_file = fopen("test.bin", "wb");
+	FILE* p_file = fopen("assets/test.bin", "wb");
 	fwrite(test_bin, 1, 13, p_file);
 	fclose(p_file);
 	MemoryChunkPtr cptr_1 = std::make_shared<Valkyrie::MemoryChunk>();
@@ -125,29 +129,24 @@ TEST(FillMemoryCheck, File) {
 	ASSERT_FALSE(cptr_1->allocated());
 	ASSERT_FALSE(cptr_2->allocated());
 	ASSERT_FALSE(cptr_3->allocated());
-	cptr_1->allocate(13);
 	cptr_2->allocate(12);
 	cptr_3->allocate(14);
-	ASSERT_TRUE(cptr_1->allocated());
+	ASSERT_FALSE(cptr_1->allocated());
 	ASSERT_TRUE(cptr_2->allocated());
 	ASSERT_TRUE(cptr_3->allocated());
-	FillMemoryFromFile(cptr_1, "test.bin");
-	FillMemoryFromFile(cptr_2, "test.bin");
-	FillMemoryFromFile(cptr_3, "test.bin");
+	asset_manager.load(cptr_1, "test.bin");
+	EXPECT_THROW(asset_manager.load(cptr_2, "test.bin"), std::exception);
+	asset_manager.load(cptr_3, "test.bin");
 	ASSERT_TRUE(memcmp(cptr_1->getData(), test_bin, 13) == 0);
-	ASSERT_TRUE(memcmp(cptr_2->getData(), test_bin, 12) == 0);
 	ASSERT_TRUE(memcmp(cptr_3->getData(), test_bin, 13) == 0);
 	ASSERT_TRUE(cptr_1->ready());
-	ASSERT_TRUE(cptr_2->ready());
+	ASSERT_FALSE(cptr_2->ready());
 	ASSERT_TRUE(cptr_3->ready());
 	cptr_1->unsetFlags(MemoryAccess::READY);
-	cptr_2->unsetFlags(MemoryAccess::READY);
 	cptr_3->unsetFlags(MemoryAccess::READY);
 	ASSERT_TRUE(cptr_1->allocated());
-	ASSERT_TRUE(cptr_2->allocated());
 	ASSERT_TRUE(cptr_3->allocated());
 	ASSERT_FALSE(cptr_1->ready());
-	ASSERT_FALSE(cptr_2->ready());
 	ASSERT_FALSE(cptr_3->ready());
 	cptr_1->unsetFlags(MemoryAccess::ALLOCATED);
 	cptr_2->unsetFlags(MemoryAccess::ALLOCATED);

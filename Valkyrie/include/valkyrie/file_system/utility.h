@@ -10,7 +10,4 @@ public:
 	virtual bool load(const std::string file_path) = 0;
 };
 
-uint32_t GetFileSize(FILE* p_file) throw(...);
-void FillMemoryFromFile(MemoryAccessPtr ptr, const std::string& file) throw(...);
-
 #endif

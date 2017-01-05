@@ -263,9 +263,6 @@
     <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp">
       <Filter>Source Files\asset</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\file_system\utility.cpp">
-      <Filter>Source Files\file_system</Filter>
-    </ClCompile>
     <ClCompile Include="Valkyrie\third_party\imgui.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>

@@ -62,7 +62,6 @@
     <ClCompile Include="Valkyrie\source\asset\asset_manager.cpp" />
     <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp" />
     <ClCompile Include="Valkyrie\source\asset\gltf_loader.cpp" />
-    <ClCompile Include="Valkyrie\source\file_system\utility.cpp" />
     <ClCompile Include="Valkyrie\source\graphics_api_support\attribute.cpp" />
     <ClCompile Include="Valkyrie\source\memory_chunk.cpp" />
     <ClCompile Include="Valkyrie\source\render_function.cpp" />

@@ -11,11 +11,14 @@ namespace Valkyrie {
 		static AssetManager* getGlobalAssetMangerPtr() { return gp_asset_manager; }
 
 		virtual ~AssetManager();
-		void load(std::string asset_file_name, MemoryAccess* memory);
+		void load(MemoryChunkPtr& memory_ptr, const std::string& asset_file_name) throw(...);
 
 	private:
 		static AssetManager* gp_asset_manager;
 		AssetManager();
+
+		long getFileSize(FILE* p_file) throw(...);
+		void fillMemoryFromFile(MemoryChunkPtr& ptr, const std::string& relative_path) throw(...);
 
 		std::tr2::sys::path m_path;
 	};

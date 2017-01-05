@@ -14,7 +14,7 @@ namespace Valkyrie {
 		virtual uint32_t getSize() const { return m_size; }
 
 		MemoryChunk& operator=(const MemoryChunk& src) = delete;
-		virtual void allocate(uint32_t size);
+		virtual void allocate(uint32_t size) throw(...);
 		inline uint32_t getMaxSize() { return m_max_size; }
 		
 	private:

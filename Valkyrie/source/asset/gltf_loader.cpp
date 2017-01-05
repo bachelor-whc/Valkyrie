@@ -83,12 +83,13 @@ void glTFLoader::loadBufferViewDescriptions(const glTFAssetPtr& asset_ptr, const
 
 		std::string buffer_name = j[BUFFER].get<std::string>();
 		uint32_t byte_offset = j[BYTE_OFFSET].get<uint32_t>();
+		std::string uri = m_buffer_uri_map[buffer_name];
 		
 		uint32_t byte_length = 0;
 		if(j.count(BYTE_LENGTH))
 			byte_length = j[BYTE_LENGTH].get<uint32_t>();
 		
-		m_buffer_view_map[buffer_view_name] = MAKE_SHARED(glTFBufferView)(m_uri_memory_chunk_map[buffer_name], byte_length, byte_offset);
+		m_buffer_view_map[buffer_view_name] = MAKE_SHARED(glTFBufferView)(m_uri_memory_chunk_map[uri], byte_length, byte_offset);
 	}
 }
 
