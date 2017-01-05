@@ -164,15 +164,15 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="gltf\test.bin" />
-    <None Include="gltf\test.gltf" />
+    <None Include="assets\gltf\test.bin" />
+    <None Include="assets\gltf\test.gltf" />
     <None Include="imgui.frag.spv" />
     <None Include="imgui.vert.spv" />
     <None Include="shader.frag.spv" />
     <None Include="shader.vert.spv" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="gltf\test.png" />
+    <Image Include="assets\gltf\test.png" />
     <Image Include="wang.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

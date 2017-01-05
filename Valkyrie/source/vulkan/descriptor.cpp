@@ -4,7 +4,7 @@ using namespace Vulkan;
 
 DescriptorPool::DescriptorPool(uint32_t max_sets) : 
 	m_max_sets(max_sets),
-	m_sizes(),
+	m_unit_sizes(),
 	m_sets_map(),
 	m_set_layouts(),
 	m_set_layouts_map() {
@@ -23,8 +23,8 @@ VkResult DescriptorPool::initializePool() {
 	VkDescriptorPoolCreateInfo descriptor_pool_create = {};
 	descriptor_pool_create.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	descriptor_pool_create.maxSets = m_max_sets;
-	descriptor_pool_create.poolSizeCount = (uint32_t)m_sizes.size();
-	descriptor_pool_create.pPoolSizes = m_sizes.data();
+	descriptor_pool_create.poolSizeCount = (uint32_t)m_unit_sizes.size();
+	descriptor_pool_create.pPoolSizes = m_unit_sizes.data();
 	return vkCreateDescriptorPool(g_device_handle, &descriptor_pool_create, nullptr, &handle);
 	
 }
@@ -90,7 +90,7 @@ void DescriptorPool::addPoolSize(VkDescriptorType type, uint32_t count) {
 	VkDescriptorPoolSize pool_size = {};
 	pool_size.type = type;
 	pool_size.descriptorCount = count;
-	m_sizes.push_back(pool_size);
+	m_unit_sizes.push_back(pool_size);
 }
 
 std::vector<VkDescriptorSetLayout> DescriptorPool::getSetLayoutHandles() {

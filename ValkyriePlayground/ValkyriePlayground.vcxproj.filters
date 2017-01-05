@@ -32,10 +32,10 @@
     <None Include="shader.vert.spv">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="gltf\test.gltf">
+    <None Include="assets\gltf\test.bin">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="gltf\test.bin">
+    <None Include="assets\gltf\test.gltf">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -43,7 +43,7 @@
     <Image Include="wang.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="gltf\test.png">
+    <Image Include="assets\gltf\test.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

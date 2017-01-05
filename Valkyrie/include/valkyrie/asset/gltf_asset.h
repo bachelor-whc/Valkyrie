@@ -19,7 +19,9 @@ namespace Valkyrie {
 		SCALAR, VEC2, VEC3, VEC4, MAT2, MAT3, MAT4
 	};
 
-	class glTFBufferView : public Asset, public MemoryAccess {
+	class glTFBufferView : 
+		public Asset, 
+		public MemoryAccess {
 	public:
 		glTFBufferView() = delete;
 		glTFBufferView(const MemoryChunkPtr& buffer_ptr, const uint32_t length, const uint32_t offset);
@@ -28,6 +30,8 @@ namespace Valkyrie {
 		virtual void* getData() { return (unsigned char*)m_buffer_ptr->getData() + m_offset; }
 		virtual uint32_t getSize() const { return m_length; }
 
+		virtual bool allocated() const { return m_buffer_ptr->allocated(); }
+		virtual bool ready() const { return m_buffer_ptr->ready(); }
 	private:
 		MemoryChunkPtr m_buffer_ptr;
 		uint32_t m_length;
@@ -55,6 +59,8 @@ namespace Valkyrie {
 		inline GLTF_COMPONENT_TYPE getglTFComponentType() const { return m_component_type; }
 		virtual void* getInstance(uint32_t index) { return m_attribute_ptr->getInstance(index); }
 
+		virtual bool allocated() const { return m_attribute_ptr->allocated(); }
+		virtual bool ready() const { return m_attribute_ptr->ready(); }
 	private:
 		GLTF_TYPE m_type;
 		GLTF_COMPONENT_TYPE m_component_type;

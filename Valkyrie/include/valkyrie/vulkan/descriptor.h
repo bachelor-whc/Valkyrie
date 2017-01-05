@@ -36,7 +36,7 @@ namespace Vulkan {
 	private:
 		uint32_t m_max_sets;
 		uint32_t m_sets_size;
-		std::vector<VkDescriptorPoolSize> m_sizes;
+		std::vector<VkDescriptorPoolSize> m_unit_sizes;
 		std::vector<VkDescriptorSet> m_sets;
 		std::map<std::string, int> m_sets_map;
 		std::vector<DescriptorSetLayout*> m_set_layouts;

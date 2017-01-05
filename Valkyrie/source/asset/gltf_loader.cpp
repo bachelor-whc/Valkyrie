@@ -1,7 +1,14 @@
 #include <glm/glm.hpp>
 #include "valkyrie/asset/gltf_loader.h"
 #include "valkyrie/asset/gltf_asset.h"
+#include "valkyrie/asset/asset_manager.h"
 using namespace Valkyrie;
+using std::experimental::filesystem::path;
+using std::experimental::filesystem::exists;
+using std::experimental::filesystem::create_directory;
+using std::experimental::filesystem::current_path;
+using std::experimental::filesystem::file_size;
+using std::experimental::filesystem::is_regular_file;
 
 const char* glTFLoader::BUFFER = "buffer";
 const char* glTFLoader::BUFFERS = "buffers";
@@ -16,15 +23,19 @@ const char* glTFLoader::COMPONENT_TYPE = "componentType";
 const char* glTFLoader::COUNT = "count";
 const char* glTFLoader::TYPE = "type";
 
-glTFAssetPtr glTFLoader::load(const std::string& filename) throw(...) {
-	JSON json;
-	std::ifstream file(filename);
+glTFAssetPtr glTFLoader::load(const std::tr2::sys::path& abs_file_path) throw(...) {
+	std::ifstream file(abs_file_path);
 	if (!file.is_open()) {
-		std::string ex_message = "File " + filename + " not open.";
+		std::string ex_message = "File " + abs_file_path.filename().u8string() + " not open.";
 		throw std::exception(ex_message.c_str());
 	}
+
+	m_working_directory = abs_file_path.parent_path();
+
+	JSON json;
 	file >> json;
 	file.close();
+
 	glTFAssetPtr& ptr = MAKE_SHARED(glTFAsset)(json);
 	
 	m_buffer_uri_map.clear();
@@ -34,6 +45,7 @@ glTFAssetPtr glTFLoader::load(const std::string& filename) throw(...) {
 
 	try {
 		loadBufferDescriptions(ptr, json);
+		loadAllBinaryFile(ptr);
 		loadBufferViewDescriptions(ptr, json);
 		loadAccessorDescriptions(ptr, json);
 	}
@@ -59,19 +71,21 @@ void glTFLoader::loadBufferDescriptions(const glTFAssetPtr& asset_ptr, const JSO
 			byte_length = j[BYTE_LENGTH].get<uint32_t>();
 		}
 		else {
-			std::ifstream file(uri, std::ifstream::binary);
-			if (!file.is_open()) {
+			path bin_file_path = m_working_directory / uri;
+			if (!exists(bin_file_path)) {
 				std::string ex_message = "File " + uri + " not found.";
 				throw std::exception(ex_message.c_str());
 			}
-
-			file.seekg(0, file.end);
-			byte_length = file.tellg();
-			file.close();
+			if (!is_regular_file(bin_file_path)) {
+				std::string ex_message = uri + " is not a file.";
+				throw std::exception(ex_message.c_str());
+			}
+			byte_length = file_size(bin_file_path);
 		}
 		auto& memory_chunk_ptr = MAKE_SHARED(MemoryChunk)();
 		m_uri_memory_chunk_map[uri] = memory_chunk_ptr;
 		memory_chunk_ptr->allocate(byte_length);
+		asset_ptr->setBuffer(buffer_name, memory_chunk_ptr);
 	}
 }
 
@@ -89,7 +103,9 @@ void glTFLoader::loadBufferViewDescriptions(const glTFAssetPtr& asset_ptr, const
 		if(j.count(BYTE_LENGTH))
 			byte_length = j[BYTE_LENGTH].get<uint32_t>();
 		
-		m_buffer_view_map[buffer_view_name] = MAKE_SHARED(glTFBufferView)(m_uri_memory_chunk_map[uri], byte_length, byte_offset);
+		auto& buffer_view_ptr = MAKE_SHARED(glTFBufferView)(m_uri_memory_chunk_map[uri], byte_length, byte_offset);
+		m_buffer_view_map[buffer_view_name] = buffer_view_ptr;
+		asset_ptr->setBufferView(buffer_view_name, buffer_view_ptr);
 	}
 }
 
@@ -143,6 +159,17 @@ void glTFLoader::loadAccessorDescriptions(const glTFAssetPtr& asset_ptr, const J
 			type = MAT4;
 		}
 #undef PARAMETERS
-		m_accessor_map[accessor_name] = MAKE_SHARED(glTFAccessor)(gaas_ptr, type, component_type);
+		auto& accessor_ptr = MAKE_SHARED(glTFAccessor)(gaas_ptr, type, component_type);
+		m_accessor_map[accessor_name] = accessor_ptr;
+		asset_ptr->setAccessor(accessor_name, accessor_ptr);
+	}
+}
+
+void Valkyrie::glTFLoader::loadAllBinaryFile(const Valkyrie::glTFAssetPtr & asset_ptr) {
+	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
+	for (auto& key_value : m_uri_memory_chunk_map) {
+		auto& uri = key_value.first;
+		auto& chunk_ptr = key_value.second;
+		asset_manager.fillMemoryFromFile(chunk_ptr, m_working_directory / uri);
 	}
 }

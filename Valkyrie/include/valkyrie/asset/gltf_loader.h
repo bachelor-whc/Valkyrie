@@ -1,6 +1,7 @@
 #ifndef _VALKYRIE_GLTF_LOADER_H 
 #define _VALKYRIE_GLTF_LOADER_H 
 #include <json.hpp>
+#include <filesystem>
 #include "common.h"
 #include "gltf_asset.h"
 
@@ -23,12 +24,14 @@ namespace Valkyrie {
 		glTFLoader() {};
 		virtual ~glTFLoader() {};
 
-		glTFAssetPtr load(const std::string& filename) throw(...);
+		glTFAssetPtr load(const std::tr2::sys::path& abs_file_path) throw(...);
 	private:
 		void loadBufferDescriptions(const Valkyrie::glTFAssetPtr& asset_ptr, const JSON& json) throw(...);
 		void loadBufferViewDescriptions(const Valkyrie::glTFAssetPtr& asset_ptr, const JSON& json);
 		void loadAccessorDescriptions(const Valkyrie::glTFAssetPtr& asset_ptr, const JSON& json);
+		void loadAllBinaryFile(const Valkyrie::glTFAssetPtr& asset_ptr);
 
+		std::tr2::sys::path m_working_directory;
 		std::map<std::string, std::string> m_buffer_uri_map;
 		std::map<std::string, Valkyrie::MemoryChunkPtr> m_uri_memory_chunk_map;
 		std::map<std::string, Valkyrie::glTFBufferViewPtr> m_buffer_view_map;

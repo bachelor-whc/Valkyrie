@@ -7,10 +7,9 @@ namespace Valkyrie {
 	public:
 		Asset() {};
 		virtual ~Asset() {};
-
-		virtual void* getData() = 0;
-		virtual uint32_t getSize() const = 0;
 	};
+
+	typedef std::shared_ptr<Asset> AssetPtr;
 }
 
 #endif
