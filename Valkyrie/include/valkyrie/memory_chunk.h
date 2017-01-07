@@ -1,10 +1,13 @@
 #ifndef _VALKYRIE_MEMORY_CHUNK_H
 #define _VALKYRIE_MEMORY_CHUNK_H
+#include "valkyrie/asset/asset.h"
 #include "valkyrie/utility/memory_access.h"
 #include "common.h"
 
 namespace Valkyrie {
-	class MemoryChunk : public MemoryAccess {
+	class MemoryChunk : 
+		public MemoryAccess,
+		public Asset {
 	public:
 		MemoryChunk();
 		MemoryChunk(const MemoryChunk& src) = delete;

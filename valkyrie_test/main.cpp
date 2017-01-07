@@ -120,40 +120,31 @@ TEST(FillMemoryCheck, File) {
 		0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 		0xAB, 0xCD, 0xEF
 	};
+
+	const float floats_bin[3] = {
+		35.02259826660156,
+		89.38739776611328,
+		23.373199462890625
+	};
+
 	FILE* p_file = fopen("assets/test.bin", "wb");
 	fwrite(test_bin, 1, 13, p_file);
 	fclose(p_file);
-	MemoryChunkPtr cptr_1 = std::make_shared<Valkyrie::MemoryChunk>();
-	MemoryChunkPtr cptr_2 = std::make_shared<Valkyrie::MemoryChunk>();
-	MemoryChunkPtr cptr_3 = std::make_shared<Valkyrie::MemoryChunk>();
-	ASSERT_FALSE(cptr_1->allocated());
-	ASSERT_FALSE(cptr_2->allocated());
-	ASSERT_FALSE(cptr_3->allocated());
-	cptr_2->allocate(12);
-	cptr_3->allocate(14);
-	ASSERT_FALSE(cptr_1->allocated());
-	ASSERT_TRUE(cptr_2->allocated());
-	ASSERT_TRUE(cptr_3->allocated());
-	asset_manager.load(cptr_1, "test.bin");
-	EXPECT_THROW(asset_manager.load(cptr_2, "test.bin"), std::exception);
-	asset_manager.load(cptr_3, "test.bin");
-	ASSERT_TRUE(memcmp(cptr_1->getData(), test_bin, 13) == 0);
-	ASSERT_TRUE(memcmp(cptr_3->getData(), test_bin, 13) == 0);
-	ASSERT_TRUE(cptr_1->ready());
-	ASSERT_FALSE(cptr_2->ready());
-	ASSERT_TRUE(cptr_3->ready());
-	cptr_1->unsetFlags(MemoryAccess::READY);
-	cptr_3->unsetFlags(MemoryAccess::READY);
-	ASSERT_TRUE(cptr_1->allocated());
-	ASSERT_TRUE(cptr_3->allocated());
-	ASSERT_FALSE(cptr_1->ready());
-	ASSERT_FALSE(cptr_3->ready());
-	cptr_1->unsetFlags(MemoryAccess::ALLOCATED);
-	cptr_2->unsetFlags(MemoryAccess::ALLOCATED);
-	cptr_3->unsetFlags(MemoryAccess::ALLOCATED);
-	ASSERT_FALSE(cptr_1->allocated());
-	ASSERT_FALSE(cptr_2->allocated());
-	ASSERT_FALSE(cptr_3->allocated());
+	asset_manager.load("test.bin");
+	asset_manager.load("floats.bin");
+	auto& cptr = std::dynamic_pointer_cast<MemoryChunk>(asset_manager.getAsset("test.bin"));
+	auto& cptr_floats = std::dynamic_pointer_cast<MemoryChunk>(asset_manager.getAsset("floats.bin"));
+	ASSERT_TRUE(memcmp(cptr->getData(), test_bin, 13) == 0);
+	ASSERT_TRUE(memcmp(cptr_floats->getData(), floats_bin, 12) == 0);
+	ASSERT_TRUE(cptr->ready());
+	ASSERT_TRUE(cptr->allocated());
+	ASSERT_TRUE(cptr_floats->ready());
+	ASSERT_TRUE(cptr_floats->allocated());
+	cptr->unsetFlags(MemoryAccess::READY);
+	ASSERT_TRUE(cptr->allocated());
+	ASSERT_FALSE(cptr->ready());
+	cptr->unsetFlags(MemoryAccess::ALLOCATED);
+	ASSERT_FALSE(cptr->allocated());
 }
 
 TEST(ThreadManager, Initialization) {

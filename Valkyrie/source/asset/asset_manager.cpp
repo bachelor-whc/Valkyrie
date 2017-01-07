@@ -34,11 +34,16 @@ void Valkyrie::AssetManager::load(path file_path) throw(...) {
 		file_path = m_path / file_path;
 	}
 	if (exists(file_path) && is_regular_file(file_path)) {
+		AssetPtr ptr;
 		auto& file_type = file_path.extension();
 		if(file_type == ".gltf") {
-			glTFAssetPtr& asset_ptr = m_glTF_loader.load(file_path);
-			m_asset_map[file_path.u8string()] = asset_ptr;
+			ptr = m_glTF_loader.load(file_path);
 		}
+		else {
+			ptr = MAKE_SHARED(MemoryChunk)();
+			fillMemoryFromFile(std::dynamic_pointer_cast<MemoryChunk>(ptr), file_path);
+		}
+		m_asset_map[file_path.u8string()] = ptr;
 	}
 	else {
 		std::string ex_message = file_path.filename().u8string() + " is not avaliable.";
