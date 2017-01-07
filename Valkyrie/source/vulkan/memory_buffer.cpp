@@ -43,10 +43,11 @@ VkResult MemoryBuffer::allocate(const std::vector<VkBufferUsageFlags>& usages, c
 	m_information_pointers.resize(m_sizes.size());
 	for (auto& p_information : m_information_pointers)
 		p_information = nullptr;
+	uint32_t total_size = 0;
 	for (auto size : m_sizes)
-		m_total_size += size;
+		total_size += size;
 	buffer_create.usage = usage;
-	buffer_create.size = m_total_size;
+	buffer_create.size = total_size;
 
 	result = vkCreateBuffer(g_device_handle, &buffer_create, nullptr, &handle);
 
@@ -55,38 +56,30 @@ VkResult MemoryBuffer::allocate(const std::vector<VkBufferUsageFlags>& usages, c
 
 	VkMemoryAllocateInfo memory_allocate = {};
 	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	memory_allocate.allocationSize = m_total_size;
+	memory_allocate.allocationSize = total_size;
 	bool found = PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memory_allocate.memoryTypeIndex);
 	result = vkAllocateMemory(g_device_handle, &memory_allocate, nullptr, &memory);
 	result = vkBindBufferMemory(g_device_handle, handle, memory, 0);
 	return result;
 }
 
-VkResult MemoryBuffer::write(const std::vector<void*>& data, const std::vector<uint32_t>& offsets, const std::vector<uint32_t>& counts, const std::vector<uint32_t>& unit_sizes, const std::vector<uint32_t>& strides) {
+VkResult MemoryBuffer::write(const void *data, int index) {
+	assert(memory != NULL && m_sizes.size() != 0 && !m_writing_state && index >= 0 && index < m_sizes.size());
+	uint32_t size = m_sizes[index];
+	uint32_t offset = m_offsets[index];
+
 	VkResult result;
-	void* destination;
+	void *destination;
 	
-	result = vkMapMemory(g_device_handle, memory, 0, m_total_size, NULL, &destination);
-	auto ptr_count = data.size();
-	for(int i = 0; i < ptr_count; ++i) {
-		auto p_data = (unsigned char*)data[i];
-		auto d_data = (unsigned char*)destination;
-		auto unit_size = unit_sizes[i];
-		auto stride = strides[i];
-		auto count = counts[i];
-		auto offset = offsets[i];
-		for(int j = 0; j < count; ++j) {
-			auto d_shift = offset + j * stride;
-			auto s_shift = j * unit_size;
-			memcpy(d_data + d_shift, p_data + s_shift, unit_size);
-		}
-	}
+	result = vkMapMemory(g_device_handle, memory, offset, size, NULL, &destination);
+	memcpy(destination, data, size);
 	vkUnmapMemory(g_device_handle, memory);
 	
 	return result;
 }
 
-void* MemoryBuffer::startWriting(const int index) {
+void* MemoryBuffer::startWriting(int index) {
+	assert(memory != NULL && m_sizes.size() != 0 && index >= 0 && index < m_sizes.size());
 	m_writing_state = true;
 
 	VkResult result;

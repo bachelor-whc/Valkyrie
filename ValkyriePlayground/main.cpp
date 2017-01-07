@@ -45,10 +45,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto& imgui_io = ImGui::GetIO();
 
 	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
-	asset_manager.load("gltf/test.gltf");
-	auto& gltf_asset_ptr = std::dynamic_pointer_cast<glTFAsset>(asset_manager.getAsset("gltf/test.gltf"));
-	/*asset_manager.load("gltf/BoxTextured.gltf");
-	auto& gltf_asset_ptr = std::dynamic_pointer_cast<glTFAsset>(asset_manager.getAsset("gltf/BoxTextured.gltf"));*/
+	asset_manager.load("test.lavy.bin");
+	auto& lavy_asset_ptr = std::dynamic_pointer_cast<MemoryChunk>(asset_manager.getAsset("test.lavy.bin"));
 	
 #pragma endregion INITIALIZE_VALKYRIE
 
@@ -63,7 +61,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::MemoryBuffer imgui_vertex_buffer;
 	Vulkan::MemoryBuffer imgui_index_buffer;
 	FILE* wang_png = fopen("assets/gltf/test.png", "rb");
-	//FILE* wang_png = fopen("assets/gltf/CesiumLogoFlat.png", "rb");
 	int wang_png_w;
 	int wang_png_h;
 	int wang_png_c;
@@ -78,53 +75,18 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::Texture memory_texture = CreateImGuiFontsTexture(valkyrie, imgui_io);
 	imgui_io.Fonts->TexID = (void*)memory_texture.image;
 
-	auto& pos_ptr = gltf_asset_ptr->getAccessor("accessor_23");
-	auto& normal_ptr = gltf_asset_ptr->getAccessor("accessor_25");
-	auto& uv_ptr = gltf_asset_ptr->getAccessor("accessor_27");
-	auto& indices_ptr = gltf_asset_ptr->getAccessor("accessor_21");
-	
 	normal_object_buffer.allocate(
 		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT },
 		{
-			pos_ptr->getSize() + normal_ptr->getSize() + uv_ptr->getSize(),
-			indices_ptr->getSize() 
+			67456,
+			50544
 		});
 	normal_uniform_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, { sizeof(mvp) });
 
-	normal_object_buffer.write(
-		{
-			pos_ptr->getData(),
-			normal_ptr->getData(),
-			uv_ptr->getData(),
-			indices_ptr->getData()
-		},
-		{
-			0,
-			12,
-			24,
-			pos_ptr->getSize() + normal_ptr->getSize() + uv_ptr->getSize()
-		},
-		{
-			pos_ptr->getCount(),
-			normal_ptr->getCount(),
-			uv_ptr->getCount(),
-			indices_ptr->getCount()
-		},
-		{
-			pos_ptr->getTypeSize(),
-			normal_ptr->getTypeSize(),
-			uv_ptr->getTypeSize(),
-			indices_ptr->getTypeSize()
-		},
-		{
-			32,
-			32,
-			32,
-			indices_ptr->getTypeSize()
-		}
-	);
+	normal_object_buffer.write(lavy_asset_ptr->getData(), 0);
+	normal_object_buffer.write((unsigned char*)lavy_asset_ptr->getData() + 67456, 1);
 	
-	normal_uniform_buffer.write({ &mvp }, { 0 }, { 1 }, { sizeof(mvp) }, { sizeof(mvp) });
+	normal_uniform_buffer.write(&mvp, 0);
 
 #pragma endregion INITIALIZE_VARIABLE
 
@@ -142,7 +104,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto p_normal_pipeline = valkyrie.pipelines[NORMAL_PIPELINE];
 	auto p_imgui_pipeline = valkyrie.pipelines[IMGUI_PIPELINE];
 
-	valkyrie.vertexInputs[NORMAL_PIPELINE]->setBindingDescription(0, pos_ptr->getTypeSize() + normal_ptr->getTypeSize() + uv_ptr->getTypeSize());
+	valkyrie.vertexInputs[NORMAL_PIPELINE]->setBindingDescription(0, 32);
 	valkyrie.vertexInputs[NORMAL_PIPELINE]->setAttributeDescription(0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0);
 	valkyrie.vertexInputs[NORMAL_PIPELINE]->setAttributeDescription(0, 1, VK_FORMAT_R32G32B32_SFLOAT, 12);
 	valkyrie.vertexInputs[NORMAL_PIPELINE]->setAttributeDescription(0, 2, VK_FORMAT_R32G32_SFLOAT, 24);
@@ -265,10 +227,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		);
 		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->handle);
 		vkCmdBindVertexBuffers(command.handle, 0, 1, &normal_object_buffer.handle, normal_offsets);
-		vkCmdBindIndexBuffer(command.handle, normal_object_buffer.handle, normal_object_buffer.getOffset(1), VK_INDEX_TYPE_UINT16);
-		vkCmdDrawIndexed(command.handle, indices_ptr->getCount(), 1, 0, 0, 1);
+		vkCmdBindIndexBuffer(command.handle, normal_object_buffer.handle, normal_object_buffer.getOffset(1), VK_INDEX_TYPE_UINT32);
+		vkCmdDrawIndexed(command.handle, 12636, 1, 0, 0, 1);
 		
-		//vkCmdExecuteCommands(command.handle, 1, secondary_buffers.data() + i);
+		vkCmdExecuteCommands(command.handle, 1, secondary_buffers.data() + i);
 
 		vkCmdEndRenderPass(command.handle);
 		
@@ -306,9 +268,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = glm::rotate(mvp.model, rotation.x * 3.14f / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		mvp.model = glm::rotate(mvp.model, rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-		normal_uniform_buffer.write({ &mvp }, { 0 }, { 1 }, { sizeof(mvp) }, { sizeof(mvp) });
+		mvp.model = glm::scale(mvp.model, glm::vec3(0.01f));
+		normal_uniform_buffer.write(&mvp, 0);
 
-		/*const auto& mouse_pos = imgui_io.MousePos;
+		const auto& mouse_pos = imgui_io.MousePos;
 		ImGui::NewFrame();
 		ImGui::Text(std::to_string(count++).c_str());
 		ImGui::Text((std::to_string(mouse_pos.x) + ", " + std::to_string(mouse_pos.y)).c_str());
@@ -392,7 +355,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 			}
 			vertex_offset += command_list->VtxBuffer.Size;
 		}
-		vkEndCommandBuffer(command);*/
+		vkEndCommandBuffer(command);
 	}
 	ValkyrieEngine::closeValkyrieEngine();
 	return 0;
