@@ -45,8 +45,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto& imgui_io = ImGui::GetIO();
 
 	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
-	asset_manager.load("test.lavy.bin");
-	auto& lavy_asset_ptr = std::dynamic_pointer_cast<MemoryChunk>(asset_manager.getAsset("test.lavy.bin"));
+	asset_manager.load("untitled.lavy.bin");
+	auto& lavy_asset_ptr = std::dynamic_pointer_cast<MemoryChunk>(asset_manager.getAsset("untitled.lavy.bin"));
 	
 #pragma endregion INITIALIZE_VALKYRIE
 
@@ -78,13 +78,13 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	normal_object_buffer.allocate(
 		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT },
 		{
-			67456,
+			73536,
 			50544
 		});
 	normal_uniform_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, { sizeof(mvp) });
 
 	normal_object_buffer.write(lavy_asset_ptr->getData(), 0);
-	normal_object_buffer.write((unsigned char*)lavy_asset_ptr->getData() + 67456, 1);
+	normal_object_buffer.write((unsigned char*)lavy_asset_ptr->getData() + 73536, 1);
 	
 	normal_uniform_buffer.write(&mvp, 0);
 
