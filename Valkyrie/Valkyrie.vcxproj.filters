@@ -64,6 +64,9 @@
     <Filter Include="Header Files\valkyrie\component">
       <UniqueIdentifier>{ff5cc0e4-004c-40bb-853f-90d9ddd30283}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\component">
+      <UniqueIdentifier>{7481372c-82bc-4950-848e-a05d3e6c5880}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\valkyrie.h">
@@ -286,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="source\asset\lavy_loader.cpp">
       <Filter>Source Files\asset</Filter>
+    </ClCompile>
+    <ClCompile Include="source\component\mesh.cpp">
+      <Filter>Source Files\component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
