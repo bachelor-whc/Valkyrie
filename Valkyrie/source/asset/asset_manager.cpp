@@ -33,16 +33,14 @@ void Valkyrie::AssetManager::load(path file_path) throw(...) {
 	if (file_path.is_relative()) {
 		file_path = m_path / file_path;
 	}
-	if (exists(file_path) && is_regular_file(file_path)) {
+	if (file_path.extension() == ".lavy") {
 		AssetPtr ptr;
-		auto& file_type = file_path.extension();
-		if(file_type == ".gltf") {
-			ptr = m_glTF_loader.load(file_path);
-		}
-		else {
-			ptr = MAKE_SHARED(MemoryChunk)();
-			fillMemoryFromFile(std::dynamic_pointer_cast<MemoryChunk>(ptr), file_path);
-		}
+		ptr = m_lavy_loader.load(file_path);
+		m_asset_map[file_path.u8string()] = ptr;
+	}
+	else if (exists(file_path) && is_regular_file(file_path)) {
+		AssetPtr ptr = MAKE_SHARED(MemoryChunk)();
+		fillMemoryFromFile(std::dynamic_pointer_cast<MemoryChunk>(ptr), file_path);
 		m_asset_map[file_path.u8string()] = ptr;
 	}
 	else {
@@ -52,7 +50,7 @@ void Valkyrie::AssetManager::load(path file_path) throw(...) {
 }
 
 Valkyrie::AssetManager::AssetManager() :
-	m_glTF_loader() {
+	m_lavy_loader() {
 	m_path = current_path() / "assets";
 	if (!exists(m_path)) {
 		create_directory(m_path);

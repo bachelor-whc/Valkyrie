@@ -2,7 +2,7 @@
 #define _VALKYRIE_ASSET_MANAGER_H
 #include <filesystem>
 #include "valkyrie/asset/asset.h"
-#include "valkyrie/asset/gltf_loader.h"
+#include "valkyrie/asset/lavy_loader.h"
 #include "valkyrie/memory_chunk.h"
 
 namespace Valkyrie {
@@ -26,7 +26,7 @@ namespace Valkyrie {
 
 		std::experimental::filesystem::path m_path;
 		std::map <std::string, AssetPtr> m_asset_map;
-		glTFLoader m_glTF_loader;
+		LavyLoader m_lavy_loader;
 	};
 }
 

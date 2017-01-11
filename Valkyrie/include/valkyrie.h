@@ -22,7 +22,7 @@
 #include "valkyrie/vulkan/texture.h"
 #include "valkyrie/render_function.h"
 #include "valkyrie/UI/user_input.h"
-#include "valkyrie/asset/gltf_loader.h"
+#include "valkyrie/asset/lavy_loader.h"
 #include "valkyrie/memory_chunk.h"
 #include "valkyrie/thread/thread_manager.h"
 #include "valkyrie/asset/asset_manager.h"

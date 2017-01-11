@@ -45,8 +45,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto& imgui_io = ImGui::GetIO();
 
 	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
-	asset_manager.load("untitled.lavy.bin");
-	auto& lavy_asset_ptr = std::dynamic_pointer_cast<MemoryChunk>(asset_manager.getAsset("untitled.lavy.bin"));
+	asset_manager.load("duck.lavy");
+	auto& lavy_asset_ptr = std::dynamic_pointer_cast<LavyAsset>(asset_manager.getAsset("duck.lavy"));
 	
 #pragma endregion INITIALIZE_VALKYRIE
 
@@ -54,7 +54,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	ModelViewProjection mvp;
 
 	mvp.projection = glm::perspective(60 * 3.14f / 180.0f, (float)width / (float)height, 0.1f, 256.0f);
-	mvp.view = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, -5.0f));
+	mvp.view = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, -50.0f));
 
 	Vulkan::MemoryBuffer normal_object_buffer;
 	Vulkan::MemoryBuffer normal_uniform_buffer;
@@ -83,8 +83,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		});
 	normal_uniform_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, { sizeof(mvp) });
 
-	normal_object_buffer.write(lavy_asset_ptr->getData(), 0);
-	normal_object_buffer.write((unsigned char*)lavy_asset_ptr->getData() + 73536, 1);
+	normal_object_buffer.write(lavy_asset_ptr->m_buffer_ptr->getData(), 0);
+	normal_object_buffer.write((unsigned char*)lavy_asset_ptr->m_buffer_ptr->getData() + 73536, 1);
 	
 	normal_uniform_buffer.write(&mvp, 0);
 
@@ -196,9 +196,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	render_pass_begin.clearValueCount = 2;
 	render_pass_begin.pClearValues = clear_values;
 
-	float scale[2];
-	scale[0] = 2.0f / imgui_io.DisplaySize.x;
-	scale[1] = 2.0f / imgui_io.DisplaySize.y;
+	float m_scale[2];
+	m_scale[0] = 2.0f / imgui_io.DisplaySize.x;
+	m_scale[1] = 2.0f / imgui_io.DisplaySize.y;
 	float translate[2];
 	translate[0] = -1.0f;
 	translate[1] = -1.0f;
@@ -254,7 +254,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		assert(result == VK_SUCCESS);
 	}
 
-	glm::vec3 rotation = glm::vec3();
+	glm::vec3 m_rotation = glm::vec3();
 	std::vector<void*> parameter({ &valkyrie, &p_normal_pipeline });
 	const VkDeviceSize imgui_offsets[1] = { 0 };
 
@@ -262,12 +262,12 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	int count = 0;
 	while (valkyrie.execute()) {
-		rotation.x += 0.01f;
-		rotation.y += 0.01f;
+		m_rotation.x += 0.01f;
+		m_rotation.y += 0.01f;
 		mvp.model = glm::mat4();
-		mvp.model = glm::rotate(mvp.model, rotation.x * 3.14f / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		mvp.model = glm::rotate(mvp.model, rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-		mvp.model = glm::rotate(mvp.model, rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+		mvp.model = glm::rotate(mvp.model, m_rotation.x * 3.14f / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		mvp.model = glm::rotate(mvp.model, m_rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		mvp.model = glm::rotate(mvp.model, m_rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 		mvp.model = glm::scale(mvp.model, glm::vec3(0.01f));
 		normal_uniform_buffer.write(&mvp, 0);
 
@@ -333,7 +333,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		);
 		vkCmdBindPipeline(command, VK_PIPELINE_BIND_POINT_GRAPHICS, p_imgui_pipeline->handle);
 
-		vkCmdPushConstants(command, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
+		vkCmdPushConstants(command, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, m_scale);
 		vkCmdPushConstants(command, p_imgui_pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
 
 		vkCmdBindVertexBuffers(command, 0, 1, &imgui_vertex_buffer.handle, imgui_offsets);

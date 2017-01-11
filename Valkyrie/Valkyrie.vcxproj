@@ -19,75 +19,81 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Valkyrie\include\common.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\asset.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\asset_manager.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_asset.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_loader.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\mesh.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\default_create_info.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\graphics_api_support\attribute.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\image.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\memory_chunk.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\render_function.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\thread\thread.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\thread\thread_manager.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\UI\user_input.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\utility\memory_access.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\attachment.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_buffer.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_pool.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\debug.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\depth_buffer.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\descriptor.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\device.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\instance.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\physical_device.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\pipeline.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\queue.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\render_pass.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\shader.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\surface.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\swapchain.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\texture.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\tool.h" />
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\vertex_input.h" />
+    <ClInclude Include="include\common.h" />
+    <ClInclude Include="include\valkyrie.h" />
+    <ClInclude Include="include\valkyrie\asset\asset.h" />
+    <ClInclude Include="include\valkyrie\asset\asset_manager.h" />
+    <ClInclude Include="include\valkyrie\asset\lavy_asset.h" />
+    <ClInclude Include="include\valkyrie\asset\lavy_loader.h" />
+    <ClInclude Include="include\valkyrie\asset\mesh.h" />
+    <ClInclude Include="include\valkyrie\component\base.h" />
+    <ClInclude Include="include\valkyrie\component\component.h" />
+    <ClInclude Include="include\valkyrie\component\mesh.h" />
+    <ClInclude Include="include\valkyrie\default_create_info.h" />
+    <ClInclude Include="include\valkyrie\graphics_api_support\attribute.h" />
+    <ClInclude Include="include\valkyrie\image.h" />
+    <ClInclude Include="include\valkyrie\memory_chunk.h" />
+    <ClInclude Include="include\valkyrie\render_function.h" />
+    <ClInclude Include="include\valkyrie\scene\camera.h" />
+    <ClInclude Include="include\valkyrie\scene\object.h" />
+    <ClInclude Include="include\valkyrie\thread\thread.h" />
+    <ClInclude Include="include\valkyrie\thread\thread_manager.h" />
+    <ClInclude Include="include\valkyrie\UI\user_input.h" />
+    <ClInclude Include="include\valkyrie\utility\memory_access.h" />
+    <ClInclude Include="include\valkyrie\vulkan\attachment.h" />
+    <ClInclude Include="include\valkyrie\vulkan\command_buffer.h" />
+    <ClInclude Include="include\valkyrie\vulkan\command_pool.h" />
+    <ClInclude Include="include\valkyrie\vulkan\debug.h" />
+    <ClInclude Include="include\valkyrie\vulkan\depth_buffer.h" />
+    <ClInclude Include="include\valkyrie\vulkan\descriptor.h" />
+    <ClInclude Include="include\valkyrie\vulkan\device.h" />
+    <ClInclude Include="include\valkyrie\vulkan\instance.h" />
+    <ClInclude Include="include\valkyrie\vulkan\memory_buffer.h" />
+    <ClInclude Include="include\valkyrie\vulkan\physical_device.h" />
+    <ClInclude Include="include\valkyrie\vulkan\pipeline.h" />
+    <ClInclude Include="include\valkyrie\vulkan\queue.h" />
+    <ClInclude Include="include\valkyrie\vulkan\render_pass.h" />
+    <ClInclude Include="include\valkyrie\vulkan\shader.h" />
+    <ClInclude Include="include\valkyrie\vulkan\surface.h" />
+    <ClInclude Include="include\valkyrie\vulkan\swapchain.h" />
+    <ClInclude Include="include\valkyrie\vulkan\texture.h" />
+    <ClInclude Include="include\valkyrie\vulkan\tool.h" />
+    <ClInclude Include="include\valkyrie\vulkan\vertex_input.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Valkyrie\source\asset\asset_manager.cpp" />
-    <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp" />
-    <ClCompile Include="Valkyrie\source\asset\gltf_loader.cpp" />
-    <ClCompile Include="Valkyrie\source\graphics_api_support\attribute.cpp" />
-    <ClCompile Include="Valkyrie\source\memory_chunk.cpp" />
-    <ClCompile Include="Valkyrie\source\render_function.cpp" />
-    <ClCompile Include="Valkyrie\source\rgba32_memory.cpp" />
-    <ClCompile Include="Valkyrie\source\thread\thread.cpp" />
-    <ClCompile Include="Valkyrie\source\thread\thread_manager.cpp" />
-    <ClCompile Include="Valkyrie\source\UI\user_input.cpp" />
-    <ClCompile Include="Valkyrie\source\valkyrie.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\command_buffer.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\command_pool.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\debug.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\depth_buffer.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\descriptor.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\device.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\instance.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\memory_buffer.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\physical_device.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\pipeline.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\queue.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\render_pass.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\shader.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\surface.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\swapchain.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\texture.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\tool.cpp" />
-    <ClCompile Include="Valkyrie\source\vulkan\vertex_input.cpp" />
-    <ClCompile Include="Valkyrie\third_party\imgui.cpp" />
-    <ClCompile Include="Valkyrie\third_party\imgui_demo.cpp" />
-    <ClCompile Include="Valkyrie\third_party\imgui_draw.cpp" />
+    <ClCompile Include="source\asset\asset_manager.cpp" />
+    <ClCompile Include="source\asset\lavy_asset.cpp" />
+    <ClCompile Include="source\asset\lavy_loader.cpp" />
+    <ClCompile Include="source\graphics_api_support\attribute.cpp" />
+    <ClCompile Include="source\memory_chunk.cpp" />
+    <ClCompile Include="source\render_function.cpp" />
+    <ClCompile Include="source\rgba32_memory.cpp" />
+    <ClCompile Include="source\scene\object.cpp" />
+    <ClCompile Include="source\thread\thread.cpp" />
+    <ClCompile Include="source\thread\thread_manager.cpp" />
+    <ClCompile Include="source\UI\user_input.cpp" />
+    <ClCompile Include="source\valkyrie.cpp" />
+    <ClCompile Include="source\vulkan\command_buffer.cpp" />
+    <ClCompile Include="source\vulkan\command_pool.cpp" />
+    <ClCompile Include="source\vulkan\debug.cpp" />
+    <ClCompile Include="source\vulkan\depth_buffer.cpp" />
+    <ClCompile Include="source\vulkan\descriptor.cpp" />
+    <ClCompile Include="source\vulkan\device.cpp" />
+    <ClCompile Include="source\vulkan\instance.cpp" />
+    <ClCompile Include="source\vulkan\memory_buffer.cpp" />
+    <ClCompile Include="source\vulkan\physical_device.cpp" />
+    <ClCompile Include="source\vulkan\pipeline.cpp" />
+    <ClCompile Include="source\vulkan\queue.cpp" />
+    <ClCompile Include="source\vulkan\render_pass.cpp" />
+    <ClCompile Include="source\vulkan\shader.cpp" />
+    <ClCompile Include="source\vulkan\surface.cpp" />
+    <ClCompile Include="source\vulkan\swapchain.cpp" />
+    <ClCompile Include="source\vulkan\texture.cpp" />
+    <ClCompile Include="source\vulkan\tool.cpp" />
+    <ClCompile Include="source\vulkan\vertex_input.cpp" />
+    <ClCompile Include="third_party\imgui.cpp" />
+    <ClCompile Include="third_party\imgui_demo.cpp" />
+    <ClCompile Include="third_party\imgui_draw.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{56B138DF-ABBC-4FBB-A41D-DBDF69B799AD}</ProjectGuid>
@@ -170,7 +176,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -184,7 +190,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -200,7 +206,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -218,7 +224,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Valkyrie\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

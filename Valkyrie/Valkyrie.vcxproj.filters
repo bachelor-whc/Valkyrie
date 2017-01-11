@@ -55,209 +55,236 @@
     <Filter Include="Source Files\thread">
       <UniqueIdentifier>{368c82b2-4349-4bc8-8668-f05089806584}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\valkyrie\scene">
+      <UniqueIdentifier>{5f638f34-8b9c-4090-ba36-08c560137095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{6391c952-1157-4870-9b93-cf468032c93f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\valkyrie\component">
+      <UniqueIdentifier>{ff5cc0e4-004c-40bb-853f-90d9ddd30283}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Valkyrie\include\valkyrie.h">
+    <ClInclude Include="include\valkyrie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\instance.h">
+    <ClInclude Include="include\valkyrie\vulkan\instance.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\physical_device.h">
+    <ClInclude Include="include\valkyrie\vulkan\physical_device.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\device.h">
+    <ClInclude Include="include\valkyrie\vulkan\device.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\queue.h">
+    <ClInclude Include="include\valkyrie\vulkan\queue.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\swapchain.h">
+    <ClInclude Include="include\valkyrie\vulkan\swapchain.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\surface.h">
+    <ClInclude Include="include\valkyrie\vulkan\surface.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\tool.h">
+    <ClInclude Include="include\valkyrie\vulkan\tool.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_buffer.h">
+    <ClInclude Include="include\valkyrie\vulkan\command_buffer.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\depth_buffer.h">
+    <ClInclude Include="include\valkyrie\vulkan\depth_buffer.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\render_pass.h">
+    <ClInclude Include="include\valkyrie\vulkan\render_pass.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\attachment.h">
+    <ClInclude Include="include\valkyrie\vulkan\attachment.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\pipeline.h">
+    <ClInclude Include="include\valkyrie\vulkan\pipeline.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\vertex_input.h">
+    <ClInclude Include="include\valkyrie\vulkan\vertex_input.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\shader.h">
+    <ClInclude Include="include\valkyrie\vulkan\shader.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\descriptor.h">
+    <ClInclude Include="include\valkyrie\vulkan\descriptor.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\texture.h">
+    <ClInclude Include="include\valkyrie\vulkan\texture.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\debug.h">
+    <ClInclude Include="include\valkyrie\vulkan\debug.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\image.h">
+    <ClInclude Include="include\valkyrie\image.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\render_function.h">
+    <ClInclude Include="include\valkyrie\render_function.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\default_create_info.h">
+    <ClInclude Include="include\valkyrie\default_create_info.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\memory_buffer.h">
+    <ClInclude Include="include\valkyrie\vulkan\memory_buffer.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\UI\user_input.h">
+    <ClInclude Include="include\valkyrie\UI\user_input.h">
       <Filter>Header Files\valkyrie\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\asset.h">
+    <ClInclude Include="include\valkyrie\asset\asset.h">
       <Filter>Header Files\valkyrie\asset</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_loader.h">
-      <Filter>Header Files\valkyrie\asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\gltf_asset.h">
-      <Filter>Header Files\valkyrie\asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\memory_chunk.h">
+    <ClInclude Include="include\valkyrie\memory_chunk.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\mesh.h">
+    <ClInclude Include="include\valkyrie\asset\mesh.h">
       <Filter>Header Files\valkyrie\asset</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\graphics_api_support\attribute.h">
+    <ClInclude Include="include\valkyrie\graphics_api_support\attribute.h">
       <Filter>Header Files\valkyrie\graphics_api_support</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\common.h">
+    <ClInclude Include="include\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\utility\memory_access.h">
+    <ClInclude Include="include\valkyrie\utility\memory_access.h">
       <Filter>Header Files\valkyrie\utility</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\thread\thread_manager.h">
+    <ClInclude Include="include\valkyrie\thread\thread_manager.h">
       <Filter>Header Files\valkyrie\thread</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\thread\thread.h">
+    <ClInclude Include="include\valkyrie\thread\thread.h">
       <Filter>Header Files\valkyrie\thread</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\vulkan\command_pool.h">
+    <ClInclude Include="include\valkyrie\vulkan\command_pool.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Valkyrie\include\valkyrie\asset\asset_manager.h">
+    <ClInclude Include="include\valkyrie\asset\asset_manager.h">
+      <Filter>Header Files\valkyrie\asset</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\scene\camera.h">
+      <Filter>Header Files\valkyrie\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\scene\object.h">
+      <Filter>Header Files\valkyrie\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\component\component.h">
+      <Filter>Header Files\valkyrie\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\component\base.h">
+      <Filter>Header Files\valkyrie</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\component\mesh.h">
+      <Filter>Header Files\valkyrie\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\asset\lavy_loader.h">
+      <Filter>Header Files\valkyrie\asset</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\asset\lavy_asset.h">
       <Filter>Header Files\valkyrie\asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Valkyrie\source\vulkan\command_buffer.cpp">
+    <ClCompile Include="source\vulkan\command_buffer.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\debug.cpp">
+    <ClCompile Include="source\vulkan\debug.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\depth_buffer.cpp">
+    <ClCompile Include="source\vulkan\depth_buffer.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\descriptor.cpp">
+    <ClCompile Include="source\vulkan\descriptor.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\device.cpp">
+    <ClCompile Include="source\vulkan\device.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\instance.cpp">
+    <ClCompile Include="source\vulkan\instance.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\memory_buffer.cpp">
+    <ClCompile Include="source\vulkan\memory_buffer.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\physical_device.cpp">
+    <ClCompile Include="source\vulkan\physical_device.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\pipeline.cpp">
+    <ClCompile Include="source\vulkan\pipeline.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\queue.cpp">
+    <ClCompile Include="source\vulkan\queue.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\render_pass.cpp">
+    <ClCompile Include="source\vulkan\render_pass.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\shader.cpp">
+    <ClCompile Include="source\vulkan\shader.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\surface.cpp">
+    <ClCompile Include="source\vulkan\surface.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\swapchain.cpp">
+    <ClCompile Include="source\vulkan\swapchain.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\texture.cpp">
+    <ClCompile Include="source\vulkan\texture.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\tool.cpp">
+    <ClCompile Include="source\vulkan\tool.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\vertex_input.cpp">
+    <ClCompile Include="source\vulkan\vertex_input.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\UI\user_input.cpp">
+    <ClCompile Include="source\UI\user_input.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\render_function.cpp">
+    <ClCompile Include="source\render_function.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\rgba32_memory.cpp">
+    <ClCompile Include="source\rgba32_memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\valkyrie.cpp">
+    <ClCompile Include="source\valkyrie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\asset\gltf_loader.cpp">
-      <Filter>Source Files\asset</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\source\memory_chunk.cpp">
+    <ClCompile Include="source\memory_chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\graphics_api_support\attribute.cpp">
+    <ClCompile Include="source\graphics_api_support\attribute.cpp">
       <Filter>Source Files\graphics_api_support</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\asset\gltf_asset.cpp">
-      <Filter>Source Files\asset</Filter>
-    </ClCompile>
-    <ClCompile Include="Valkyrie\third_party\imgui.cpp">
+    <ClCompile Include="third_party\imgui.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\third_party\imgui_demo.cpp">
+    <ClCompile Include="third_party\imgui_demo.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\third_party\imgui_draw.cpp">
+    <ClCompile Include="third_party\imgui_draw.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\thread\thread_manager.cpp">
+    <ClCompile Include="source\thread\thread_manager.cpp">
       <Filter>Source Files\thread</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\vulkan\command_pool.cpp">
+    <ClCompile Include="source\vulkan\command_pool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\thread\thread.cpp">
+    <ClCompile Include="source\thread\thread.cpp">
       <Filter>Source Files\thread</Filter>
     </ClCompile>
-    <ClCompile Include="Valkyrie\source\asset\asset_manager.cpp">
+    <ClCompile Include="source\asset\asset_manager.cpp">
+      <Filter>Source Files\asset</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\object.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\asset\lavy_asset.cpp">
+      <Filter>Source Files\asset</Filter>
+    </ClCompile>
+    <ClCompile Include="source\asset\lavy_loader.cpp">
       <Filter>Source Files\asset</Filter>
     </ClCompile>
   </ItemGroup>
