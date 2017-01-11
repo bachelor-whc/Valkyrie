@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include "valkyrie/component/base.h"
 
 namespace Valkyrie {
@@ -27,7 +28,11 @@ namespace Valkyrie {
 
 		class Transform {
 		public:
-			Transform() {};
+			Transform() {
+				scale.setX(1.0f);
+				scale.setY(1.0f);
+				scale.setZ(1.0f);
+			};
 			virtual ~Transform() {};
 
 			void update() {
@@ -39,8 +44,8 @@ namespace Valkyrie {
 					r.z = glm::radians(r.z);
 					glm::quat quaternion(r);
 					m_world = glm::scale(m_world, scale.getData());
-					m_world *= glm::mat4_cast(quaternion);
 					m_world = glm::translate(m_world, translate.getData());
+					m_world *= glm::mat4_cast(quaternion);
 					translate.update();
 					rotation.update();
 					scale.update();

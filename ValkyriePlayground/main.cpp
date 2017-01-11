@@ -49,6 +49,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	asset_manager.load("duck.lavy");
 	auto& mesh_ptr = std::dynamic_pointer_cast<Mesh>(asset_manager.getAsset("duck.lavy"));
 	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);
+	Scene::Object duck;
 	
 #pragma endregion INITIALIZE_VALKYRIE
 
@@ -245,18 +246,26 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		assert(result == VK_SUCCESS);
 	}
 
-	glm::vec3 rotation = glm::vec3();
 	std::vector<void*> parameter({ &valkyrie, &p_normal_pipeline });
 	const VkDeviceSize imgui_offsets[1] = { 0 };
 
 	bool test_window = true;
 
+	auto& transform = duck.transform;
+	transform.rotation.setZ(-90.0f);
+	auto ty = 0.0f;
+	auto ry = 0.0f;
+	auto s = 0.01f;
+	transform.scale.setX(s);
+	transform.scale.setY(s);
+	transform.scale.setZ(s);
 	int count = 0;
 	while (valkyrie.execute()) {
-		//rotation.y += 0.01f;
-		mvp.model = glm::mat4(1.0f);
-		mvp.model = glm::scale(mvp.model, glm::vec3(0.01f));
-		mvp.model = mvp.model * glm::mat4_cast(glm::quat(rotation));
+		transform.translate.setY(100 * sin(ty));
+		transform.rotation.setX(ry);
+		ry += 1.0f;
+		ty += 0.01f;
+		mvp.model = transform.getWorldMatrix();
 		normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
 
 		const auto& mouse_pos = imgui_io.MousePos;

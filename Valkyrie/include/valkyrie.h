@@ -28,6 +28,7 @@
 #include "valkyrie/asset/asset_manager.h"
 #include "valkyrie/asset/mesh_asset.h"
 #include "valkyrie/component/mesh_renderer.h"
+#include "valkyrie/scene/object.h"
 
 class ValkyrieEngine {
 public:
