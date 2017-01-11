@@ -20,6 +20,7 @@ Valkyrie所使用的第三方函式庫或代碼其版權聲明都放置於`licen
 * Valkyrie可Render具材質貼圖的3D Model
 * 載入SPV(使用者自行編譯)
 * 簡易設置Descriptor Pool, Descriptor Set, Descriptor Set Layout(2016/12/22)
+* 專用格式Lavy(仿glTF)與Blender用Exporter
 
 ## 未來開發項目
 * 更好的Vulkan封裝與介面
