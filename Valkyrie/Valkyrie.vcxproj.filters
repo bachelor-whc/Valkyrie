@@ -198,6 +198,9 @@
     <ClInclude Include="include\valkyrie\component\mesh_renderer.h">
       <Filter>Header Files\valkyrie\component</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\scene\transform.h">
+      <Filter>Header Files\valkyrie\scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">

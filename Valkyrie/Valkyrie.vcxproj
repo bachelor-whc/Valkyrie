@@ -37,6 +37,7 @@
     <ClInclude Include="include\valkyrie\render_function.h" />
     <ClInclude Include="include\valkyrie\scene\camera.h" />
     <ClInclude Include="include\valkyrie\scene\object.h" />
+    <ClInclude Include="include\valkyrie\scene\transform.h" />
     <ClInclude Include="include\valkyrie\thread\thread.h" />
     <ClInclude Include="include\valkyrie\thread\thread_manager.h" />
     <ClInclude Include="include\valkyrie\UI\user_input.h" />

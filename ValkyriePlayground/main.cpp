@@ -62,7 +62,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		glm::vec3(0.0f, 1.0f, 0.0f)
 	);
 
-	Vulkan::MemoryBuffer normal_object_buffer;
 	Vulkan::MemoryBuffer normal_uniform_buffer;
 	Vulkan::MemoryBuffer imgui_vertex_buffer;
 	Vulkan::MemoryBuffer imgui_index_buffer;

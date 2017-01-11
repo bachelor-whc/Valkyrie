@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_SCENE_OBJECT_H
 #define _VALKYRIE_SCENE_OBJECT_H
-#include <glm/glm.hpp>
+#include "valkyrie/scene/transform.h"
 #include "valkyrie/component/base.h"
 
 namespace Valkyrie {
@@ -12,16 +12,9 @@ namespace Valkyrie {
 
 			virtual void start();
 			virtual void update();
-			glm::mat4 world; //WRYYYYYYY
-
-			glm::vec3 position;
-			glm::vec3 rotation;
-			glm::vec3 scale;
 			
+			Transform transform;
 		private:
-			static const glm::vec3 s_x_axis;
-			static const glm::vec3 s_y_axis;
-			static const glm::vec3 s_z_axis;
 		};
 	}
 }
