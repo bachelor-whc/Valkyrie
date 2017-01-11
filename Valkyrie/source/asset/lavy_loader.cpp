@@ -49,6 +49,7 @@ void LavyLoader::loadBufferDescriptions(const LavyAssetPtr& asset_ptr, const JSO
 	auto& indices_json = json["indices"];
 	get_byte_information(vertices_json, asset_ptr->m_vertices_byte_length, asset_ptr->m_vertices_byte_offset);
 	get_byte_information(indices_json, asset_ptr->m_indices_byte_length, asset_ptr->m_indices_byte_offset);
+	asset_ptr->m_indices_count = asset_ptr->m_indices_byte_length / 4;
 }
 
 void Valkyrie::LavyLoader::loadBinaryFile(const Valkyrie::LavyAssetPtr& asset_ptr, const path& bin_file_path) {

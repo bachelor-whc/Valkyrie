@@ -11,20 +11,19 @@ namespace Vulkan {
 		MemoryBuffer();
 		~MemoryBuffer();
 
-		VkResult allocate(const std::vector<VkBufferUsageFlags>& usages, const std::vector<uint32_t>& sizes, VkBufferCreateInfo buffer_create = VK_DEFAULT_BUFFER_CREATE_INFO);
-		VkResult write(const void *data, int index);
-		void* startWriting(int index);
+		VkResult allocate(const std::vector<VkBufferUsageFlags>& usages, const uint32_t size, VkBufferCreateInfo buffer_create = VK_DEFAULT_BUFFER_CREATE_INFO);
+		VkResult write(const void *data, const uint32_t offset, const uint32_t size);
+		void* startWriting(const uint32_t offset, const uint32_t size);
 		void endWriting();
-		VkDescriptorBufferInfo* getInformationPointer(int index);
-		inline uint32_t getSize(int index) { return m_sizes[index]; }
-		inline uint32_t getOffset(int index) { return m_offsets[index]; }
+		VkDescriptorBufferInfo* getInformationPointer();
+		VkDescriptorBufferInfo* getInformationPointer(const uint32_t offset, const uint32_t size);
+		inline uint32_t getSize() { return m_size; }
 
-		VkBuffer handle = NULL;
-		VkDeviceMemory memory = NULL;
+		VkBuffer handle = VK_NULL_HANDLE;
+		VkDeviceMemory memory = VK_NULL_HANDLE;
 	private:
-		std::vector<uint32_t> m_sizes;
-		std::vector<uint32_t> m_offsets;
-		std::vector<VkDescriptorBufferInfo*> m_information_pointers;
+		uint32_t m_size = 0;
+		VkDescriptorBufferInfo* mp_information = nullptr;
 		bool m_writing_state = false;
 	};
 

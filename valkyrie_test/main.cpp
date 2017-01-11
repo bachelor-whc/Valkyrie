@@ -64,8 +64,8 @@ TEST(FillMemoryCheck, File) {
 	fclose(p_file);
 	asset_manager.load("test.bin");
 	asset_manager.load("floats.bin");
-	auto& cptr = std::dynamic_pointer_cast<MemoryChunk>(asset_manager.getAsset("test.bin"));
-	auto& cptr_floats = std::dynamic_pointer_cast<MemoryChunk>(asset_manager.getAsset("floats.bin"));
+	auto& cptr = std::static_pointer_cast<MemoryChunk>(asset_manager.getAsset("test.bin"));
+	auto& cptr_floats = std::static_pointer_cast<MemoryChunk>(asset_manager.getAsset("floats.bin"));
 	ASSERT_TRUE(memcmp(cptr->getData(), test_bin, 13) == 0);
 	ASSERT_TRUE(memcmp(cptr_floats->getData(), floats_bin, 12) == 0);
 	ASSERT_TRUE(cptr->ready());

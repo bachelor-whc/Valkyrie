@@ -67,6 +67,12 @@
     <Filter Include="Source Files\component">
       <UniqueIdentifier>{7481372c-82bc-4950-848e-a05d3e6c5880}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\valkyrie\factory">
+      <UniqueIdentifier>{699d51c5-b59a-4db1-a77e-2875775a0026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\factory">
+      <UniqueIdentifier>{8af643bb-941f-41b7-9e71-95c982edc026}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\valkyrie.h">
@@ -144,9 +150,6 @@
     <ClInclude Include="include\valkyrie\memory_chunk.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\asset\mesh.h">
-      <Filter>Header Files\valkyrie\asset</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\graphics_api_support\attribute.h">
       <Filter>Header Files\valkyrie\graphics_api_support</Filter>
     </ClInclude>
@@ -180,14 +183,20 @@
     <ClInclude Include="include\valkyrie\component\base.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\component\mesh.h">
-      <Filter>Header Files\valkyrie\component</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\asset\lavy_loader.h">
       <Filter>Header Files\valkyrie\asset</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\asset\lavy_asset.h">
       <Filter>Header Files\valkyrie\asset</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\factory\mesh.h">
+      <Filter>Header Files\valkyrie\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\asset\mesh_asset.h">
+      <Filter>Header Files\valkyrie\asset</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\component\mesh_renderer.h">
+      <Filter>Header Files\valkyrie\component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -290,7 +299,13 @@
     <ClCompile Include="source\asset\lavy_loader.cpp">
       <Filter>Source Files\asset</Filter>
     </ClCompile>
-    <ClCompile Include="source\component\mesh.cpp">
+    <ClCompile Include="source\factory\mesh.cpp">
+      <Filter>Source Files\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\asset\mesh_asset.cpp">
+      <Filter>Source Files\asset</Filter>
+    </ClCompile>
+    <ClCompile Include="source\component\mesh_renderer.cpp">
       <Filter>Source Files\component</Filter>
     </ClCompile>
   </ItemGroup>

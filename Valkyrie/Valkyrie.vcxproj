@@ -25,11 +25,12 @@
     <ClInclude Include="include\valkyrie\asset\asset_manager.h" />
     <ClInclude Include="include\valkyrie\asset\lavy_asset.h" />
     <ClInclude Include="include\valkyrie\asset\lavy_loader.h" />
-    <ClInclude Include="include\valkyrie\asset\mesh.h" />
+    <ClInclude Include="include\valkyrie\asset\mesh_asset.h" />
     <ClInclude Include="include\valkyrie\component\base.h" />
     <ClInclude Include="include\valkyrie\component\component.h" />
-    <ClInclude Include="include\valkyrie\component\mesh.h" />
+    <ClInclude Include="include\valkyrie\component\mesh_renderer.h" />
     <ClInclude Include="include\valkyrie\default_create_info.h" />
+    <ClInclude Include="include\valkyrie\factory\mesh.h" />
     <ClInclude Include="include\valkyrie\graphics_api_support\attribute.h" />
     <ClInclude Include="include\valkyrie\image.h" />
     <ClInclude Include="include\valkyrie\memory_chunk.h" />
@@ -64,7 +65,9 @@
     <ClCompile Include="source\asset\asset_manager.cpp" />
     <ClCompile Include="source\asset\lavy_asset.cpp" />
     <ClCompile Include="source\asset\lavy_loader.cpp" />
-    <ClCompile Include="source\component\mesh.cpp" />
+    <ClCompile Include="source\asset\mesh_asset.cpp" />
+    <ClCompile Include="source\component\mesh_renderer.cpp" />
+    <ClCompile Include="source\factory\mesh.cpp" />
     <ClCompile Include="source\graphics_api_support\attribute.cpp" />
     <ClCompile Include="source\memory_chunk.cpp" />
     <ClCompile Include="source\render_function.cpp" />

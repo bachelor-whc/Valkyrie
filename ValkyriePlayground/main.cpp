@@ -1,6 +1,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <iostream>
-#include <Valkyrie.h>
+#include <valkyrie.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -47,7 +47,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
 	asset_manager.load("duck.lavy");
-	auto& lavy_asset_ptr = std::dynamic_pointer_cast<LavyAsset>(asset_manager.getAsset("duck.lavy"));
+	auto& mesh_ptr = std::dynamic_pointer_cast<Mesh>(asset_manager.getAsset("duck.lavy"));
+	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);
 	
 #pragma endregion INITIALIZE_VALKYRIE
 
@@ -80,18 +81,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Vulkan::Texture memory_texture = CreateImGuiFontsTexture(valkyrie, imgui_io);
 	imgui_io.Fonts->TexID = (void*)memory_texture.image;
 
-	normal_object_buffer.allocate(
-		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_BUFFER_USAGE_INDEX_BUFFER_BIT },
-		{
-			73536,
-			50544
-		});
-	normal_uniform_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, { sizeof(mvp) });
-
-	normal_object_buffer.write(lavy_asset_ptr->m_buffer_ptr->getData(), 0);
-	normal_object_buffer.write((unsigned char*)lavy_asset_ptr->m_buffer_ptr->getData() + 73536, 1);
-	
-	normal_uniform_buffer.write(&mvp, 0);
+	normal_uniform_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, sizeof(mvp));
+	normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
 
 #pragma endregion INITIALIZE_VARIABLE
 
@@ -161,7 +152,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	shader_uniform.dstSet = valkyrie.descriptorPool.getSet(NORMAL_PIPELINE);
 	shader_uniform.descriptorCount = 1;
 	shader_uniform.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	shader_uniform.pBufferInfo = normal_uniform_buffer.getInformationPointer(0);
+	shader_uniform.pBufferInfo = normal_uniform_buffer.getInformationPointer();
 	shader_uniform.dstBinding = 0;
 
 	shader_samplers = {};
@@ -219,8 +210,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 		valkyrie.commandSetViewport(command);
 		valkyrie.commandSetScissor(command);
-
-		const VkDeviceSize normal_offsets[1] = { normal_object_buffer.getOffset(0) };
 		
 		vkCmdBindDescriptorSets(
 			command.handle, 
@@ -231,9 +220,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 			0, nullptr
 		);
 		vkCmdBindPipeline(command.handle, VK_PIPELINE_BIND_POINT_GRAPHICS, p_normal_pipeline->handle);
-		vkCmdBindVertexBuffers(command.handle, 0, 1, &normal_object_buffer.handle, normal_offsets);
-		vkCmdBindIndexBuffer(command.handle, normal_object_buffer.handle, normal_object_buffer.getOffset(1), VK_INDEX_TYPE_UINT32);
-		vkCmdDrawIndexed(command.handle, 12636, 1, 0, 0, 1);
+		mesh_renderer.recordDrawCommand(command);
 		
 		vkCmdExecuteCommands(command.handle, 1, secondary_buffers.data() + i);
 
@@ -271,7 +258,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = glm::mat4(1.0f);
 		mvp.model = glm::scale(mvp.model, glm::vec3(0.01f));
 		mvp.model = mvp.model * glm::mat4_cast(glm::quat(rotation));
-		normal_uniform_buffer.write(&mvp, 0);
+		normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
 
 		const auto& mouse_pos = imgui_io.MousePos;
 		ImGui::NewFrame();
@@ -285,15 +272,15 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		uint32_t total_vertex_size = draw_data->TotalVtxCount * sizeof(ImDrawVert);
 		imgui_vertex_buffer.allocate(
 		{ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT },
-		{ total_vertex_size });
+		total_vertex_size);
 
 		uint32_t total_index_size = draw_data->TotalIdxCount * sizeof(ImDrawIdx);
 		imgui_index_buffer.allocate(
 		{ VK_BUFFER_USAGE_INDEX_BUFFER_BIT },
-		{ total_index_size });
+		total_index_size);
 
-		ImDrawVert* vertex_memory_destination = (ImDrawVert*)imgui_vertex_buffer.startWriting(0);
-		ImDrawIdx* index_memory_destination = (ImDrawIdx*)imgui_index_buffer.startWriting(0);
+		ImDrawVert* vertex_memory_destination = (ImDrawVert*)imgui_vertex_buffer.startWriting(0, total_vertex_size);
+		ImDrawIdx* index_memory_destination = (ImDrawIdx*)imgui_index_buffer.startWriting(0, total_index_size);
 
 		for (int n = 0; n < draw_data->CmdListsCount; n++) {
 			const auto command_list = draw_data->CmdLists[n];

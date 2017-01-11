@@ -23,7 +23,6 @@ namespace Valkyrie {
 		static AssetManager* gp_asset_manager;
 		AssetManager();
 
-
 		std::experimental::filesystem::path m_path;
 		std::map <std::string, AssetPtr> m_asset_map;
 		LavyLoader m_lavy_loader;

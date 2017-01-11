@@ -26,6 +26,8 @@
 #include "valkyrie/memory_chunk.h"
 #include "valkyrie/thread/thread_manager.h"
 #include "valkyrie/asset/asset_manager.h"
+#include "valkyrie/asset/mesh_asset.h"
+#include "valkyrie/component/mesh_renderer.h"
 
 class ValkyrieEngine {
 public:

@@ -1,4 +1,6 @@
 #include "valkyrie/asset/asset_manager.h"
+#include "valkyrie/asset/mesh_asset.h"
+#include "valkyrie/factory/mesh.h"
 #include "common.h"
 using namespace Valkyrie;
 using std::experimental::filesystem::path;
@@ -34,13 +36,14 @@ void Valkyrie::AssetManager::load(path file_path) throw(...) {
 		file_path = m_path / file_path;
 	}
 	if (file_path.extension() == ".lavy") {
-		AssetPtr ptr;
-		ptr = m_lavy_loader.load(file_path);
-		m_asset_map[file_path.u8string()] = ptr;
+		LavyAssetPtr lavy_ptr;
+		lavy_ptr = m_lavy_loader.load(file_path);
+		auto& factory = *ValkyrieFactory::MeshFactory::getGlobalMeshFactoryPtr();
+		m_asset_map[file_path.u8string()] = factory.createMesh(lavy_ptr);
 	}
 	else if (exists(file_path) && is_regular_file(file_path)) {
-		AssetPtr ptr = MAKE_SHARED(MemoryChunk)();
-		fillMemoryFromFile(std::dynamic_pointer_cast<MemoryChunk>(ptr), file_path);
+		MemoryChunkPtr ptr = MAKE_SHARED(MemoryChunk)();
+		fillMemoryFromFile(ptr, file_path);
 		m_asset_map[file_path.u8string()] = ptr;
 	}
 	else {
