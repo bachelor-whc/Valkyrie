@@ -71,10 +71,12 @@ class LavyExporter(bpy.types.Operator, ExportHelper):
 
             for i, vert in enumerate(verts):
                 vert.index = i
-                for pos in vert.pos:
-                    export_bin.write(ctypes.c_float(pos))
-                for normal in vert.normal:
-                    export_bin.write(ctypes.c_float(normal))
+                export_bin.write(ctypes.c_float(vert.pos.y))
+                export_bin.write(ctypes.c_float(vert.pos.z))
+                export_bin.write(ctypes.c_float(vert.pos.x))
+                export_bin.write(ctypes.c_float(vert.normal.y))
+                export_bin.write(ctypes.c_float(vert.normal.z))
+                export_bin.write(ctypes.c_float(vert.normal.x))
                 uv_x = vert.uv.x
                 uv_y = vert.uv.y
                 export_bin.write(ctypes.c_float(uv_x))

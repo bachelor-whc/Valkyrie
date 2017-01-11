@@ -3,6 +3,7 @@
 #include <Valkyrie.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <vulkan/vulkan.h>
 #include <cassert>
 #include <imgui.h>
@@ -54,7 +55,11 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	ModelViewProjection mvp;
 
 	mvp.projection = glm::perspective(60 * 3.14f / 180.0f, (float)width / (float)height, 0.1f, 256.0f);
-	mvp.view = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, -50.0f));
+	mvp.view = glm::lookAt(
+		glm::vec3(0.0f, 0.0f, 10.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f)
+	);
 
 	Vulkan::MemoryBuffer normal_object_buffer;
 	Vulkan::MemoryBuffer normal_uniform_buffer;
@@ -254,7 +259,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		assert(result == VK_SUCCESS);
 	}
 
-	glm::vec3 m_rotation = glm::vec3();
+	glm::vec3 rotation = glm::vec3();
 	std::vector<void*> parameter({ &valkyrie, &p_normal_pipeline });
 	const VkDeviceSize imgui_offsets[1] = { 0 };
 
@@ -262,13 +267,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	int count = 0;
 	while (valkyrie.execute()) {
-		m_rotation.x += 0.01f;
-		m_rotation.y += 0.01f;
-		mvp.model = glm::mat4();
-		mvp.model = glm::rotate(mvp.model, m_rotation.x * 3.14f / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		mvp.model = glm::rotate(mvp.model, m_rotation.y * 3.14f / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-		mvp.model = glm::rotate(mvp.model, m_rotation.z * 3.14f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+		//rotation.y += 0.01f;
+		mvp.model = glm::mat4(1.0f);
 		mvp.model = glm::scale(mvp.model, glm::vec3(0.01f));
+		mvp.model = mvp.model * glm::mat4_cast(glm::quat(rotation));
 		normal_uniform_buffer.write(&mvp, 0);
 
 		const auto& mouse_pos = imgui_io.MousePos;
