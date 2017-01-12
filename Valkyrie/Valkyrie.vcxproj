@@ -26,7 +26,8 @@
     <ClInclude Include="include\valkyrie\asset\lavy_asset.h" />
     <ClInclude Include="include\valkyrie\asset\lavy_loader.h" />
     <ClInclude Include="include\valkyrie\asset\mesh_asset.h" />
-    <ClInclude Include="include\valkyrie\component\base.h" />
+    <ClInclude Include="include\valkyrie\base_unit.h" />
+    <ClInclude Include="include\valkyrie\component\camera.h" />
     <ClInclude Include="include\valkyrie\component\component.h" />
     <ClInclude Include="include\valkyrie\component\mesh_renderer.h" />
     <ClInclude Include="include\valkyrie\default_create_info.h" />
@@ -35,7 +36,6 @@
     <ClInclude Include="include\valkyrie\image.h" />
     <ClInclude Include="include\valkyrie\memory_chunk.h" />
     <ClInclude Include="include\valkyrie\render_function.h" />
-    <ClInclude Include="include\valkyrie\scene\camera.h" />
     <ClInclude Include="include\valkyrie\scene\object.h" />
     <ClInclude Include="include\valkyrie\scene\transform.h" />
     <ClInclude Include="include\valkyrie\thread\thread.h" />

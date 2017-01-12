@@ -171,17 +171,11 @@
     <ClInclude Include="include\valkyrie\asset\asset_manager.h">
       <Filter>Header Files\valkyrie\asset</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\scene\camera.h">
-      <Filter>Header Files\valkyrie\scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\scene\object.h">
       <Filter>Header Files\valkyrie\scene</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\component\component.h">
       <Filter>Header Files\valkyrie\component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\valkyrie\component\base.h">
-      <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\asset\lavy_loader.h">
       <Filter>Header Files\valkyrie\asset</Filter>
@@ -200,6 +194,12 @@
     </ClInclude>
     <ClInclude Include="include\valkyrie\scene\transform.h">
       <Filter>Header Files\valkyrie\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\component\camera.h">
+      <Filter>Header Files\valkyrie\component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\base_unit.h">
+      <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

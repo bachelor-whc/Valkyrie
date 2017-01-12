@@ -1,9 +1,6 @@
-#ifndef _VALKYRIECOMPONENT_MESH_RENDERER_H
-#define _VALKYRIECOMPONENT_MESH_RENDERER_H
+#ifndef _VALKYRIECOMPONENT_CAMERA_H
+#define _VALKYRIECOMPONENT_CAMERA_H
 #include "valkyrie/component/component.h"
-#include "valkyrie/vulkan/command_buffer.h"
-#include "valkyrie/vulkan/memory_buffer.h"
-#include "valkyrie/asset/mesh_asset.h"
 
 namespace ValkyrieComponent {
 	class MeshRenderer : public Component {
