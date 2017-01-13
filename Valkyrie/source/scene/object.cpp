@@ -16,5 +16,5 @@ void Valkyrie::Scene::Object::start() {
 }
 
 void Valkyrie::Scene::Object::update() {
-	transform.update();
+	
 }

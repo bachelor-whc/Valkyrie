@@ -8,6 +8,7 @@
 
 namespace Valkyrie {
 	namespace Scene {
+
 		class Transform : 
 			public DirtyFlag {
 		public:
@@ -17,20 +18,36 @@ namespace Valkyrie {
 			glm::mat4& getWorldMatrix();
 
 			void setTranslate(const float x, const float y, const float z);
-			
-			/// Taking degree as arguments.
+			/// \brief Taking degree as arguments.
 			void setRotation(const float dx, const float dy, const float dz);
 			void setScale(const float x, const float y, const float z);
+
+			/// \brief Get value of translate.
 			const glm::vec3& getTranslteValue() const;
+			/// \brief Get value of roatation in degree.
 			const glm::vec3& getRotationValue() const;
+			/// \brief Get value of scale.
 			const glm::vec3& getScaleValue() const;
+			///
+			/// Getting reference of instance will enable dirty flag.<br/>
+			/// For evaluation purpose, just use getTranslteValue()
+			///
 			glm::vec3& getTranslteRef();
+			///
+			/// Getting reference of instance will enable dirty flag.<br/>
+			/// For evaluation purpose, just use getRotationValue()
+			///
 			glm::vec3& getRotationRef();
+			///
+			/// Getting reference of instance will enable dirty flag.<br/>
+			/// For evaluation purpose, just use getScaleValue()
+			///
 			glm::vec3& getScaleRef();
 
-		private:
+			/// Update world matrix and make orientation normalized.
 			void update();
 
+		private:
 			glm::mat4 m_world;
 			glm::vec3 m_translate;
 			glm::vec3 m_rotation;

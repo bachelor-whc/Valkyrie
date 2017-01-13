@@ -6,7 +6,7 @@ Transform::Transform() :
 	m_translate(),
 	m_rotation(),
 	m_scale(1.0f, 1.0f, 1.0f) {
-
+	
 }
 
 Transform::~Transform() {
@@ -29,21 +29,21 @@ glm::mat4& Transform::getWorldMatrix() {
 	return m_world;
 }
 
-void Valkyrie::Scene::Transform::setTranslate(const float x, const float y, const float z) {
+void Transform::setTranslate(const float x, const float y, const float z) {
 	m_translate.x = x;
 	m_translate.y = y;
 	m_translate.z = z;
 	enableDirtyFlag();
 }
 
-void Valkyrie::Scene::Transform::setRotation(const float dx, const float dy, const float dz) {
+void Transform::setRotation(const float dx, const float dy, const float dz) {
 	m_rotation.x = glm::radians<float>(dx);
 	m_rotation.y = glm::radians<float>(dy);
 	m_rotation.z = glm::radians<float>(dz);
 	enableDirtyFlag();
 }
 
-void Valkyrie::Scene::Transform::setScale(const float x, const float y, const float z) {
+void Transform::setScale(const float x, const float y, const float z) {
 	if(x > 0.0f && y > 0.0f && z > 0.0f) {
 		m_scale.x = x;
 		m_scale.y = y;
@@ -52,29 +52,29 @@ void Valkyrie::Scene::Transform::setScale(const float x, const float y, const fl
 	}
 }
 
-const glm::vec3& Valkyrie::Scene::Transform::getTranslteValue() const {
+const glm::vec3& Transform::getTranslteValue() const {
 	return m_translate;
 }
 
-const glm::vec3& Valkyrie::Scene::Transform::getRotationValue() const {
+const glm::vec3& Transform::getRotationValue() const {
 	return m_rotation;
 }
 
-const glm::vec3& Valkyrie::Scene::Transform::getScaleValue() const {
+const glm::vec3& Transform::getScaleValue() const {
 	return m_scale;
 }
 
-glm::vec3& Valkyrie::Scene::Transform::getTranslteRef() {
+glm::vec3& Transform::getTranslteRef() {
 	enableDirtyFlag();
 	return m_translate;
 }
 
-glm::vec3& Valkyrie::Scene::Transform::getRotationRef() {
+glm::vec3& Transform::getRotationRef() {
 	enableDirtyFlag();
 	return m_rotation;
 }
 
-glm::vec3& Valkyrie::Scene::Transform::getScaleRef() {
+glm::vec3& Transform::getScaleRef() {
 	enableDirtyFlag();
 	return m_scale;
 }
