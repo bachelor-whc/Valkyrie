@@ -73,10 +73,13 @@
     <ClCompile Include="source\memory_chunk.cpp" />
     <ClCompile Include="source\render_function.cpp" />
     <ClCompile Include="source\rgba32_memory.cpp" />
+    <ClCompile Include="source\scene\camera.cpp" />
     <ClCompile Include="source\scene\object.cpp" />
     <ClCompile Include="source\thread\thread.cpp" />
     <ClCompile Include="source\thread\thread_manager.cpp" />
+    <ClCompile Include="source\transform.cpp" />
     <ClCompile Include="source\UI\user_input.cpp" />
+    <ClCompile Include="source\base_unit.cpp" />
     <ClCompile Include="source\valkyrie.cpp" />
     <ClCompile Include="source\vulkan\command_buffer.cpp" />
     <ClCompile Include="source\vulkan\command_pool.cpp" />

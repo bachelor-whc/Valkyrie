@@ -4,11 +4,24 @@
 namespace Valkyrie {
 	class Base {
 	public:
-		Base() {};
-		virtual ~Base() {};
+		Base() {}
+		virtual ~Base() {}
 
 		virtual void start() = 0;
 		virtual void update() = 0;
+	};
+
+	class DirtyFlag {
+	public:
+		DirtyFlag() {}
+		virtual ~DirtyFlag() {}
+
+		void enableDirtyFlag();
+		void disableDirtyFlag();
+		bool dirty();
+
+	private:
+		bool m_dirty = true;
 	};
 }
 

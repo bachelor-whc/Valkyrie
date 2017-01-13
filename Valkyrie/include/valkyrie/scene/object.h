@@ -23,7 +23,7 @@ namespace Valkyrie {
 			
 			Transform transform;
 		private:
-			//std::set<ValkyrieComponent::ComponentPtr>
+			std::set<ValkyrieComponent::ComponentPtr> m_component_ptrs;
 		};
 	}
 }

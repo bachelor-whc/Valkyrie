@@ -1,3 +1,7 @@
+# Doxygen
+doc/html/
+doc/latex/
+
 # ImGui ini
 imgui.ini
 

@@ -311,5 +311,14 @@
     <ClCompile Include="source\component\mesh_renderer.cpp">
       <Filter>Source Files\component</Filter>
     </ClCompile>
+    <ClCompile Include="source\transform.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\camera.cpp">
+      <Filter>Source Files\component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\base_unit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
