@@ -29,6 +29,7 @@
     <ClInclude Include="include\valkyrie\base_unit.h" />
     <ClInclude Include="include\valkyrie\component\camera.h" />
     <ClInclude Include="include\valkyrie\component\component.h" />
+    <ClInclude Include="include\valkyrie\component\component_attacher.h" />
     <ClInclude Include="include\valkyrie\component\mesh_renderer.h" />
     <ClInclude Include="include\valkyrie\default_create_info.h" />
     <ClInclude Include="include\valkyrie\factory\mesh.h" />
@@ -67,6 +68,7 @@
     <ClCompile Include="source\asset\lavy_asset.cpp" />
     <ClCompile Include="source\asset\lavy_loader.cpp" />
     <ClCompile Include="source\asset\mesh_asset.cpp" />
+    <ClCompile Include="source\component\component_attacher.cpp" />
     <ClCompile Include="source\component\mesh_renderer.cpp" />
     <ClCompile Include="source\factory\mesh.cpp" />
     <ClCompile Include="source\graphics_api_support\attribute.cpp" />

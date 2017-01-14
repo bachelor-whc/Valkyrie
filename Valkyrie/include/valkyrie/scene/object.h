@@ -12,6 +12,7 @@ namespace ValkyrieComponent {
 }
 
 namespace Valkyrie {
+	class ComponentAttacher;
 	namespace Scene {
 		class Object : public Base {
 		public:
@@ -23,6 +24,7 @@ namespace Valkyrie {
 			
 			Transform transform;
 		private:
+			friend class Valkyrie::ComponentAttacher;
 			std::set<ValkyrieComponent::ComponentPtr> m_component_ptrs;
 		};
 	}

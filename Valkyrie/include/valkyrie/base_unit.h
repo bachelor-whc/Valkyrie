@@ -28,8 +28,8 @@ namespace Valkyrie {
 		void reset();
 		void enableDirtyFlag(const unsigned int flag);
 		void disableDirtyFlag(const unsigned int flag);
-		bool dirty();
-		bool dirtyAt(const unsigned int flag);
+		bool dirty() const;
+		bool dirtyAt(const unsigned int flag) const;
 	private:
 		unsigned int m_dirty = 0;
 	};

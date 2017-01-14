@@ -15,11 +15,11 @@ void DirtyFlags::disableDirtyFlag(const unsigned int flag) {
 	m_dirty = m_dirty & (~flag);
 }
 
-bool DirtyFlags::dirty() {
+bool DirtyFlags::dirty() const {
 	return m_dirty > 0;
 }
 
-bool DirtyFlags::dirtyAt(const unsigned int flag) {
+bool DirtyFlags::dirtyAt(const unsigned int flag) const {
 	return (m_dirty & flag) > 0;
 	
 }

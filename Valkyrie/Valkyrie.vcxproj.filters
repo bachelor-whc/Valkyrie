@@ -201,6 +201,9 @@
     <ClInclude Include="include\valkyrie\base_unit.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\component\component_attacher.h">
+      <Filter>Header Files\valkyrie\component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -318,6 +321,9 @@
       <Filter>Source Files\component</Filter>
     </ClCompile>
     <ClCompile Include="source\base_unit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\component\component_attacher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

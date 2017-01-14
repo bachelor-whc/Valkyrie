@@ -49,19 +49,21 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	asset_manager.load("duck.lavy");
 	auto& mesh_ptr = std::dynamic_pointer_cast<Mesh>(asset_manager.getAsset("duck.lavy"));
 	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);
+	ValkyrieComponent::CameraPtr camera_ptr = MAKE_SHARED(ValkyrieComponent::Camera)();
 	Scene::Object duck;
+	Scene::ObjectPtr camera_obj_ptr = MAKE_SHARED(Scene::Object)();
+	Valkyrie::ComponentAttacher attacher;
+	attacher.attachComponent(camera_obj_ptr, camera_ptr);
 	
 #pragma endregion INITIALIZE_VALKYRIE
 
 #pragma region INITIALIZE_VARIABLE
 	ModelViewProjection mvp;
 
-	mvp.projection = glm::perspective(60 * 3.14f / 180.0f, (float)width / (float)height, 0.1f, 256.0f);
-	mvp.view = glm::lookAt(
-		glm::vec3(0.0f, 0.0f, 10.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f)
-	);
+	camera_ptr->setRatio(width, height);
+	camera_ptr->update();
+	mvp.view = camera_ptr->getView();
+	mvp.projection = camera_ptr->getPerspective();
 
 	Vulkan::MemoryBuffer normal_uniform_buffer;
 	Vulkan::MemoryBuffer imgui_vertex_buffer;
@@ -251,21 +253,23 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	bool test_window = true;
 
-	auto& transform = duck.transform;
-	transform.rotation.setZ(-90.0f);
+	auto& duck_transform = duck.transform;
+	duck_transform.setRotation(0.0f, 0.0f, -90.0f);
 	auto ty = 0.0f;
 	auto ry = 0.0f;
 	auto s = 0.01f;
-	transform.scale.setX(s);
-	transform.scale.setY(s);
-	transform.scale.setZ(s);
+	duck_transform.setScale(s, s, s);
 	int count = 0;
 	while (valkyrie.execute()) {
-		transform.translate.setY(100 * sin(ty));
-		transform.rotation.setX(ry);
+		camera_obj_ptr->update();
+		camera_obj_ptr->transform.getTranslteRef().z = 25.0f * sin(ty) + 30.0f;
+		camera_obj_ptr->transform.getRotationRef().z = glm::radians<float>(ry);
+		duck_transform.getTranslteRef().y = sin(ty);
+		duck_transform.getRotationRef().x = glm::radians<float>(ry);
 		ry += 1.0f;
 		ty += 0.01f;
-		mvp.model = transform.getWorldMatrix();
+		mvp.view = camera_ptr->getView();
+		mvp.model = duck_transform.getWorldMatrix();
 		normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
 
 		const auto& mouse_pos = imgui_io.MousePos;

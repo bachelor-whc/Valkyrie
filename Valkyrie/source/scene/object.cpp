@@ -1,20 +1,24 @@
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include "valkyrie/scene/object.h"
+#include "valkyrie/component/component.h"
 
-Valkyrie::Scene::Object::Object() :
+using namespace Valkyrie::Scene;
+
+Object::Object() :
 	transform() {
 
 }
 
-Valkyrie::Scene::Object::~Object() {
+Object::~Object() {
 
 }
 
-void Valkyrie::Scene::Object::start() {
+void Object::start() {
 
 }
 
-void Valkyrie::Scene::Object::update() {
-	
+void Object::update() {
+	transform.update();
+	for (auto& component_ptr : m_component_ptrs) {
+		component_ptr->update();
+	}
 }

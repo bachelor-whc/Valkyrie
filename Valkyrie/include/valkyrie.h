@@ -27,7 +27,9 @@
 #include "valkyrie/thread/thread_manager.h"
 #include "valkyrie/asset/asset_manager.h"
 #include "valkyrie/asset/mesh_asset.h"
+#include "valkyrie/component/component_attacher.h"
 #include "valkyrie/component/mesh_renderer.h"
+#include "valkyrie/component/camera.h"
 #include "valkyrie/scene/object.h"
 
 class ValkyrieEngine {

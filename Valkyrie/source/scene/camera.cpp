@@ -11,8 +11,8 @@ Camera::Camera() :
 	m_ratio(1.0f),
 	m_near(0.1f), 
 	m_far(1000.0f),
-	m_orientation(),
-	m_up(),
+	m_orientation(0.0f, 0.0f, -1.0f),
+	m_up(0.0f, 1.0f, 0.0f),
 	m_perspective(),
 	m_view() {
 	m_dirty.enableDirtyFlag(VIEW);

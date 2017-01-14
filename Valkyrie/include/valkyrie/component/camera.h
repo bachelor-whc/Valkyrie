@@ -59,6 +59,8 @@ namespace ValkyrieComponent {
 		glm::mat4 m_perspective;
 		glm::mat4 m_view;
 	};
+
+	using CameraPtr = std::shared_ptr<Camera>;
 }
 
 #endif
