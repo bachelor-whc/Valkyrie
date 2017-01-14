@@ -42,7 +42,10 @@
     <ClInclude Include="include\valkyrie\thread\thread.h" />
     <ClInclude Include="include\valkyrie\thread\thread_manager.h" />
     <ClInclude Include="include\valkyrie\UI\user_input.h" />
+    <ClInclude Include="include\valkyrie\UI\window.h" />
+    <ClInclude Include="include\valkyrie\UI\window_manager.h" />
     <ClInclude Include="include\valkyrie\utility\memory_access.h" />
+    <ClInclude Include="include\valkyrie\utility\sdl_manager.h" />
     <ClInclude Include="include\valkyrie\vulkan\attachment.h" />
     <ClInclude Include="include\valkyrie\vulkan\command_buffer.h" />
     <ClInclude Include="include\valkyrie\vulkan\command_pool.h" />
@@ -82,6 +85,9 @@
     <ClCompile Include="source\transform.cpp" />
     <ClCompile Include="source\UI\user_input.cpp" />
     <ClCompile Include="source\base_unit.cpp" />
+    <ClCompile Include="source\UI\window.cpp" />
+    <ClCompile Include="source\UI\window_manager.cpp" />
+    <ClCompile Include="source\utility\sdl_manager.cpp" />
     <ClCompile Include="source\valkyrie.cpp" />
     <ClCompile Include="source\vulkan\command_buffer.cpp" />
     <ClCompile Include="source\vulkan\command_pool.cpp" />

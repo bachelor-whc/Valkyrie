@@ -73,6 +73,9 @@
     <Filter Include="Source Files\factory">
       <UniqueIdentifier>{8af643bb-941f-41b7-9e71-95c982edc026}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\utility">
+      <UniqueIdentifier>{8587fc21-3d29-4d4f-a37d-b029c6a7cf19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\valkyrie.h">
@@ -204,6 +207,15 @@
     <ClInclude Include="include\valkyrie\component\component_attacher.h">
       <Filter>Header Files\valkyrie\component</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\UI\window_manager.h">
+      <Filter>Header Files\valkyrie\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\utility\sdl_manager.h">
+      <Filter>Header Files\valkyrie\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\UI\window.h">
+      <Filter>Header Files\valkyrie\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -325,6 +337,15 @@
     </ClCompile>
     <ClCompile Include="source\component\component_attacher.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UI\window_manager.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\sdl_manager.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UI\window.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

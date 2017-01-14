@@ -31,6 +31,8 @@
 #include "valkyrie/component/mesh_renderer.h"
 #include "valkyrie/component/camera.h"
 #include "valkyrie/scene/object.h"
+#include "valkyrie/UI/window.h"
+#include "valkyrie/UI/window_manager.h"
 
 class ValkyrieEngine {
 public:
@@ -49,7 +51,6 @@ public:
 	virtual VkResult initialize();
 	virtual VkResult render();
 
-	void initializeWindow(int width, int height, const std::string& title);
 	void initializePipelineLayout(const std::string& pipeline_name);
 	void initializeDescriptorSetLayouts();
 	void createPipelineModule(const std::string& pipename_name);
@@ -124,7 +125,6 @@ private:
 
 private:
 	std::string m_application_name;
-	SDL_Window* mp_window;
 	double m_previous_timestamp = 0.0;
 	double m_current_timestamp = 0.0;
 	double m_deltatime = 0.0;

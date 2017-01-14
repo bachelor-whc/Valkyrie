@@ -3,6 +3,9 @@
 #include "valkyrie/vulkan/tool.h"
 #include "valkyrie/vulkan/debug.h"
 #include "valkyrie/UI/user_input.h"
+#include "valkyrie/UI/window.h"
+#include "valkyrie/UI/window_manager.h"
+#include "valkyrie/utility/sdl_manager.h"
 using namespace Vulkan;
 
 ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
@@ -18,17 +21,24 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 		return 1;
 	int result_tm = Valkyrie::ThreadManager::initialize();
 	int result_am = Valkyrie::AssetManager::initialize();
-	
+	int result_sm = Valkyrie::SDLManager::initialize();
+	int result_wm = Valkyrie::WindowManager::initialize();
 	if (result_tm != 0)
 		return 2;
 	if (result_am != 0)
 		return 3;
+	if (result_sm != 0)
+		return 4;
+	if (result_wm != 0)
+		return 5;
 	return 0;
 }
 
 void ValkyrieEngine::closeValkyrieEngine() {
-	Valkyrie::ThreadManager::close();
+	Valkyrie::WindowManager::close();
+	Valkyrie::SDLManager::close();
 	Valkyrie::AssetManager::close();
+	Valkyrie::ThreadManager::close();
 	if(gp_valkyrie != nullptr)
 		delete gp_valkyrie;
 	gp_valkyrie = nullptr;
@@ -36,16 +46,11 @@ void ValkyrieEngine::closeValkyrieEngine() {
 
 ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	m_application_name(application_name),
-	mp_window(nullptr),
 	mp_swapchain(nullptr),
 	mp_depth_buffer(nullptr),
 	descriptorPool(8),
 	m_render_pfns() {
-	if(!SDLInitialized) {
-		int sdl_result = SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-		assert(sdl_result == 0);
-		SDLInitialized = true;
-	}
+	
 }
 
 ValkyrieEngine::~ValkyrieEngine() {
@@ -60,7 +65,6 @@ ValkyrieEngine::~ValkyrieEngine() {
 	DestroyInstance(m_instatnce);
 	delete mp_swapchain;
 	delete mp_depth_buffer;
-	SDL_Quit();
 }
 
 void ValkyrieEngine::initializeInstance() {
@@ -85,7 +89,7 @@ void ValkyrieEngine::initializeDevice() {
 
 void ValkyrieEngine::initializeSurface() {
 	VkResult result;
-	result = setSurface(m_surface, mp_window, m_instatnce);
+	result = setSurface(m_surface, m_instatnce);
 	assert(result == VK_SUCCESS);
 }
 
@@ -99,7 +103,7 @@ void ValkyrieEngine::initializeThreads() {
 
 void ValkyrieEngine::initializeSwapChain(CommandBuffer& command_bufer) {
 	VkResult result;
-	mp_swapchain = NEW_NT SwapChain(m_surface, mp_window);
+	mp_swapchain = NEW_NT SwapChain(m_surface);
 	result = mp_swapchain->initializeImages(m_surface, command_bufer);
 	assert(result == VK_SUCCESS);
 }
@@ -107,7 +111,7 @@ void ValkyrieEngine::initializeSwapChain(CommandBuffer& command_bufer) {
 void ValkyrieEngine::initializeDepthBuffer(CommandBuffer& command_bufer) {
 	VkResult result;
 	mp_depth_buffer = NEW_NT DepthBuffer();
-	result = mp_depth_buffer->initializeImages(command_bufer, mp_window);
+	result = mp_depth_buffer->initializeImages(command_bufer);
 	assert(result == VK_SUCCESS);
 }
 
@@ -221,7 +225,6 @@ VkResult ValkyrieEngine::initialize() {
 
 	SDL_StartTextInput();
 
-	assert(mp_window != nullptr);
 	initializeInstance();
 
 	initializePhysicalDevice();
@@ -299,14 +302,6 @@ VkResult ValkyrieEngine::render() {
 	return VK_SUCCESS;
 }
 
-void ValkyrieEngine::initializeWindow(int width, int height, const std::string & title) {
-	const SDL_WindowFlags flags = SDL_WINDOW_SHOWN;
-	mp_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
-	auto& imgui_io = ImGui::GetIO();
-	imgui_io.DisplaySize.x = width;
-	imgui_io.DisplaySize.y = height;
-}
-
 void ValkyrieEngine::initializePipelineLayout(const std::string& pipeline_name) {
 	VkResult result;
 	assert(pipelines.count(pipeline_name) > 0);
@@ -361,11 +356,10 @@ void ValkyrieEngine::writeSets(const std::vector<VkWriteDescriptorSet>& writes) 
 }
 
 void ValkyrieEngine::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
-	int width;
-	int height;
-	SDL_GetWindowSize(mp_window, &width, &height);
-	m_viewport.width = (float)width;
-	m_viewport.height = (float)height;
+	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	auto& window_ptr = window_manager.getMainWindowPtr();
+	m_viewport.width = window_ptr->getWidth();
+	m_viewport.height = window_ptr->getHeight();
 	m_viewport.minDepth = 0.0f;
 	m_viewport.maxDepth = 1.0f;
 	m_viewport.x = 0;
@@ -374,11 +368,10 @@ void ValkyrieEngine::commandSetViewport(const Vulkan::CommandBuffer& command_buf
 }
 
 void ValkyrieEngine::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
-	int width;
-	int height;
-	SDL_GetWindowSize(mp_window, &width, &height);
-	m_scissor.extent.width = (uint32_t)width;
-	m_scissor.extent.height = (uint32_t)height;
+	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	auto& window_ptr = window_manager.getMainWindowPtr();
+	m_scissor.extent.width = window_ptr->getWidth();
+	m_scissor.extent.height = window_ptr->getHeight();
 	m_scissor.offset.x = 0;
 	m_scissor.offset.y = 0;
 	vkCmdSetScissor(command_buffer.handle, 0, 1, &m_scissor);

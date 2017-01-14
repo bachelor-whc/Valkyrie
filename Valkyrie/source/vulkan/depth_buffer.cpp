@@ -3,6 +3,8 @@
 #include "valkyrie/vulkan/depth_buffer.h"
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/tool.h"
+#include "valkyrie/UI/window.h"
+#include "valkyrie/UI/window_manager.h"
 using namespace Vulkan;
 
 DepthBuffer::DepthBuffer() {
@@ -31,19 +33,18 @@ DepthBuffer::~DepthBuffer() {
 
 }
 
-VkResult DepthBuffer::initializeImages(CommandBuffer& buffer, SDL_Window* p_window) {
+VkResult DepthBuffer::initializeImages(CommandBuffer& buffer) {
 	VkResult result;
 	
-	int width;
-	int height;
-	SDL_GetWindowSize(p_window, &width, &height);
+	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	auto& window_ptr = window_manager.getMainWindowPtr();
 
 	VkImageCreateInfo image_create = {};
 	image_create.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	image_create.imageType = VK_IMAGE_TYPE_2D;
 	image_create.format = format;
-	image_create.extent.width = width;
-	image_create.extent.height = height;
+	image_create.extent.width = window_ptr->getWidth();
+	image_create.extent.height = window_ptr->getHeight();
 	image_create.extent.depth = 1;
 	image_create.mipLevels = 1;
 	image_create.arrayLayers = 1;

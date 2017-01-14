@@ -13,9 +13,10 @@ int Valkyrie::ThreadManager::initialize() {
 }
 
 void Valkyrie::ThreadManager::close() {
-	if (gp_thread_manager != nullptr)
+	if (gp_thread_manager != nullptr) {
 		delete gp_thread_manager;
-	gp_thread_manager = nullptr;
+		gp_thread_manager = nullptr;
+	}
 }
 
 ThreadManager::ThreadManager() {

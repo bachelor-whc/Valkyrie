@@ -40,8 +40,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	std::string title("Playground");
 	ValkyrieEngine::initializeValkyrieEngine();
+	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	window_manager.createMainWindow(title, width, height);
 	auto& valkyrie = *ValkyrieEngine::getGlobalValkyriePtr();
-	valkyrie.initializeWindow(width, height, title);
 	valkyrie.initialize();
 	auto& imgui_io = ImGui::GetIO();
 

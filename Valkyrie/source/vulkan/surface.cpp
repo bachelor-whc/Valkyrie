@@ -1,21 +1,19 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
 #include "valkyrie/vulkan/surface.h"
 #include "valkyrie/vulkan/instance.h"
 #include "valkyrie/vulkan/physical_device.h"
+#include "valkyrie/UI/window.h"
+#include "valkyrie/UI/window_manager.h"
 using namespace Vulkan;
 
-VkResult Vulkan::setSurface(Surface& surface, SDL_Window* p_window, const Instance& instance) {
+VkResult Vulkan::setSurface(Surface& surface, const Instance& instance) {
 	VkResult result;
-	SDL_SysWMinfo window_info = {};
-	SDL_GetWindowWMInfo(p_window, &window_info);
+	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	auto& window_ptr = window_manager.getMainWindowPtr();
 #ifdef _WIN32
 	VkWin32SurfaceCreateInfoKHR surface_create = {};
-	HWND window_handle = window_info.info.win.window;
-	HINSTANCE instance_handle = (HINSTANCE)GetWindowLongPtr(window_handle, GWLP_HINSTANCE);
 	surface_create.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	surface_create.hinstance = instance_handle;
-	surface_create.hwnd = window_handle;
+	surface_create.hinstance = window_ptr->getWindowInstance();
+	surface_create.hwnd = window_ptr->getWindowHandle();
 	result = vkCreateWin32SurfaceKHR(instance.handle, &surface_create, nullptr, &surface.handle);
 #elif __ANDROID__
 	

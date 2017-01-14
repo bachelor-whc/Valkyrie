@@ -7,6 +7,8 @@
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/render_pass.h"
 #include "valkyrie/vulkan/queue.h"
+#include "valkyrie/UI/window.h"
+#include "valkyrie/UI/window_manager.h"
 using namespace Vulkan;
 
 Framebuffers::Framebuffers(const uint32_t count, const std::vector<SwapChainBuffer>& buffers) :
@@ -48,7 +50,7 @@ void Framebuffers::initialize(const RenderPass& render_pass, const int width, co
 	}
 }
 
-SwapChain::SwapChain(const Surface& surface, SDL_Window* p_window) :
+SwapChain::SwapChain(const Surface& surface) :
 	mp_framebuffers(nullptr),
 	m_current_buffer(-1),
 	m_width(0),
@@ -57,7 +59,10 @@ SwapChain::SwapChain(const Surface& surface, SDL_Window* p_window) :
 	VkResult result = VK_SUCCESS;
 	VkSurfaceCapabilitiesKHR surface_capabilities = {};
 
-	SDL_GetWindowSize(p_window, &m_width, &m_height);
+	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	auto& window_ptr = window_manager.getMainWindowPtr();
+	m_width = window_ptr->getWidth();
+	m_height = window_ptr->getHeight();
 	// Specification:
 	// To query the basic capabilities of a surface, needed in order to create a swapchain.
 	result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(g_physical_device_handle, surface.handle, &surface_capabilities);
