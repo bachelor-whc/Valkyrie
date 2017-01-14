@@ -11,17 +11,27 @@ namespace Valkyrie {
 		virtual void update() = 0;
 	};
 
-	class DirtyFlag {
+	class DirtyFlagView {
 	public:
-		DirtyFlag() {}
-		virtual ~DirtyFlag() {}
+		DirtyFlagView() {}
+		virtual ~DirtyFlagView() {}
 
-		void enableDirtyFlag();
-		void disableDirtyFlag();
+		virtual bool dirty() = 0;
+		virtual bool dirtyAt(const unsigned int flag) = 0;
+	};
+
+	class DirtyFlags {
+	public:
+		DirtyFlags() {}
+		virtual ~DirtyFlags() {}
+
+		void reset();
+		void enableDirtyFlag(const unsigned int flag);
+		void disableDirtyFlag(const unsigned int flag);
 		bool dirty();
-
+		bool dirtyAt(const unsigned int flag);
 	private:
-		bool m_dirty = true;
+		unsigned int m_dirty = 0;
 	};
 }
 

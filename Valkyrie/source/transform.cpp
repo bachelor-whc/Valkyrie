@@ -14,13 +14,12 @@ Transform::~Transform() {
 }
 
 void Transform::update() {
-	if (dirty()) {
+	if (m_dirty.dirty()) {
 		m_world = glm::mat4(1.0f);
-		glm::quat quaternion(m_rotation);
 		m_world = glm::scale(m_world, m_scale);
 		m_world = glm::translate(m_world, m_translate);
-		m_world *= glm::mat4_cast(quaternion);
-		disableDirtyFlag();
+		m_world *= getRotationMatrix4();
+		m_dirty.reset();
 	}
 }
 
@@ -33,14 +32,14 @@ void Transform::setTranslate(const float x, const float y, const float z) {
 	m_translate.x = x;
 	m_translate.y = y;
 	m_translate.z = z;
-	enableDirtyFlag();
+	m_dirty.enableDirtyFlag(TRANSLATE);
 }
 
 void Transform::setRotation(const float dx, const float dy, const float dz) {
 	m_rotation.x = glm::radians<float>(dx);
 	m_rotation.y = glm::radians<float>(dy);
 	m_rotation.z = glm::radians<float>(dz);
-	enableDirtyFlag();
+	m_dirty.enableDirtyFlag(ROTATION);
 }
 
 void Transform::setScale(const float x, const float y, const float z) {
@@ -48,8 +47,18 @@ void Transform::setScale(const float x, const float y, const float z) {
 		m_scale.x = x;
 		m_scale.y = y;
 		m_scale.z = z;
-		enableDirtyFlag();
+		m_dirty.enableDirtyFlag(SCALE);
 	}
+}
+
+const glm::mat3 Transform::getRotationMatrix3() const {
+	glm::quat quaternion(m_rotation);
+	return glm::mat3_cast(quaternion);
+}
+
+const glm::mat4 Transform::getRotationMatrix4() const {
+	glm::quat quaternion(m_rotation);
+	return glm::mat4_cast(quaternion);
 }
 
 const glm::vec3& Transform::getTranslteValue() const {
@@ -65,16 +74,16 @@ const glm::vec3& Transform::getScaleValue() const {
 }
 
 glm::vec3& Transform::getTranslteRef() {
-	enableDirtyFlag();
+	m_dirty.enableDirtyFlag(TRANSLATE);
 	return m_translate;
 }
 
 glm::vec3& Transform::getRotationRef() {
-	enableDirtyFlag();
+	m_dirty.enableDirtyFlag(ROTATION);
 	return m_rotation;
 }
 
 glm::vec3& Transform::getScaleRef() {
-	enableDirtyFlag();
+	m_dirty.enableDirtyFlag(SCALE);
 	return m_scale;
 }

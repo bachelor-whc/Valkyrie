@@ -2,14 +2,24 @@
 
 using namespace Valkyrie;
 
-void DirtyFlag::enableDirtyFlag() {
-	m_dirty = true;
+
+void DirtyFlags::reset() {
+	m_dirty = 0;
 }
 
-void DirtyFlag::disableDirtyFlag() {
-	m_dirty = false;
+void DirtyFlags::enableDirtyFlag(const unsigned int flag) {
+	m_dirty |= flag;
 }
 
-bool Valkyrie::DirtyFlag::dirty() {
-	return m_dirty;
+void DirtyFlags::disableDirtyFlag(const unsigned int flag) {
+	m_dirty = m_dirty & (~flag);
+}
+
+bool DirtyFlags::dirty() {
+	return m_dirty > 0;
+}
+
+bool DirtyFlags::dirtyAt(const unsigned int flag) {
+	return (m_dirty & flag) > 0;
+	
 }
