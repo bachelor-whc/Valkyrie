@@ -33,9 +33,11 @@
     <ClInclude Include="include\valkyrie\component\mesh_renderer.h" />
     <ClInclude Include="include\valkyrie\default_create_info.h" />
     <ClInclude Include="include\valkyrie\factory\mesh.h" />
+    <ClInclude Include="include\valkyrie\graphics\pipeline.h" />
     <ClInclude Include="include\valkyrie\graphics_api_support\attribute.h" />
     <ClInclude Include="include\valkyrie\image.h" />
     <ClInclude Include="include\valkyrie\memory_chunk.h" />
+    <ClInclude Include="include\valkyrie\render_context.h" />
     <ClInclude Include="include\valkyrie\render_function.h" />
     <ClInclude Include="include\valkyrie\scene\object.h" />
     <ClInclude Include="include\valkyrie\scene\transform.h" />
@@ -46,6 +48,7 @@
     <ClInclude Include="include\valkyrie\UI\window_manager.h" />
     <ClInclude Include="include\valkyrie\utility\memory_access.h" />
     <ClInclude Include="include\valkyrie\utility\sdl_manager.h" />
+    <ClInclude Include="include\valkyrie\utility\vulkan_manager.h" />
     <ClInclude Include="include\valkyrie\vulkan\attachment.h" />
     <ClInclude Include="include\valkyrie\vulkan\command_buffer.h" />
     <ClInclude Include="include\valkyrie\vulkan\command_pool.h" />
@@ -63,7 +66,6 @@
     <ClInclude Include="include\valkyrie\vulkan\surface.h" />
     <ClInclude Include="include\valkyrie\vulkan\swapchain.h" />
     <ClInclude Include="include\valkyrie\vulkan\texture.h" />
-    <ClInclude Include="include\valkyrie\vulkan\tool.h" />
     <ClInclude Include="include\valkyrie\vulkan\vertex_input.h" />
   </ItemGroup>
   <ItemGroup>
@@ -74,20 +76,23 @@
     <ClCompile Include="source\component\component_attacher.cpp" />
     <ClCompile Include="source\component\mesh_renderer.cpp" />
     <ClCompile Include="source\factory\mesh.cpp" />
+    <ClCompile Include="source\graphics\pipeline.cpp" />
     <ClCompile Include="source\graphics_api_support\attribute.cpp" />
     <ClCompile Include="source\memory_chunk.cpp" />
+    <ClCompile Include="source\render_context.cpp" />
     <ClCompile Include="source\render_function.cpp" />
     <ClCompile Include="source\rgba32_memory.cpp" />
     <ClCompile Include="source\scene\camera.cpp" />
     <ClCompile Include="source\scene\object.cpp" />
     <ClCompile Include="source\thread\thread.cpp" />
     <ClCompile Include="source\thread\thread_manager.cpp" />
-    <ClCompile Include="source\transform.cpp" />
+    <ClCompile Include="source\scene\transform.cpp" />
     <ClCompile Include="source\UI\user_input.cpp" />
     <ClCompile Include="source\base_unit.cpp" />
     <ClCompile Include="source\UI\window.cpp" />
     <ClCompile Include="source\UI\window_manager.cpp" />
     <ClCompile Include="source\utility\sdl_manager.cpp" />
+    <ClCompile Include="source\utility\vulkan_manager.cpp" />
     <ClCompile Include="source\valkyrie.cpp" />
     <ClCompile Include="source\vulkan\command_buffer.cpp" />
     <ClCompile Include="source\vulkan\command_pool.cpp" />
@@ -105,7 +110,6 @@
     <ClCompile Include="source\vulkan\surface.cpp" />
     <ClCompile Include="source\vulkan\swapchain.cpp" />
     <ClCompile Include="source\vulkan\texture.cpp" />
-    <ClCompile Include="source\vulkan\tool.cpp" />
     <ClCompile Include="source\vulkan\vertex_input.cpp" />
     <ClCompile Include="third_party\imgui.cpp" />
     <ClCompile Include="third_party\imgui_demo.cpp" />

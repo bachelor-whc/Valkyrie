@@ -5,7 +5,7 @@
 #include "valkyrie/UI/window_manager.h"
 using namespace Vulkan;
 
-VkResult Vulkan::setSurface(Surface& surface, const Instance& instance) {
+VkResult Vulkan::setSurface(Surface& surface) {
 	VkResult result;
 	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
 	auto& window_ptr = window_manager.getMainWindowPtr();
@@ -42,7 +42,7 @@ VkResult Vulkan::setSurface(Surface& surface, const Instance& instance) {
 	return result;
 }
 
-void Vulkan::DestroySurface(Instance& instance, Surface& surface) {
+void Vulkan::DestroySurface(Surface& surface) {
 	vkDestroySurfaceKHR(instance.handle, surface.handle, nullptr);
 }
 

@@ -16,7 +16,7 @@ CommandPool::~CommandPool() {
 	
 }
 
-Vulkan::CommandBuffer CommandPool::createCommandBuffer() {
+CommandBuffer CommandPool::createCommandBuffer() {
 	Vulkan::CommandBuffer command_buffer;
 	VkCommandBufferAllocateInfo command_buffer_allocate = {};
 	command_buffer_allocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -28,7 +28,7 @@ Vulkan::CommandBuffer CommandPool::createCommandBuffer() {
 	return command_buffer;
 }
 
-Vulkan::SecondaryCommandBuffers CommandPool::createSecondaryCommandBuffers(const uint32_t count) {
+SecondaryCommandBuffers CommandPool::createSecondaryCommandBuffers(const uint32_t count) {
 	Vulkan::SecondaryCommandBuffers command_buffers;
 	VkCommandBufferAllocateInfo command_buffer_allocate = {};
 	command_buffers.resize(count);
@@ -41,6 +41,6 @@ Vulkan::SecondaryCommandBuffers CommandPool::createSecondaryCommandBuffers(const
 	return command_buffers;
 }
 
-void Vulkan::DestroyCommandPool(CommandPool & command_pool) {
+void DestroyCommandPool(CommandPool & command_pool) {
 	vkDestroyCommandPool(g_device_handle, command_pool.handle, nullptr);
 }

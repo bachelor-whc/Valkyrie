@@ -7,7 +7,7 @@ VkPhysicalDeviceProperties PhysicalDevice::properties = {};
 VkPhysicalDeviceMemoryProperties PhysicalDevice::memoryProperties = {};
 std::vector<VkQueueFamilyProperties> PhysicalDevice::queueFamilyProperties = {};
 
-VkResult Vulkan::CreatePhysicalDevice(Instance& instance, PhysicalDevice& physical_device) {
+VkResult Vulkan::CreatePhysicalDevice(PhysicalDevice& physical_device) {
 	VkResult result;
 	uint32_t number_of_devices = 1;
 

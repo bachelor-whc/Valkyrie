@@ -51,7 +51,7 @@ namespace Vulkan {
 		std::vector<VkDynamicState> m_dynamic_state_enables;
 	};
 
-	typedef std::shared_ptr<PipelineModule> PipelinePointer;
+	typedef std::shared_ptr<PipelineModule> PipelineModulePointer;
 
 	void DestroyPipeline(PipelineModule& pipeline);
 	void DestroyPipelineCache();

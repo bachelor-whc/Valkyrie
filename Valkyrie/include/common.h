@@ -32,6 +32,7 @@
 #define MAKE_SHARED(t) std::make_shared<t>
 
 const int VALKYRIE_FRAME_BUFFER_COUNT = 2;
+extern VkInstance g_instance_handle;
 extern VkDevice g_device_handle;
 extern VkPhysicalDevice g_physical_device_handle;
 using JSON = nlohmann::json;

@@ -76,6 +76,12 @@
     <Filter Include="Source Files\utility">
       <UniqueIdentifier>{8587fc21-3d29-4d4f-a37d-b029c6a7cf19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\valkyrie\graphics">
+      <UniqueIdentifier>{057915f4-20a1-4fa0-9e01-d2ffbe202e5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{586d8f33-fbac-431a-a3e5-67edddf4ecaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\valkyrie.h">
@@ -97,9 +103,6 @@
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\surface.h">
-      <Filter>Header Files\valkyrie\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="include\valkyrie\vulkan\tool.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\command_buffer.h">
@@ -216,6 +219,15 @@
     <ClInclude Include="include\valkyrie\UI\window.h">
       <Filter>Header Files\valkyrie\UI</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\render_context.h">
+      <Filter>Header Files\valkyrie</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\utility\vulkan_manager.h">
+      <Filter>Header Files\valkyrie\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\graphics\pipeline.h">
+      <Filter>Header Files\valkyrie\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -261,9 +273,6 @@
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="source\vulkan\texture.cpp">
-      <Filter>Source Files\vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="source\vulkan\tool.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="source\vulkan\vertex_input.cpp">
@@ -326,9 +335,6 @@
     <ClCompile Include="source\component\mesh_renderer.cpp">
       <Filter>Source Files\component</Filter>
     </ClCompile>
-    <ClCompile Include="source\transform.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
     <ClCompile Include="source\scene\camera.cpp">
       <Filter>Source Files\component</Filter>
     </ClCompile>
@@ -346,6 +352,18 @@
     </ClCompile>
     <ClCompile Include="source\UI\window.cpp">
       <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\vulkan_manager.cpp">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\pipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render_context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\transform.cpp">
+      <Filter>Source Files\scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

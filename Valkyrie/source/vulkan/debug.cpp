@@ -17,7 +17,7 @@ VkBool32 Vulkan::DebugCallback(
 	return false;
 }
 
-void Vulkan::SetupDebug(const Vulkan::Instance& instance, VkDebugReportFlagsEXT flags, VkDebugReportCallbackEXT callback) {
+void Vulkan::SetupDebug(VkDebugReportFlagsEXT flags, VkDebugReportCallbackEXT callback) {
 	VkDebugReportCallbackCreateInfoEXT debug_report_callback_create = {};
 	debug_report_callback_create.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
 	debug_report_callback_create.pfnCallback = (PFN_vkDebugReportCallbackEXT)Vulkan::DebugCallback;

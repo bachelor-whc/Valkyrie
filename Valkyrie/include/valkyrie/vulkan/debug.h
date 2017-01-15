@@ -15,7 +15,7 @@ namespace Vulkan {
 		const char* p_message,
 		void* p_user_data);
 
-	void SetupDebug(const Instance& instance, VkDebugReportFlagsEXT flags, VkDebugReportCallbackEXT callback);
+	void SetupDebug(VkDebugReportFlagsEXT flags, VkDebugReportCallbackEXT callback);
 }
 
 #endif

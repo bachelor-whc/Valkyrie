@@ -10,6 +10,7 @@ Valkyrie所使用的第三方函式庫或代碼其版權聲明都放置於`licen
 * googletest
 * nlohmann/json
 * SDL2
+* Intel® TBB
 * zlib
 
 由於專案性質，可能會同時於各個branch使用不同的第三方函式庫與代碼，屆時每個branch的`license`內容皆不同。但任何二進位可執行、連結的執行檔或Library與`README.md`僅紀錄該版本及目前`master`所採用的。

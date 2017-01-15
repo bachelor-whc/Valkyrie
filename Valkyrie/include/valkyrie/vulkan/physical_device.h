@@ -14,7 +14,7 @@ namespace Vulkan {
 		static bool setMemoryType(uint32_t type_bits, VkFlags requirements_mask, uint32_t& type_index);
 	};
 
-	VkResult CreatePhysicalDevice(Instance& instance, PhysicalDevice& physical_device);
+	VkResult CreatePhysicalDevice(PhysicalDevice& physical_device);
 }
 
 #endif
