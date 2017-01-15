@@ -2,9 +2,9 @@
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/vulkan/depth_buffer.h"
 #include "valkyrie/vulkan/command_buffer.h"
-#include "valkyrie/vulkan/tool.h"
 #include "valkyrie/UI/window.h"
 #include "valkyrie/UI/window_manager.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 DepthBuffer::DepthBuffer() {
@@ -33,7 +33,7 @@ DepthBuffer::~DepthBuffer() {
 
 }
 
-VkResult DepthBuffer::initializeImages(CommandBuffer& buffer) {
+VkResult DepthBuffer::initializeImages() {
 	VkResult result;
 	
 	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
@@ -80,7 +80,12 @@ VkResult DepthBuffer::initializeImages(CommandBuffer& buffer) {
 	result = vkAllocateMemory(g_device_handle, &memory_allocate, nullptr, &memory);
 
 	result = vkBindImageMemory(g_device_handle, image, memory, 0);
-	setImageLayout(buffer, image, VK_IMAGE_ASPECT_DEPTH_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+	Valkyrie::VulkanManager::setImageLayout(
+		image, 
+		VK_IMAGE_ASPECT_DEPTH_BIT, 
+		VK_IMAGE_LAYOUT_UNDEFINED, 
+		VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+	);
 
 	image_view_create.image = image;
 	result = vkCreateImageView(g_device_handle, &image_view_create, nullptr, &view);

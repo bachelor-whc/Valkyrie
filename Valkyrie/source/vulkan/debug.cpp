@@ -1,5 +1,6 @@
 #include "valkyrie/vulkan/debug.h"
 #include "valkyrie/vulkan/instance.h"
+#include "valkyrie/utility/vulkan_manager.h"
 
 VkDebugReportCallbackEXT message_callback;
 
@@ -23,7 +24,8 @@ void Vulkan::SetupDebug(VkDebugReportFlagsEXT flags, VkDebugReportCallbackEXT ca
 	debug_report_callback_create.pfnCallback = (PFN_vkDebugReportCallbackEXT)Vulkan::DebugCallback;
 	debug_report_callback_create.flags = flags;
 
-	PFN_vkCreateDebugReportCallbackEXT CreateDebugReportCallback = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(instance.handle, "vkCreateDebugReportCallbackEXT");
-	VkResult result = CreateDebugReportCallback(instance.handle, &debug_report_callback_create, nullptr, &message_callback);
+	const auto& instance = Valkyrie::VulkanManager::getInstance();
+	PFN_vkCreateDebugReportCallbackEXT CreateDebugReportCallback = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT");
+	VkResult result = CreateDebugReportCallback(instance, &debug_report_callback_create, nullptr, &message_callback);
 	assert(result == VK_SUCCESS);
 }

@@ -3,12 +3,12 @@
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/vulkan/surface.h"
-#include "valkyrie/vulkan/tool.h"
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/render_pass.h"
 #include "valkyrie/vulkan/queue.h"
 #include "valkyrie/UI/window.h"
 #include "valkyrie/UI/window_manager.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 Framebuffers::Framebuffers(const uint32_t count, const std::vector<SwapChainBuffer>& buffers) :
@@ -135,7 +135,7 @@ SwapChain::~SwapChain() {
 		delete mp_framebuffers;
 }
 
-VkResult SwapChain::initializeImages(const Surface& surface, CommandBuffer& buffer) {
+VkResult SwapChain::initializeImages(const Surface& surface) {
 	VkResult result;
 	uint32_t buffer_count;
 	result = vkGetSwapchainImagesKHR(g_device_handle, handle, &buffer_count, nullptr);
@@ -169,12 +169,12 @@ VkResult SwapChain::initializeImages(const Surface& surface, CommandBuffer& buff
 
 		m_buffers[i].image = swapchain_images[i];
 
-		setImageLayout(
-			buffer,
+		Valkyrie::VulkanManager::setImageLayout(
 			m_buffers[i].image,
 			VK_IMAGE_ASPECT_COLOR_BIT,
 			VK_IMAGE_LAYOUT_UNDEFINED,
-			VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+			VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+		);
 
 		image_view_create.image = m_buffers[i].image;
 
@@ -202,13 +202,13 @@ VkResult SwapChain::acquireNextImage(uint64_t timeout, const VkSemaphore semapho
 	return vkAcquireNextImageKHR(g_device_handle, handle, timeout, semaphore, fence, &m_current_buffer);
 }
 
-VkResult SwapChain::queuePresent(const Queue& queue) {
+VkResult SwapChain::queuePresent(const VkQueue& queue) {
 	VkPresentInfoKHR present = {};
 	present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 	present.swapchainCount = 1;
 	present.pSwapchains = &handle;
 	present.pImageIndices = &m_current_buffer;
-	return vkQueuePresentKHR(queue.handle, &present);
+	return vkQueuePresentKHR(queue, &present);
 }
 
 void Vulkan::DestroySwapChain(SwapChain& swapchain) {

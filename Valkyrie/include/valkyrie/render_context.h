@@ -14,6 +14,7 @@ namespace Valkyrie {
 		RenderContext();
 		virtual ~RenderContext();
 
+		virtual VkResult render();
 		inline VkRenderPass getRenderPassHandle() { return m_render_pass.handle; }
 		inline VkFramebuffer getFramebuffer(int index) { return mp_swapchain->getFramebuffers()->handles[index]; }
 		inline VkImage getSwapChainImage(int index) { return mp_swapchain->getImage(index); }
@@ -38,6 +39,8 @@ namespace Valkyrie {
 		VkFence m_present_fence = VK_NULL_HANDLE;
 		VkSemaphore m_present_semaphore = VK_NULL_HANDLE;
 	};
+
+	using RenderContextPtr = std::shared_ptr<RenderContext>;
 }
 
 #endif

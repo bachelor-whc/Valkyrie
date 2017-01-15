@@ -35,7 +35,7 @@ namespace Vulkan {
 		SwapChain(const Surface& surface);
 		virtual ~SwapChain();
 
-		VkResult initializeImages(const Surface& surface, CommandBuffer& buffer);
+		VkResult initializeImages(const Surface& surface);
 		void initializeFramebuffers(const RenderPass& render_pass, const VkImageView* extended_attachments, int count);
 
 		VkSwapchainKHR handle = NULL;
@@ -46,7 +46,7 @@ namespace Vulkan {
 		inline VkImage getCurrentImage() const { return m_buffers[m_current_buffer].image; }
 		inline VkImage getImage(int index) const { return m_buffers[index].image; }
 		VkResult acquireNextImage(uint64_t timeout, const VkSemaphore semaphore, const VkFence fence);
-		VkResult queuePresent(const Queue& queue);
+		VkResult queuePresent(const VkQueue& queue);
 
 	private:
 		std::vector<SwapChainBuffer> m_buffers;

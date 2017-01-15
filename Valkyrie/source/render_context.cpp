@@ -1,4 +1,5 @@
 #include "valkyrie/render_context.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Valkyrie;
 
 RenderContext::RenderContext() {
@@ -45,6 +46,35 @@ RenderContext::~RenderContext() {
 	if(mp_depth_buffer != nullptr) {
 		delete mp_depth_buffer;
 	}
+}
+
+VkResult RenderContext::render() {
+	VkResult result;
+	const auto& queue = VulkanManager::getGraphicsQueue();
+
+	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, m_present_fence);
+	assert(result == VK_SUCCESS);
+
+	VkSubmitInfo submit = {};
+	submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submit.waitSemaphoreCount = 1;
+	submit.pWaitSemaphores = &m_present_semaphore;
+	submit.commandBufferCount = 1;
+	submit.pCommandBuffers = &renderCommands[mp_swapchain->getCurrent()].handle;
+
+	result = vkQueueSubmit(queue, 1, &submit, m_present_fence);
+	assert(result == VK_SUCCESS);
+
+	do {
+		result = vkWaitForFences(VulkanManager::getDevice(), 1, &m_present_fence, VK_TRUE, 100000000);
+	} while (result == VK_TIMEOUT);
+	assert(result == VK_SUCCESS);
+	vkResetFences(VulkanManager::getDevice(), 1, &m_present_fence);
+
+	result = mp_swapchain->queuePresent(queue);
+	assert(result == VK_SUCCESS);
+
+	return VK_SUCCESS;
 }
 
 void RenderContext::initializeSwapChain() {

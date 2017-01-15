@@ -1,5 +1,6 @@
 #include "valkyrie/vulkan/instance.h"
 #include "valkyrie/vulkan/physical_device.h"
+#include "valkyrie/utility/vulkan_manager.h"
 #include "common.h"
 using namespace Vulkan;
 
@@ -11,12 +12,13 @@ VkResult Vulkan::CreatePhysicalDevice(PhysicalDevice& physical_device) {
 	VkResult result;
 	uint32_t number_of_devices = 1;
 
+	const auto& instance = Valkyrie::VulkanManager::getInstance();
 	std::vector<VkPhysicalDevice> physical_devices;
-	result = vkEnumeratePhysicalDevices(instance.handle, &number_of_devices, NULL);
+	result = vkEnumeratePhysicalDevices(instance, &number_of_devices, NULL);
 	assert(number_of_devices > 0);
 
 	physical_devices.resize(number_of_devices);
-	result = vkEnumeratePhysicalDevices(instance.handle, &number_of_devices, physical_devices.data());
+	result = vkEnumeratePhysicalDevices(instance, &number_of_devices, physical_devices.data());
 	physical_device.handle = physical_devices[0];
 
 	vkGetPhysicalDeviceProperties(physical_device.handle, &physical_device.properties);

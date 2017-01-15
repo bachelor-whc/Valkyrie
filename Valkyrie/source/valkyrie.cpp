@@ -1,6 +1,5 @@
 #include <imgui.h>
 #include "valkyrie.h"
-#include "valkyrie/vulkan/tool.h"
 #include "valkyrie/vulkan/debug.h"
 #include "valkyrie/UI/user_input.h"
 #include "valkyrie/UI/window.h"
@@ -121,7 +120,7 @@ bool ValkyrieEngine::execute() {
 		updateUserInput(s_event);
 	}
 	updateTime();
-	render();
+	m_render_context_ptr->render();
 	return true;
 }
 
@@ -138,37 +137,4 @@ VkResult ValkyrieEngine::initialize() {
 	
 
 	return VK_SUCCESS;
-}
-
-VkResult ValkyrieEngine::render() {
-	VkResult result;
-
-	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, m_present_fence);
-	assert(result == VK_SUCCESS);
-
-	VkSubmitInfo submit = {};
-	submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submit.waitSemaphoreCount = 1;
-	submit.pWaitSemaphores = &m_present_semaphore;
-	submit.commandBufferCount = 1;
-	submit.pCommandBuffers = &renderCommands[mp_swapchain->getCurrent()].handle;
-
-	result = vkQueueSubmit(m_graphics_queue.handle, 1, &submit, m_present_fence);
-	assert(result == VK_SUCCESS);
-
-	do {
-		result = vkWaitForFences(m_device.handle, 1, &m_present_fence, VK_TRUE, 100000000);
-	} while (result == VK_TIMEOUT);
-	assert(result == VK_SUCCESS);
-	vkResetFences(m_device.handle, 1, &m_present_fence);
-
-	result = mp_swapchain->queuePresent(m_graphics_queue);
-	assert(result == VK_SUCCESS);
-
-	return VK_SUCCESS;
-}
-
-void ValkyrieEngine::createPipelineModule(const std::string & pipename_name) {
-	pipelines[pipename_name] = MAKE_SHARED(Vulkan::PipelineModule)();
-	vertexInputs[pipename_name] = MAKE_SHARED(Vulkan::VertexInput)();
 }

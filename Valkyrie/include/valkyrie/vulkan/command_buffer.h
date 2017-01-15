@@ -7,7 +7,7 @@ namespace Vulkan {
 	struct Queue;
 
 	struct CommandBuffer {
-		VkCommandBuffer handle = NULL;
+		VkCommandBuffer handle = VK_NULL_HANDLE;
 		VkResult begin();
 		VkResult end();
 		VkResult submit(const Queue& queue);

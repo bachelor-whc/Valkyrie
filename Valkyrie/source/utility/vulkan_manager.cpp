@@ -122,6 +122,10 @@ void VulkanManager::initailizeTexture(Vulkan::Texture& texture) {
 	assert(result == VK_SUCCESS);
 }
 
+Vulkan::CommandBuffer Valkyrie::VulkanManager::createCommandBuffer() {
+	return m_command_pool_ptr->createCommandBuffer();
+}
+
 VulkanManager::VulkanManager() {
 	initializeInstance();
 	initializePhysicalDevice();

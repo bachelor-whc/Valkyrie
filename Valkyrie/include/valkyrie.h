@@ -18,6 +18,7 @@
 #include "valkyrie/scene/object.h"
 #include "valkyrie/UI/window.h"
 #include "valkyrie/UI/window_manager.h"
+#include "valkyrie/render_context.h"
 
 class ValkyrieEngine {
 public:
@@ -34,7 +35,6 @@ public:
 
 	virtual bool execute();
 	virtual VkResult initialize();
-	virtual VkResult render();
 
 	inline double getFPS() { return (1 / m_deltatime); }
 
@@ -55,6 +55,7 @@ private:
 	std::map<std::string, Valkyrie::RenderPFN> m_render_pfns;
 
 private:
+	Valkyrie::RenderContextPtr m_render_context_ptr;
 	std::string m_application_name;
 	double m_previous_timestamp = 0.0;
 	double m_current_timestamp = 0.0;

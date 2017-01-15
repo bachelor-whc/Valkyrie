@@ -3,6 +3,7 @@
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/UI/window.h"
 #include "valkyrie/UI/window_manager.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 VkResult Vulkan::setSurface(Surface& surface) {
@@ -14,7 +15,7 @@ VkResult Vulkan::setSurface(Surface& surface) {
 	surface_create.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
 	surface_create.hinstance = window_ptr->getWindowInstance();
 	surface_create.hwnd = window_ptr->getWindowHandle();
-	result = vkCreateWin32SurfaceKHR(instance.handle, &surface_create, nullptr, &surface.handle);
+	result = vkCreateWin32SurfaceKHR(Valkyrie::VulkanManager::getInstance(), &surface_create, nullptr, &surface.handle);
 #elif __ANDROID__
 	
 #elif __linux__
@@ -43,7 +44,7 @@ VkResult Vulkan::setSurface(Surface& surface) {
 }
 
 void Vulkan::DestroySurface(Surface& surface) {
-	vkDestroySurfaceKHR(instance.handle, surface.handle, nullptr);
+	vkDestroySurfaceKHR(Valkyrie::VulkanManager::getInstance(), surface.handle, nullptr);
 }
 
 VkAttachmentDescription Surface::getAttachmentDescription() const {
