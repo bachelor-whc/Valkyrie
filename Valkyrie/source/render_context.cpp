@@ -1,5 +1,7 @@
 #include "valkyrie/render_context.h"
 #include "valkyrie/utility/vulkan_manager.h"
+#include "valkyrie/UI/window_manager.h"
+#include "valkyrie/UI/window.h"
 using namespace Valkyrie;
 
 RenderContext::RenderContext() {
@@ -14,7 +16,7 @@ RenderContext::RenderContext() {
 	//result = m_setup_command_buffer.submit(m_graphics_queue);
 	renderCommands.resize(mp_swapchain->getImageCount());
 	for (auto& command : renderCommands) {
-		command = m_command_pool_ptr->createCommandBuffer();
+		command = VulkanManager::getGlobalVulkanManagerPtr()->createCommandBuffer();
 	}
 
 	VkResult result;
@@ -80,14 +82,14 @@ VkResult RenderContext::render() {
 void RenderContext::initializeSwapChain() {
 	VkResult result;
 	mp_swapchain = NEW_NT Vulkan::SwapChain(m_surface);
-	result = mp_swapchain->initializeImages(m_surface, command_bufer);
+	result = mp_swapchain->initializeImages(m_surface);
 	assert(result == VK_SUCCESS);
 }
 
 void RenderContext::initializeDepthBuffer() {
 	VkResult result;
 	mp_depth_buffer = NEW_NT Vulkan::DepthBuffer();
-	result = mp_depth_buffer->initializeImages(command_bufer);
+	result = mp_depth_buffer->initializeImages();
 	assert(result == VK_SUCCESS);
 }
 
@@ -126,7 +128,7 @@ void RenderContext::initializeSurface() {
 }
 
 void RenderContext::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
-	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	auto& window_manager = *WindowManager::getGlobalWindowManagerPtr();
 	auto& window_ptr = window_manager.getMainWindowPtr();
 	m_viewport.width = window_ptr->getWidth();
 	m_viewport.height = window_ptr->getHeight();
@@ -138,7 +140,7 @@ void RenderContext::commandSetViewport(const Vulkan::CommandBuffer& command_buff
 }
 
 void RenderContext::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
-	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	auto& window_manager = *WindowManager::getGlobalWindowManagerPtr();
 	auto& window_ptr = window_manager.getMainWindowPtr();
 	m_scissor.extent.width = window_ptr->getWidth();
 	m_scissor.extent.height = window_ptr->getHeight();

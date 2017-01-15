@@ -228,6 +228,9 @@
     <ClInclude Include="include\valkyrie\graphics\pipeline.h">
       <Filter>Header Files\valkyrie\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\vulkan\image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -364,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="source\scene\transform.cpp">
       <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\vulkan\image.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

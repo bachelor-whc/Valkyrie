@@ -27,19 +27,43 @@ bool VulkanManager::initialized() {
 	return gp_vulkan_manager != nullptr;
 }
 
-VkInstance Valkyrie::VulkanManager::getInstance() {
+VkInstance VulkanManager::getInstance() {
 	return gp_vulkan_manager->m_instatnce.handle;
 }
 
-VkPhysicalDevice Valkyrie::VulkanManager::getPhysicalDevice() {
+VkPhysicalDevice VulkanManager::getPhysicalDevice() {
 	return gp_vulkan_manager->m_physical_device.handle;
 }
 
-VkDevice Valkyrie::VulkanManager::getDevice() {
+VkDevice VulkanManager::getDevice() {
 	return gp_vulkan_manager->m_device.handle;
 }
 
-void Valkyrie::VulkanManager::setImageLayout(VkImage image, VkImageAspectFlags aspect_mask, VkImageLayout old_image_layout, VkImageLayout new_image_layout) {
+VkResult VulkanManager::initializeImage(Vulkan::Image& image) {
+	VkResult result;
+
+	VkImageCreateInfo image_create = image.getImageCreate();
+
+	VkMemoryAllocateInfo memory_allocate = {};
+	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+
+	VkImageViewCreateInfo image_view_create = image.getImageViewCreate();
+
+	VkMemoryRequirements memory_requirements;
+
+	result = vkCreateImage(g_device_handle, &image_create, nullptr, &image.handle);
+	vkGetImageMemoryRequirements(g_device_handle, image.handle, &memory_requirements);
+	memory_allocate.allocationSize = memory_requirements.size;
+	Vulkan::PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memory_allocate.memoryTypeIndex);
+	result = vkAllocateMemory(g_device_handle, &memory_allocate, nullptr, &image.memory);
+
+	result = vkBindImageMemory(g_device_handle, image.handle, image.memory, 0);
+	image_view_create.image = image.handle;
+	result = vkCreateImageView(g_device_handle, &image_view_create, nullptr, &image.view);
+	return result;
+}
+
+void VulkanManager::setImageLayout(VkImage image, VkImageAspectFlags aspect_mask, VkImageLayout old_image_layout, VkImageLayout new_image_layout) {
 	VkImageMemoryBarrier image_memory_barrier = {};
 	image_memory_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 	image_memory_barrier.oldLayout = old_image_layout;
@@ -95,6 +119,31 @@ void Valkyrie::VulkanManager::setImageLayout(VkImage image, VkImageAspectFlags a
 	vkCmdPipelineBarrier(getSetupCommandBuffer(), source_flag, destination_flag, 0, 0, NULL, 0, NULL, 1, &image_memory_barrier);
 }
 
+bool VulkanManager::getSupportFormat(VkFormat& format, const VkFlags flag) {
+	std::vector<VkFormat> formats;
+	if(flag == VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+		formats = {
+			VK_FORMAT_D32_SFLOAT_S8_UINT,
+			VK_FORMAT_D32_SFLOAT,
+			VK_FORMAT_D24_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM_S8_UINT,
+			VK_FORMAT_D16_UNORM
+		};
+	}
+	if (formats.size() == 0) {
+		return true;
+	}
+	for (auto& desired_format : formats) {
+		VkFormatProperties format_properties;
+		vkGetPhysicalDeviceFormatProperties(getPhysicalDevice(), desired_format, &format_properties);
+		if (format_properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+			format = desired_format;
+			return true;
+		}
+	}
+	return false;
+}
+
 VulkanManager::~VulkanManager() {
 	Vulkan::DestroyPipelineCache();
 	Vulkan::DestroyCommandPool(*m_command_pool_ptr);
@@ -122,8 +171,8 @@ void VulkanManager::initailizeTexture(Vulkan::Texture& texture) {
 	assert(result == VK_SUCCESS);
 }
 
-Vulkan::CommandBuffer Valkyrie::VulkanManager::createCommandBuffer() {
-	return m_command_pool_ptr->createCommandBuffer();
+Vulkan::CommandBuffer VulkanManager::createCommandBuffer() {
+	return gp_vulkan_manager->m_command_pool_ptr->createCommandBuffer();
 }
 
 VulkanManager::VulkanManager() {

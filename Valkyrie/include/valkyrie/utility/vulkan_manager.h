@@ -10,6 +10,7 @@
 #include "valkyrie/vulkan/shader.h"
 #include "valkyrie/vulkan/command_pool.h"
 #include "valkyrie/vulkan/texture.h"
+#include "valkyrie/vulkan/image.h"
 
 namespace Valkyrie {
 	class VulkanManager {
@@ -21,12 +22,14 @@ namespace Valkyrie {
 		static VkInstance getInstance();
 		static VkPhysicalDevice getPhysicalDevice();
 		static VkDevice getDevice();
+		static VkResult initializeImage(Vulkan::Image& image);
 		static void setImageLayout(VkImage image, VkImageAspectFlags aspect_mask, VkImageLayout old_image_layout, VkImageLayout new_image_layout);
+		static bool getSupportFormat(VkFormat& format, const VkFlags flag);
 		static inline VkQueue getGraphicsQueue() { return gp_vulkan_manager->m_graphics_queue.handle; }
+		static Vulkan::CommandBuffer createCommandBuffer();
 		virtual ~VulkanManager();
 
 		void initailizeTexture(Vulkan::Texture& texture);
-		Vulkan::CommandBuffer createCommandBuffer();
 	private:
 		static VkCommandBuffer getSetupCommandBuffer();
 

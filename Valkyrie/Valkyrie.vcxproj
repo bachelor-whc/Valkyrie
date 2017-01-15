@@ -56,6 +56,7 @@
     <ClInclude Include="include\valkyrie\vulkan\depth_buffer.h" />
     <ClInclude Include="include\valkyrie\vulkan\descriptor.h" />
     <ClInclude Include="include\valkyrie\vulkan\device.h" />
+    <ClInclude Include="include\valkyrie\vulkan\image.h" />
     <ClInclude Include="include\valkyrie\vulkan\instance.h" />
     <ClInclude Include="include\valkyrie\vulkan\memory_buffer.h" />
     <ClInclude Include="include\valkyrie\vulkan\physical_device.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="source\vulkan\depth_buffer.cpp" />
     <ClCompile Include="source\vulkan\descriptor.cpp" />
     <ClCompile Include="source\vulkan\device.cpp" />
+    <ClCompile Include="source\vulkan\image.cpp" />
     <ClCompile Include="source\vulkan\instance.cpp" />
     <ClCompile Include="source\vulkan\memory_buffer.cpp" />
     <ClCompile Include="source\vulkan\physical_device.cpp" />
