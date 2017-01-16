@@ -5,6 +5,7 @@
 #include "valkyrie/UI/window.h"
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/utility/sdl_manager.h"
+#include "valkyrie/utility/vulkan_manager.h"
 
 ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
 bool ValkyrieEngine::SDLInitialized = false;
@@ -22,6 +23,7 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 	int result_am = Valkyrie::AssetManager::initialize();
 	int result_sm = Valkyrie::SDLManager::initialize();
 	int result_wm = Valkyrie::WindowManager::initialize();
+	int result_vm = Valkyrie::VulkanManager::initialize();
 	if (result_tm != 0)
 		return 2;
 	if (result_am != 0)
@@ -30,10 +32,13 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 		return 4;
 	if (result_wm != 0)
 		return 5;
+	if (result_vm != 0)
+		return 6;
 	return 0;
 }
 
 void ValkyrieEngine::closeValkyrieEngine() {
+	Valkyrie::VulkanManager::close();
 	Valkyrie::WindowManager::close();
 	Valkyrie::SDLManager::close();
 	Valkyrie::AssetManager::close();
@@ -120,7 +125,8 @@ bool ValkyrieEngine::execute() {
 		updateUserInput(s_event);
 	}
 	updateTime();
-	m_render_context_ptr->render();
+	if (m_render_context_ptr != nullptr)
+		m_render_context_ptr->render();
 	return true;
 }
 
@@ -133,8 +139,6 @@ VkResult ValkyrieEngine::initialize() {
 	// RENDER CONTEXT
 	
 	initializeImGuiInput();
-
-	
 
 	return VK_SUCCESS;
 }
