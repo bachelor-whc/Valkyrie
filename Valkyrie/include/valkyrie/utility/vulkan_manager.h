@@ -33,6 +33,7 @@ namespace Valkyrie {
 	private:
 		static VkCommandBuffer getSetupCommandBuffer();
 
+		void initializeVulkan();
 		void initializeInstance();
 		void initializePhysicalDevice();
 		void initializeDevice();

@@ -45,7 +45,7 @@ SecondaryCommandBuffers CommandPool::createSecondaryCommandBuffers(const uint32_
 	return command_buffers;
 }
 
-void DestroyCommandPool(CommandPool & command_pool) {
+void Vulkan::DestroyCommandPool(CommandPool& command_pool) {
 	const auto& device = Valkyrie::VulkanManager::getDevice();
 	vkDestroyCommandPool(device, command_pool.handle, nullptr);
 }

@@ -10,6 +10,7 @@ int VulkanManager::initialize() {
 	if (gp_vulkan_manager != nullptr)
 		return 0;
 	gp_vulkan_manager = NEW_NT VulkanManager;
+	gp_vulkan_manager->initializeVulkan();
 	if (gp_vulkan_manager == nullptr) {
 		return 1;
 	}
@@ -177,16 +178,20 @@ Vulkan::CommandBuffer VulkanManager::createCommandBuffer() {
 }
 
 VulkanManager::VulkanManager() {
+	
+}
+
+VkCommandBuffer VulkanManager::getSetupCommandBuffer() {
+	return gp_vulkan_manager->m_setup_command_buffer.handle;
+}
+
+void VulkanManager::initializeVulkan() {
 	initializeInstance();
 	initializePhysicalDevice();
 	initializeDevice();
 	initializeCommandPool();
 	m_setup_command_buffer = m_command_pool_ptr->createCommandBuffer();
 	initializePipelineCache();
-}
-
-VkCommandBuffer VulkanManager::getSetupCommandBuffer() {
-	return gp_vulkan_manager->m_setup_command_buffer.handle;
 }
 
 void VulkanManager::initializeInstance() {
