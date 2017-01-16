@@ -25,6 +25,7 @@ Framebuffers::~Framebuffers() {
 }
 
 void Framebuffers::initialize(const RenderPass& render_pass, const int width, const int height) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	int extended_count = extendedAttachments.size();
 	std::vector<VkImageView> attachments(1 + extended_count);
 	if(extended_count > 0) {
@@ -45,7 +46,7 @@ void Framebuffers::initialize(const RenderPass& render_pass, const int width, co
 	VkResult result;
 	for (int i = 0; i < m_count; ++i) {
 		attachments[0] = m_swap_chain_views[i];
-		result = vkCreateFramebuffer(g_device_handle, &frame_buffer_info, nullptr, &handles[i]);
+		result = vkCreateFramebuffer(device, &frame_buffer_info, nullptr, &handles[i]);
 		assert(result == VK_SUCCESS);
 	}
 }
@@ -56,6 +57,8 @@ SwapChain::SwapChain(const Surface& surface) :
 	m_width(0),
 	m_height(0),
 	m_images_initialized(false) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
+	const auto& physical_device = Valkyrie::VulkanManager::getPhysicalDevice();
 	VkResult result = VK_SUCCESS;
 	VkSurfaceCapabilitiesKHR surface_capabilities = {};
 
@@ -65,13 +68,13 @@ SwapChain::SwapChain(const Surface& surface) :
 	m_height = window_ptr->getHeight();
 	// Specification:
 	// To query the basic capabilities of a surface, needed in order to create a swapchain.
-	result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(g_physical_device_handle, surface.handle, &surface_capabilities);
+	result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface.handle, &surface_capabilities);
 
 	uint32_t present_mode_count;
-	result = vkGetPhysicalDeviceSurfacePresentModesKHR(g_physical_device_handle, surface.handle, &present_mode_count, nullptr);
+	result = vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface.handle, &present_mode_count, nullptr);
 
 	std::vector<VkPresentModeKHR> present_modes(present_mode_count);
-	result = vkGetPhysicalDeviceSurfacePresentModesKHR(g_physical_device_handle, surface.handle, &present_mode_count, present_modes.data());
+	result = vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface.handle, &present_mode_count, present_modes.data());
 
 	VkExtent2D swap_chain_extent;
 	bool surface_size_undefined = surface_capabilities.currentExtent.width == 0xFFFFFFFF && surface_capabilities.currentExtent.height == 0xFFFFFFFF;
@@ -126,7 +129,7 @@ SwapChain::SwapChain(const Surface& surface) :
 	swapchain_create.queueFamilyIndexCount = 0;
 	swapchain_create.pQueueFamilyIndices = nullptr;
 
-	result = vkCreateSwapchainKHR(g_device_handle, &swapchain_create, nullptr, &handle);
+	result = vkCreateSwapchainKHR(device, &swapchain_create, nullptr, &handle);
 	assert(result == VK_SUCCESS);
 }
 
@@ -136,16 +139,17 @@ SwapChain::~SwapChain() {
 }
 
 VkResult SwapChain::initializeImages(const Surface& surface) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	VkResult result;
 	uint32_t buffer_count;
-	result = vkGetSwapchainImagesKHR(g_device_handle, handle, &buffer_count, nullptr);
+	result = vkGetSwapchainImagesKHR(device, handle, &buffer_count, nullptr);
 	if (result != VK_SUCCESS)
 		return result;
 
 	VkImage *swapchain_images = NEW_NT VkImage[buffer_count]();
 	assert(swapchain_images);
 
-	result = vkGetSwapchainImagesKHR(g_device_handle, handle, &buffer_count, swapchain_images);
+	result = vkGetSwapchainImagesKHR(device, handle, &buffer_count, swapchain_images);
 	if(result != VK_SUCCESS)
 		return result;
 
@@ -178,7 +182,7 @@ VkResult SwapChain::initializeImages(const Surface& surface) {
 
 		image_view_create.image = m_buffers[i].image;
 
-		result = vkCreateImageView(g_device_handle, &image_view_create, nullptr, &m_buffers[i].view);
+		result = vkCreateImageView(device, &image_view_create, nullptr, &m_buffers[i].view);
 		if(result != VK_SUCCESS)
 			return result;
 	}
@@ -199,7 +203,8 @@ void SwapChain::initializeFramebuffers(const RenderPass& render_pass, const VkIm
 }
 
 VkResult SwapChain::acquireNextImage(uint64_t timeout, const VkSemaphore semaphore, const VkFence fence) {
-	return vkAcquireNextImageKHR(g_device_handle, handle, timeout, semaphore, fence, &m_current_buffer);
+	const auto& device = Valkyrie::VulkanManager::getDevice();
+	return vkAcquireNextImageKHR(device, handle, timeout, semaphore, fence, &m_current_buffer);
 }
 
 VkResult SwapChain::queuePresent(const VkQueue& queue) {
@@ -212,11 +217,13 @@ VkResult SwapChain::queuePresent(const VkQueue& queue) {
 }
 
 void Vulkan::DestroySwapChain(SwapChain& swapchain) {
-	vkDestroySwapchainKHR(g_device_handle, swapchain.handle, nullptr);
+	const auto& device = Valkyrie::VulkanManager::getDevice();
+	vkDestroySwapchainKHR(device, swapchain.handle, nullptr);
 }
 
 void Vulkan::DestroyFramebuffers(Framebuffers& framebuffers) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	for (auto& framebuffer : framebuffers.handles) {
-		vkDestroyFramebuffer(g_device_handle, framebuffer, nullptr);
+		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}
 }

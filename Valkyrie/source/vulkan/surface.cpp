@@ -7,6 +7,7 @@
 using namespace Vulkan;
 
 VkResult Vulkan::setSurface(Surface& surface) {
+	const auto& physical_device = Valkyrie::VulkanManager::getPhysicalDevice();
 	VkResult result;
 	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
 	auto& window_ptr = window_manager.getMainWindowPtr();
@@ -22,10 +23,10 @@ VkResult Vulkan::setSurface(Surface& surface) {
 	
 #endif
 	uint32_t format_count = 0;
-	result = vkGetPhysicalDeviceSurfaceFormatsKHR(g_physical_device_handle, surface.handle, &format_count, NULL);
+	result = vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface.handle, &format_count, NULL);
 	
 	VkSurfaceFormatKHR* surface_format = NEW_NT VkSurfaceFormatKHR[format_count];
-	result = vkGetPhysicalDeviceSurfaceFormatsKHR(g_physical_device_handle, surface.handle, &format_count, surface_format);
+	result = vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface.handle, &format_count, surface_format);
 	
 	if (format_count == 1 && surface_format[0].format == VK_FORMAT_UNDEFINED) {
 		surface_format[0].format = VK_FORMAT_B8G8R8A8_UNORM;

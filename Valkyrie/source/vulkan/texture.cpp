@@ -2,6 +2,7 @@
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/physical_device.h"
+#include "valkyrie/utility/vulkan_manager.h"
 
 Vulkan::Texture::Texture(const Valkyrie::ImageMemoryPointer & image_ptr) : m_image_ptr(image_ptr) {
 
@@ -29,7 +30,7 @@ VkResult Vulkan::Texture::initializeSampler() {
 	sampler_create.maxLod = 1000.0f;
 	sampler_create.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 	sampler_create.unnormalizedCoordinates = VK_FALSE;
-	return vkCreateSampler(g_device_handle, &sampler_create, nullptr, &sampler);
+	return vkCreateSampler(Valkyrie::VulkanManager::getDevice(), &sampler_create, nullptr, &sampler);
 }
 
 VkResult Vulkan::Texture::initializeView() {
@@ -48,7 +49,7 @@ VkResult Vulkan::Texture::initializeView() {
 	image_view_create.subresourceRange.baseArrayLayer = 0;
 	image_view_create.subresourceRange.layerCount = 1;
 	image_view_create.subresourceRange.levelCount = 1;
-	return vkCreateImageView(g_device_handle, &image_view_create, nullptr, &view);
+	return vkCreateImageView(Valkyrie::VulkanManager::getDevice(), &image_view_create, nullptr, &view);
 }
 
 VkDescriptorImageInfo* Vulkan::Texture::getInformationPointer() {
@@ -78,14 +79,15 @@ VkResult Vulkan::Texture::initializeImage() {
 	image_create.tiling = VK_IMAGE_TILING_LINEAR;
 	image_create.usage = VK_IMAGE_USAGE_SAMPLED_BIT;
 	image_create.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
-	return vkCreateImage(g_device_handle, &image_create, nullptr, &image);
+	return vkCreateImage(Valkyrie::VulkanManager::getDevice(), &image_create, nullptr, &image);
 }
 
 VkResult Vulkan::Texture::allocate() {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	assert(m_image_ptr->ready());
 	assert(image != NULL);
 	VkMemoryRequirements memory_requirements = {};
-	vkGetImageMemoryRequirements(g_device_handle, image, &memory_requirements);
+	vkGetImageMemoryRequirements(device, image, &memory_requirements);
 
 	VkMemoryAllocateInfo memory_allocate = {};
 	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -94,10 +96,11 @@ VkResult Vulkan::Texture::allocate() {
 
 	bool found = PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memory_allocate.memoryTypeIndex);
 
-	return vkAllocateMemory(g_device_handle, &memory_allocate, nullptr, &memory);
+	return vkAllocateMemory(device, &memory_allocate, nullptr, &memory);
 }
 
 VkResult Vulkan::Texture::write() {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	assert(m_image_ptr->ready());
 	assert(image != NULL);
 	assert(memory != NULL);
@@ -107,11 +110,11 @@ VkResult Vulkan::Texture::write() {
 
 	VkSubresourceLayout subresource_layout = {};
 
-	vkGetImageSubresourceLayout(g_device_handle, image, &subresource, &subresource_layout);
+	vkGetImageSubresourceLayout(device, image, &subresource, &subresource_layout);
 	void* destination;
-	result = vkMapMemory(g_device_handle, memory, 0, m_size, 0, &destination);
+	result = vkMapMemory(device, memory, 0, m_size, 0, &destination);
 	assert(result == VK_SUCCESS);
 	memcpy(destination, m_image_ptr->getData(), m_image_ptr->getSize());
-	vkUnmapMemory(g_device_handle, memory);
-	return vkBindImageMemory(g_device_handle, image, memory, 0);
+	vkUnmapMemory(device, memory);
+	return vkBindImageMemory(device, image, memory, 0);
 }

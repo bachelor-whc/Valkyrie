@@ -117,9 +117,6 @@
     <ClInclude Include="include\valkyrie\vulkan\attachment.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\vulkan\pipeline.h">
-      <Filter>Header Files\valkyrie\vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\vertex_input.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
@@ -231,6 +228,9 @@
     <ClInclude Include="include\valkyrie\vulkan\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\vulkan\pipeline_module.h">
+      <Filter>Header Files\valkyrie\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -255,9 +255,6 @@
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="source\vulkan\physical_device.cpp">
-      <Filter>Source Files\vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="source\vulkan\pipeline.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="source\vulkan\queue.cpp">
@@ -370,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="source\vulkan\image.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\vulkan\pipeline_module.cpp">
+      <Filter>Source Files\vulkan</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

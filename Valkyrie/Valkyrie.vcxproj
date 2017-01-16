@@ -60,7 +60,7 @@
     <ClInclude Include="include\valkyrie\vulkan\instance.h" />
     <ClInclude Include="include\valkyrie\vulkan\memory_buffer.h" />
     <ClInclude Include="include\valkyrie\vulkan\physical_device.h" />
-    <ClInclude Include="include\valkyrie\vulkan\pipeline.h" />
+    <ClInclude Include="include\valkyrie\vulkan\pipeline_module.h" />
     <ClInclude Include="include\valkyrie\vulkan\queue.h" />
     <ClInclude Include="include\valkyrie\vulkan\render_pass.h" />
     <ClInclude Include="include\valkyrie\vulkan\shader.h" />
@@ -105,7 +105,7 @@
     <ClCompile Include="source\vulkan\instance.cpp" />
     <ClCompile Include="source\vulkan\memory_buffer.cpp" />
     <ClCompile Include="source\vulkan\physical_device.cpp" />
-    <ClCompile Include="source\vulkan\pipeline.cpp" />
+    <ClCompile Include="source\vulkan\pipeline_module.cpp" />
     <ClCompile Include="source\vulkan\queue.cpp" />
     <ClCompile Include="source\vulkan\render_pass.cpp" />
     <ClCompile Include="source\vulkan\shader.cpp" />

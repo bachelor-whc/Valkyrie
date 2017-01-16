@@ -1,6 +1,6 @@
 #include <vulkan/vulkan.h>
 #include "valkyrie/utility/vulkan_manager.h"
-#include "valkyrie/vulkan/pipeline.h"
+#include "valkyrie/vulkan/pipeline_module.h"
 #include "common.h"
 using namespace Valkyrie;
 
@@ -40,6 +40,7 @@ VkDevice VulkanManager::getDevice() {
 }
 
 VkResult VulkanManager::initializeImage(Vulkan::Image& image) {
+	const auto& device = VulkanManager::getDevice();
 	VkResult result;
 
 	VkImageCreateInfo image_create = image.getImageCreate();
@@ -51,15 +52,15 @@ VkResult VulkanManager::initializeImage(Vulkan::Image& image) {
 
 	VkMemoryRequirements memory_requirements;
 
-	result = vkCreateImage(g_device_handle, &image_create, nullptr, &image.handle);
-	vkGetImageMemoryRequirements(g_device_handle, image.handle, &memory_requirements);
+	result = vkCreateImage(device, &image_create, nullptr, &image.handle);
+	vkGetImageMemoryRequirements(device, image.handle, &memory_requirements);
 	memory_allocate.allocationSize = memory_requirements.size;
 	Vulkan::PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memory_allocate.memoryTypeIndex);
-	result = vkAllocateMemory(g_device_handle, &memory_allocate, nullptr, &image.memory);
+	result = vkAllocateMemory(device, &memory_allocate, nullptr, &image.memory);
 
-	result = vkBindImageMemory(g_device_handle, image.handle, image.memory, 0);
+	result = vkBindImageMemory(device, image.handle, image.memory, 0);
 	image_view_create.image = image.handle;
-	result = vkCreateImageView(g_device_handle, &image_view_create, nullptr, &image.view);
+	result = vkCreateImageView(device, &image_view_create, nullptr, &image.view);
 	return result;
 }
 
@@ -191,21 +192,18 @@ VkCommandBuffer VulkanManager::getSetupCommandBuffer() {
 void VulkanManager::initializeInstance() {
 	VkResult result;
 	result = Vulkan::CreateInstance("Valkyrie", m_instatnce);
-	g_instance_handle = m_instatnce.handle;
 	assert(result == VK_SUCCESS);
 }
 
 void VulkanManager::initializePhysicalDevice() {
 	VkResult result;
 	result = Vulkan::CreatePhysicalDevice(m_physical_device);
-	g_physical_device_handle = m_physical_device.handle;
 	assert(result == VK_SUCCESS);
 }
 
 void VulkanManager::initializeDevice() {
 	VkResult result;
 	result = Vulkan::CreateDevice(m_device);
-	g_device_handle = m_device.handle;
 	assert(result == VK_SUCCESS);
 }
 

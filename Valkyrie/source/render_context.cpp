@@ -5,6 +5,7 @@
 using namespace Valkyrie;
 
 RenderContext::RenderContext() {
+	const auto& device = VulkanManager::getDevice();
 	initializeSurface();
 	initializeSwapChain();
 	initializeDepthBuffer();
@@ -25,20 +26,21 @@ RenderContext::RenderContext() {
 	present_fence_create.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 	present_fence_create.pNext = nullptr;
 	present_fence_create.flags = 0;
-	result = vkCreateFence(g_device_handle, &present_fence_create, nullptr, &m_present_fence);
+	result = vkCreateFence(device, &present_fence_create, nullptr, &m_present_fence);
 	assert(result == VK_SUCCESS);
 
 	VkSemaphoreCreateInfo present_semaphore_create = {};
 	present_semaphore_create.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 	present_semaphore_create.pNext = nullptr;
 	present_semaphore_create.flags = 0;
-	result = vkCreateSemaphore(g_device_handle, &present_semaphore_create, nullptr, &m_present_semaphore);
+	result = vkCreateSemaphore(device, &present_semaphore_create, nullptr, &m_present_semaphore);
 	assert(result == VK_SUCCESS);
 }
 
 RenderContext::~RenderContext() {
-	vkDestroySemaphore(g_device_handle, m_present_semaphore, nullptr);
-	vkDestroyFence(g_device_handle, m_present_fence, nullptr);
+	const auto& device = VulkanManager::getDevice();
+	vkDestroySemaphore(device, m_present_semaphore, nullptr);
+	vkDestroyFence(device, m_present_fence, nullptr);
 	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
 	DestroySwapChain(*mp_swapchain);
 	DestroySurface(m_surface);
@@ -87,9 +89,11 @@ void RenderContext::initializeSwapChain() {
 }
 
 void RenderContext::initializeDepthBuffer() {
+	auto& window_manager = *WindowManager::getGlobalWindowManagerPtr();
+	auto& window_ptr = window_manager.getMainWindowPtr();
 	VkResult result;
-	mp_depth_buffer = NEW_NT Vulkan::DepthBuffer();
-	result = mp_depth_buffer->initializeImages();
+	mp_depth_buffer = NEW_NT Vulkan::DepthBuffer(window_ptr->getWidth(), window_ptr->getHeight());
+	result = VulkanManager::initializeImage(*mp_depth_buffer);
 	assert(result == VK_SUCCESS);
 }
 

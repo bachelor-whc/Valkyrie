@@ -1,5 +1,6 @@
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/render_pass.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 RenderPass::RenderPass() {
@@ -14,6 +15,7 @@ bool RenderPass::initialize(const SubpassDependencies& dependencies) {
 	if (attachments.size() == 0 || subpasses.size() == 0)
 		return false;
 
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	VkRenderPassCreateInfo renderpass_create = {};
 	renderpass_create.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 	renderpass_create.attachmentCount = attachments.size();
@@ -23,7 +25,7 @@ bool RenderPass::initialize(const SubpassDependencies& dependencies) {
 	renderpass_create.dependencyCount = dependencies.size();
 	renderpass_create.pDependencies = dependencies.data();
 
-	VkResult result = vkCreateRenderPass(g_device_handle, &renderpass_create, nullptr, &handle);
+	VkResult result = vkCreateRenderPass(device, &renderpass_create, nullptr, &handle);
 	return result == VK_SUCCESS;
 }
 

@@ -1,5 +1,6 @@
 #include "valkyrie/vulkan/shader.h"
 #include "valkyrie/vulkan/device.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 std::string Shader::LoadSPVBinaryCode(const std::string file_path) {
@@ -22,11 +23,12 @@ Shader::~Shader() {
 }
 
 VkResult Shader::initializeModule() {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	VkShaderModuleCreateInfo shader_module_create = {};
 	shader_module_create.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	shader_module_create.codeSize = m_binary_code.size();
 	shader_module_create.pCode = (uint32_t*)m_binary_code.c_str();
-	return vkCreateShaderModule(g_device_handle, &shader_module_create, nullptr, &handle);
+	return vkCreateShaderModule(device, &shader_module_create, nullptr, &handle);
 }
 
 VkPipelineShaderStageCreateInfo Shader::createPipelineShaderStage() {

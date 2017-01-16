@@ -15,9 +15,8 @@ namespace Vulkan {
 		VkImageLayout oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		VkImageLayout newLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-		virtual VkImageCreateInfo getImageCreate() = 0;
-		virtual VkMemoryAllocateInfo getMemoryAllocate() = 0;
-		virtual VkImageViewCreateInfo getImageViewCreate() = 0;
+		virtual VkImageCreateInfo getImageCreate() const = 0;
+		virtual VkImageViewCreateInfo getImageViewCreate() const = 0;
 	private:
 		
 	};

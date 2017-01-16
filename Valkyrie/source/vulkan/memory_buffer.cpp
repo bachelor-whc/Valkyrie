@@ -1,6 +1,7 @@
 #include "valkyrie/vulkan/memory_buffer.h"
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/vulkan/device.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 MemoryBuffer::MemoryBuffer() {
@@ -14,12 +15,13 @@ MemoryBuffer::~MemoryBuffer() {
 }
 
 VkResult MemoryBuffer::allocate(const std::vector<VkBufferUsageFlags>& usages, const uint32_t size, VkBufferCreateInfo buffer_create) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	if (handle != VK_NULL_HANDLE) {
-		vkDestroyBuffer(g_device_handle, handle, nullptr);
+		vkDestroyBuffer(device, handle, nullptr);
 		handle = VK_NULL_HANDLE;
 	}
 	if (memory != VK_NULL_HANDLE) {
-		vkFreeMemory(g_device_handle, memory, nullptr);
+		vkFreeMemory(device, memory, nullptr);
 		memory = VK_NULL_HANDLE;
 	}
 	VkResult result;
@@ -33,46 +35,49 @@ VkResult MemoryBuffer::allocate(const std::vector<VkBufferUsageFlags>& usages, c
 	buffer_create.usage = usage;
 	buffer_create.size = m_size;
 
-	result = vkCreateBuffer(g_device_handle, &buffer_create, nullptr, &handle);
+	result = vkCreateBuffer(device, &buffer_create, nullptr, &handle);
 
 	VkMemoryRequirements memory_requirements = {};
-	vkGetBufferMemoryRequirements(g_device_handle, handle, &memory_requirements);
+	vkGetBufferMemoryRequirements(device, handle, &memory_requirements);
 
 	VkMemoryAllocateInfo memory_allocate = {};
 	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	memory_allocate.allocationSize = m_size;
 	bool found = PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memory_allocate.memoryTypeIndex);
-	result = vkAllocateMemory(g_device_handle, &memory_allocate, nullptr, &memory);
-	result = vkBindBufferMemory(g_device_handle, handle, memory, 0);
+	result = vkAllocateMemory(device, &memory_allocate, nullptr, &memory);
+	result = vkBindBufferMemory(device, handle, memory, 0);
 	return result;
 }
 
 VkResult MemoryBuffer::write(const void *data, const uint32_t offset, const uint32_t size) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	assert(memory != NULL);
 	VkResult result;
 	void *destination;
 	
-	result = vkMapMemory(g_device_handle, memory, offset, size, NULL, &destination);
+	result = vkMapMemory(device, memory, offset, size, NULL, &destination);
 	memcpy(destination, data, size);
-	vkUnmapMemory(g_device_handle, memory);
+	vkUnmapMemory(device, memory);
 	
 	return result;
 }
 
 void* MemoryBuffer::startWriting(const uint32_t offset, const uint32_t size) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	assert(memory != VK_NULL_HANDLE);
 	m_writing_state = true;
 
 	VkResult result;
 	void *destination;
 
-	result = vkMapMemory(g_device_handle, memory, offset, size, NULL, &destination);
+	result = vkMapMemory(device, memory, offset, size, NULL, &destination);
 	assert(result == VK_SUCCESS);
 	return destination;
 }
 
 void MemoryBuffer::endWriting() {
-	vkUnmapMemory(g_device_handle, memory);
+	const auto& device = Valkyrie::VulkanManager::getDevice();
+	vkUnmapMemory(device, memory);
 	m_writing_state = false;
 }
 
@@ -92,10 +97,11 @@ VkDescriptorBufferInfo* MemoryBuffer::getInformationPointer(const uint32_t offse
 }
 
 void Vulkan::DestroyMemoryBuffer(MemoryBuffer& buffer) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	if (buffer.handle != VK_NULL_HANDLE)
-		vkDestroyBuffer(g_device_handle, buffer.handle, nullptr);
+		vkDestroyBuffer(device, buffer.handle, nullptr);
 	if (buffer.memory != VK_NULL_HANDLE)
-		vkFreeMemory(g_device_handle, buffer.memory, nullptr);
+		vkFreeMemory(device, buffer.memory, nullptr);
 	buffer.handle = VK_NULL_HANDLE;
 	buffer.memory = VK_NULL_HANDLE;
 }

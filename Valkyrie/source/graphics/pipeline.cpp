@@ -1,4 +1,5 @@
 #include "valkyrie/graphics/pipeline.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Valkyrie::Graphics;
 
 
@@ -14,7 +15,8 @@ Pipeline::~Pipeline() {
 }
 
 void Pipeline::writeSets(const std::vector<VkWriteDescriptorSet>& writes) {
-	vkUpdateDescriptorSets(g_device_handle, writes.size(), writes.data(), 0, NULL);
+	const auto& device = VulkanManager::getDevice();
+	vkUpdateDescriptorSets(device, writes.size(), writes.data(), 0, NULL);
 }
 
 void Pipeline::initializePipeline() {

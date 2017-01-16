@@ -1,5 +1,6 @@
 #include "valkyrie/vulkan/descriptor.h"
 #include "valkyrie/vulkan/device.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 DescriptorPool::DescriptorPool(uint32_t max_sets) : 
@@ -20,23 +21,25 @@ DescriptorPool::~DescriptorPool() {
 
 
 VkResult DescriptorPool::initializePool() {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	VkDescriptorPoolCreateInfo descriptor_pool_create = {};
 	descriptor_pool_create.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	descriptor_pool_create.maxSets = m_max_sets;
 	descriptor_pool_create.poolSizeCount = (uint32_t)m_unit_sizes.size();
 	descriptor_pool_create.pPoolSizes = m_unit_sizes.data();
-	return vkCreateDescriptorPool(g_device_handle, &descriptor_pool_create, nullptr, &handle);
+	return vkCreateDescriptorPool(device, &descriptor_pool_create, nullptr, &handle);
 	
 }
 
 VkResult DescriptorPool::initializeSets() {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	VkDescriptorSetAllocateInfo descriptor_set_allocate = {};
 	std::vector<VkDescriptorSetLayout>& set_layouts = getSetLayoutHandles();
 	descriptor_set_allocate.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	descriptor_set_allocate.descriptorPool = handle;
 	descriptor_set_allocate.descriptorSetCount = m_sets.size();
 	descriptor_set_allocate.pSetLayouts = set_layouts.data();
-	VkResult result = vkAllocateDescriptorSets(g_device_handle, &descriptor_set_allocate, m_sets.data());
+	VkResult result = vkAllocateDescriptorSets(device, &descriptor_set_allocate, m_sets.data());
 	return result;
 }
 
@@ -115,9 +118,10 @@ void DescriptorSetLayout::setBinding(const uint32_t shader_binding, const VkDesc
 }
 
 VkResult DescriptorSetLayout::initialize() {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	VkDescriptorSetLayoutCreateInfo descriptor_set_layout_create = {};
 	descriptor_set_layout_create.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 	descriptor_set_layout_create.bindingCount = m_bindings.size();
 	descriptor_set_layout_create.pBindings = m_bindings.data();
-	return vkCreateDescriptorSetLayout(g_device_handle, &descriptor_set_layout_create, nullptr, &handle);
+	return vkCreateDescriptorSetLayout(device, &descriptor_set_layout_create, nullptr, &handle);
 }

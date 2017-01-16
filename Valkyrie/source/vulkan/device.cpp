@@ -1,6 +1,7 @@
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/vulkan/device.h"
 #include "common.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 const std::vector<const char*> g_device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
@@ -19,6 +20,7 @@ void WriteDeviceQueueCreates(std::vector<VkDeviceQueueCreateInfo>& device_queue_
 }
 
 VkResult Vulkan::CreateDevice(Device& device) {
+	const auto& physical_device = Valkyrie::VulkanManager::getPhysicalDevice();
 	VkResult result;
 	uint32_t number_of_queue_family = PhysicalDevice::queueFamilyProperties.size();
 
@@ -33,10 +35,10 @@ VkResult Vulkan::CreateDevice(Device& device) {
 	device_create.enabledExtensionCount = g_device_extensions.size();
 	device_create.ppEnabledExtensionNames = g_device_extensions.data();
 
-	result = vkCreateDevice(g_physical_device_handle, &device_create, nullptr, &device.handle);
+	result = vkCreateDevice(physical_device, &device_create, nullptr, &device.handle);
 	return result;
 }
 
 void Vulkan::DestroyDevice(Device& device) {
-	vkDestroyDevice(g_device_handle, nullptr);
+	vkDestroyDevice(device.handle, nullptr);
 }

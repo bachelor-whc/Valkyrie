@@ -1,19 +1,22 @@
-#include "valkyrie/vulkan/pipeline.h"
+#include "valkyrie/vulkan/pipeline_module.h"
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/descriptor.h"
 #include "valkyrie/vulkan/render_pass.h"
 #include "valkyrie/vulkan/vertex_input.h"
+#include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
 VkPipelineCache PipelineModule::cache = VK_NULL_HANDLE;
 
 VkResult PipelineModule::initializeCache() {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	VkPipelineCacheCreateInfo pipeline_cache_create = {};
 	pipeline_cache_create.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-	return vkCreatePipelineCache(g_device_handle, &pipeline_cache_create, NULL, &cache);
+	return vkCreatePipelineCache(device, &pipeline_cache_create, NULL, &cache);
 }
 
 VkResult PipelineModule::initializeLayout(const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts) {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	size_t layout_count = descriptor_set_layouts.size();
 	VkPipelineLayoutCreateInfo pipeline_layout_create = {};
 	pipeline_layout_create.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -21,7 +24,7 @@ VkResult PipelineModule::initializeLayout(const std::vector<VkDescriptorSetLayou
 	pipeline_layout_create.pSetLayouts = descriptor_set_layouts.data();
 	pipeline_layout_create.pushConstantRangeCount = pushConstantRanges.size();
 	pipeline_layout_create.pPushConstantRanges = pushConstantRanges.data();
-	VkResult result = vkCreatePipelineLayout(g_device_handle, &pipeline_layout_create, nullptr, &layout);
+	VkResult result = vkCreatePipelineLayout(device, &pipeline_layout_create, nullptr, &layout);
 	return result;
 }
 
@@ -49,6 +52,7 @@ PipelineModule::~PipelineModule() {
 }
 
 VkResult PipelineModule::initialize() {
+	const auto& device = Valkyrie::VulkanManager::getDevice();
 	assert(cache != VK_NULL_HANDLE);
 	initializeVertexInputState();
 	initializeInputAssemblyState();
@@ -61,7 +65,7 @@ VkResult PipelineModule::initialize() {
 	m_pipeline_create.stageCount = (uint32_t)shaderStageCreates.size();
 	m_pipeline_create.pStages = shaderStageCreates.data();
 	m_pipeline_create.layout = layout;
-	return vkCreateGraphicsPipelines(g_device_handle, cache, 1, &m_pipeline_create, nullptr, &handle);
+	return vkCreateGraphicsPipelines(device, cache, 1, &m_pipeline_create, nullptr, &handle);
 }
 
 void PipelineModule::setRenderPass(const RenderPass& render_pass, uint32_t index) {
@@ -145,10 +149,12 @@ void PipelineModule::initializeDynamicState() {
 }
 
 void Vulkan::DestroyPipeline(PipelineModule& pipeline) {
-	vkDestroyPipelineLayout(g_device_handle, pipeline.layout, nullptr);
-	vkDestroyPipeline(g_device_handle, pipeline.handle, nullptr);
+	const auto& device = Valkyrie::VulkanManager::getDevice();
+	vkDestroyPipelineLayout(device, pipeline.layout, nullptr);
+	vkDestroyPipeline(device, pipeline.handle, nullptr);
 }
 
 void Vulkan::DestroyPipelineCache() {
-	vkDestroyPipelineCache(g_device_handle, PipelineModule::cache, nullptr);
+	const auto& device = Valkyrie::VulkanManager::getDevice();
+	vkDestroyPipelineCache(device, PipelineModule::cache, nullptr);
 }

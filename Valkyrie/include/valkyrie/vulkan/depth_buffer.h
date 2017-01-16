@@ -1,6 +1,7 @@
 #ifndef _VULKAN_DEPTH_BUFFER_H
 #define _VULKAN_DEPTH_BUFFER_H
 #include "common.h"
+#include "valkyrie/vulkan/image.h"
 #include "valkyrie/vulkan/attachment.h"
 
 namespace Vulkan{
@@ -8,17 +9,20 @@ namespace Vulkan{
 	struct PhysicalDevice;
 	struct CommandBuffer;
 
-	struct DepthBuffer : public Attachment {
-		DepthBuffer();
+	struct DepthBuffer : 
+		public Image,
+		public Attachment {
+		DepthBuffer() = delete;
+		DepthBuffer(uint32_t width, uint32_t height);
 		virtual ~DepthBuffer();
 
-		VkResult initializeImages();
 		virtual VkAttachmentDescription getAttachmentDescription() const;
+		virtual VkImageCreateInfo getImageCreate() const;
+		virtual VkImageViewCreateInfo getImageViewCreate() const;
 
-		VkFormat format = VK_FORMAT_UNDEFINED;
-		VkImage image = NULL;
-		VkDeviceMemory memory = NULL;
-		VkImageView view = NULL;
+	private:
+		uint32_t m_width;
+		uint32_t m_height;
 	};
 }
 

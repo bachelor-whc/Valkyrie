@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_GRAPHICS_PIPELINE_H
 #define _VALKYRIE_GRAPHICS_PIPELINE_H
-#include "valkyrie/vulkan/pipeline.h"
+#include "valkyrie/vulkan/pipeline_module.h"
 #include "valkyrie/vulkan/vertex_input.h"
 #include "valkyrie/vulkan/shader.h"
 #include "valkyrie/vulkan/descriptor.h"
