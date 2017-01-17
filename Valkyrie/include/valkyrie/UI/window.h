@@ -1,6 +1,8 @@
 #ifndef _VALKYRIE_WINDOW_H
 #define _VALKYRIE_WINDOW_H
 #include <string>
+#include <new>
+#include <memory>
 #include <SDL2/SDL_syswm.h>
 struct SDL_Window;
 
@@ -30,6 +32,7 @@ namespace Valkyrie {
 		float m_height;
 		float m_ratio;
 	};
+	using WindowPtr = std::shared_ptr<Window>;
 }
 
 #endif

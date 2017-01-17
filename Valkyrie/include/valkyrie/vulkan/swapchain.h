@@ -1,6 +1,7 @@
 #ifndef _VULKAN_SWAPCHAIN_H
 #define _VULKAN_SWAPCHAIN_H
 #include "valkyrie/vulkan/image.h"
+#include "valkyrie/UI/window.h"
 #include "common.h"
 
 namespace Vulkan {
@@ -35,7 +36,7 @@ namespace Vulkan {
 	class SwapChain {
 	public:
 		SwapChain() = delete;
-		SwapChain(const Surface& surface);
+		SwapChain(const Surface& surface, const Valkyrie::WindowPtr& window_ptr);
 		virtual ~SwapChain();
 
 		VkResult initializeImages(const Surface& surface);

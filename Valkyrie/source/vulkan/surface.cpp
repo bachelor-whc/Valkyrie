@@ -6,11 +6,9 @@
 #include "valkyrie/utility/vulkan_manager.h"
 using namespace Vulkan;
 
-VkResult Vulkan::setSurface(Surface& surface) {
+VkResult Vulkan::setSurface(Surface& surface, const Valkyrie::WindowPtr& window_ptr) {
 	const auto& physical_device = Valkyrie::VulkanManager::getPhysicalDevice();
 	VkResult result;
-	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
-	auto& window_ptr = window_manager.getMainWindowPtr();
 #ifdef _WIN32
 	VkWin32SurfaceCreateInfoKHR surface_create = {};
 	surface_create.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;

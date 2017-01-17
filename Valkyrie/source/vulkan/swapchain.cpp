@@ -51,21 +51,17 @@ void Framebuffers::initialize(const RenderPass& render_pass, const int width, co
 	}
 }
 
-SwapChain::SwapChain(const Surface& surface) :
+SwapChain::SwapChain(const Surface& surface, const Valkyrie::WindowPtr& window_ptr) :
 	mp_framebuffers(nullptr),
 	m_current_buffer(-1),
-	m_width(0),
-	m_height(0),
+	m_width(window_ptr->getWidth()),
+	m_height(window_ptr->getHeight()),
 	m_images_initialized(false) {
 	const auto& device = Valkyrie::VulkanManager::getDevice();
 	const auto& physical_device = Valkyrie::VulkanManager::getPhysicalDevice();
 	VkResult result = VK_SUCCESS;
 	VkSurfaceCapabilitiesKHR surface_capabilities = {};
 
-	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
-	auto& window_ptr = window_manager.getMainWindowPtr();
-	m_width = window_ptr->getWidth();
-	m_height = window_ptr->getHeight();
 	// Specification:
 	// To query the basic capabilities of a surface, needed in order to create a swapchain.
 	result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface.handle, &surface_capabilities);

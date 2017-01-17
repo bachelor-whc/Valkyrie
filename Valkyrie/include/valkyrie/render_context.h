@@ -7,11 +7,13 @@
 #include "valkyrie/vulkan/depth_buffer.h"
 #include "valkyrie/vulkan/swapchain.h"
 #include "valkyrie/vulkan/render_pass.h"
+#include "valkyrie/UI/window.h"
 
 namespace Valkyrie {
 	class RenderContext {
 	public:
-		RenderContext();
+		RenderContext() = delete;
+		RenderContext(const WindowPtr& window_ptr);
 		virtual ~RenderContext();
 
 		virtual VkResult render();
@@ -28,6 +30,7 @@ namespace Valkyrie {
 		void commandSetViewport(const Vulkan::CommandBuffer& command_buffer);
 		void commandSetScissor(const Vulkan::CommandBuffer& command_buffer);
 
+		WindowPtr m_window_ptr;
 		std::vector<Vulkan::CommandBuffer> renderCommands;
 		Vulkan::CommandBuffer m_present_command_buffer;
 		Vulkan::Surface m_surface;

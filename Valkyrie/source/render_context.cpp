@@ -4,17 +4,13 @@
 #include "valkyrie/UI/window.h"
 using namespace Valkyrie;
 
-RenderContext::RenderContext() {
+RenderContext::RenderContext(const WindowPtr& window_ptr) : m_window_ptr(window_ptr) {
 	const auto& device = VulkanManager::getDevice();
 	initializeSurface();
 	initializeSwapChain();
 	initializeDepthBuffer();
-	//m_present_command_buffer = m_command_pool_ptr->createCommandBuffer();
-	//result = m_setup_command_buffer.begin();
 	initializeRenderPass();
 	initializeFramebuffers();
-	//result = m_setup_command_buffer.end();
-	//result = m_setup_command_buffer.submit(m_graphics_queue);
 	renderCommands.resize(mp_swapchain->getImageCount());
 	for (auto& command : renderCommands) {
 		command = VulkanManager::getGlobalVulkanManagerPtr()->createCommandBuffer();
@@ -83,16 +79,14 @@ VkResult RenderContext::render() {
 
 void RenderContext::initializeSwapChain() {
 	VkResult result;
-	mp_swapchain = NEW_NT Vulkan::SwapChain(m_surface);
+	mp_swapchain = NEW_NT Vulkan::SwapChain(m_surface, m_window_ptr);
 	result = mp_swapchain->initializeImages(m_surface);
 	assert(result == VK_SUCCESS);
 }
 
 void RenderContext::initializeDepthBuffer() {
-	auto& window_manager = *WindowManager::getGlobalWindowManagerPtr();
-	auto& window_ptr = window_manager.getMainWindowPtr();
 	VkResult result;
-	mp_depth_buffer = NEW_NT Vulkan::DepthBuffer(window_ptr->getWidth(), window_ptr->getHeight());
+	mp_depth_buffer = NEW_NT Vulkan::DepthBuffer(m_window_ptr->getWidth(), m_window_ptr->getHeight());
 	result = VulkanManager::initializeImage(*mp_depth_buffer);
 	assert(result == VK_SUCCESS);
 }
@@ -127,15 +121,13 @@ void RenderContext::initializeFramebuffers() {
 
 void RenderContext::initializeSurface() {
 	VkResult result;
-	result = setSurface(m_surface);
+	result = setSurface(m_surface, m_window_ptr);
 	assert(result == VK_SUCCESS);
 }
 
 void RenderContext::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
-	auto& window_manager = *WindowManager::getGlobalWindowManagerPtr();
-	auto& window_ptr = window_manager.getMainWindowPtr();
-	m_viewport.width = window_ptr->getWidth();
-	m_viewport.height = window_ptr->getHeight();
+	m_viewport.width = m_window_ptr->getWidth();
+	m_viewport.height = m_window_ptr->getHeight();
 	m_viewport.minDepth = 0.0f;
 	m_viewport.maxDepth = 1.0f;
 	m_viewport.x = 0;
@@ -144,10 +136,8 @@ void RenderContext::commandSetViewport(const Vulkan::CommandBuffer& command_buff
 }
 
 void RenderContext::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
-	auto& window_manager = *WindowManager::getGlobalWindowManagerPtr();
-	auto& window_ptr = window_manager.getMainWindowPtr();
-	m_scissor.extent.width = window_ptr->getWidth();
-	m_scissor.extent.height = window_ptr->getHeight();
+	m_scissor.extent.width = m_window_ptr->getWidth();
+	m_scissor.extent.height = m_window_ptr->getHeight();
 	m_scissor.offset.x = 0;
 	m_scissor.offset.y = 0;
 	vkCmdSetScissor(command_buffer.handle, 0, 1, &m_scissor);

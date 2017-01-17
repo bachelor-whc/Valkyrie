@@ -2,6 +2,7 @@
 #define _VULKAN_SURFACE_H
 #include <memory>
 #include "common.h"
+#include "valkyrie/UI/window.h"
 #include "valkyrie/vulkan/attachment.h"
 
 namespace Vulkan {
@@ -15,7 +16,7 @@ namespace Vulkan {
 		virtual VkAttachmentDescription getAttachmentDescription() const;
 	};
 
-	VkResult setSurface(Surface& surface);
+	VkResult setSurface(Surface& surface, const Valkyrie::WindowPtr& window_ptr);
 	void DestroySurface(Surface& surface);
 }
 
