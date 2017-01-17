@@ -42,5 +42,5 @@ VkImageViewCreateInfo DepthBuffer::getImageViewCreate() const {
 	auto create = VK_DEFAULT_DEPTH_IMAGE_VIEW_CREATE_INFO;
 	create.format = format;
 	create.image = handle;
-	return VkImageViewCreateInfo();
+	return create;
 }

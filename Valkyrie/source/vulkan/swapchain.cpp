@@ -152,11 +152,12 @@ VkResult SwapChain::initializeImages(const Surface& surface) {
 	m_buffers.resize(buffer_count);
 
 	for (uint32_t i = 0; i < getImageCount(); i++) {
+		m_buffers[i].handle = swapchain_images[i];
+		
 		VkImageViewCreateInfo image_view_create = m_buffers[i].getImageViewCreate();
 		image_view_create.format = surface.format.format;
 		image_view_create.image = m_buffers[i].handle;
 
-		m_buffers[i].handle = swapchain_images[i];
 		m_buffers[i].mask = VK_IMAGE_ASPECT_COLOR_BIT;
 		m_buffers[i].oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		m_buffers[i].newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
