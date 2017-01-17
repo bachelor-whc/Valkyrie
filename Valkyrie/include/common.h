@@ -27,7 +27,6 @@
 #include <exception>
 #include <json.hpp>
 #include <SDL2/SDL.h>
-#include "valkyrie/default_create_info.h"
 #define NEW_NT new(std::nothrow)
 #define MAKE_SHARED(t) std::make_shared<t>
 

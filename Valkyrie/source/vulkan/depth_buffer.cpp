@@ -3,7 +3,7 @@
 #include "valkyrie/vulkan/depth_buffer.h"
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/utility/vulkan_manager.h"
-#include "valkyrie/default_create_info.h"
+#include "valkyrie/vulkan/default_create_info.h"
 using namespace Vulkan;
 
 DepthBuffer::DepthBuffer(uint32_t width, uint32_t height) :

@@ -138,9 +138,6 @@
     <ClInclude Include="include\valkyrie\render_function.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\default_create_info.h">
-      <Filter>Header Files\valkyrie\vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\memory_buffer.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
@@ -229,6 +226,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\pipeline_module.h">
+      <Filter>Header Files\valkyrie\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\vulkan\default_create_info.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
   </ItemGroup>

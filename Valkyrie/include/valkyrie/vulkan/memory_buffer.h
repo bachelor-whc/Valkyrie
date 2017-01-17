@@ -1,7 +1,7 @@
 #ifndef _VULKAN_MEMORY_BUFFER_H
 #define _VULKAN_MEMORY_BUFFER_H
 #include "common.h"
-#include "valkyrie/default_create_info.h"
+#include "valkyrie/vulkan/default_create_info.h"
 
 namespace Vulkan {
 	struct PhysicalDevice;

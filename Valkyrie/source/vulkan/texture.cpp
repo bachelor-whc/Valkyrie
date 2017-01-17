@@ -3,17 +3,32 @@
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/utility/vulkan_manager.h"
+#include "valkyrie/vulkan/default_create_info.h"
+using namespace Vulkan;
 
-Vulkan::Texture::Texture(const Valkyrie::ImageMemoryPointer & image_ptr) : m_image_ptr(image_ptr) {
+Texture::Texture(const Valkyrie::ImageMemoryPointer & image_ptr) : m_image_ptr(image_ptr) {
 
 }
 
-Vulkan::Texture::~Texture() {
+Texture::~Texture() {
 	if (mp_information != nullptr)
 		delete mp_information;
 }
 
-VkResult Vulkan::Texture::initializeSampler() {
+VkImageCreateInfo Texture::getImageCreate() const {
+	VkImageCreateInfo create = VK_DEFAULT_TEXTURE_IMAGE_CREATE_INFO;
+	create.extent.width = m_image_ptr->getWidth();
+	create.extent.height = m_image_ptr->getHeight();
+	return create;
+}
+
+VkImageViewCreateInfo Texture::getImageViewCreate() const {
+	VkImageViewCreateInfo create = VK_DEFAULT_TEXTURE_IMAGE_VIEW_CREATE_INFO;
+	create.image = handle;
+	return create;
+}
+
+VkResult Texture::initializeSampler() {
 	VkSamplerCreateInfo sampler_create = {};
 	sampler_create.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	sampler_create.magFilter = VK_FILTER_NEAREST;
@@ -33,88 +48,35 @@ VkResult Vulkan::Texture::initializeSampler() {
 	return vkCreateSampler(Valkyrie::VulkanManager::getDevice(), &sampler_create, nullptr, &sampler);
 }
 
-VkResult Vulkan::Texture::initializeView() {
-	assert(image != NULL);
-	VkImageViewCreateInfo image_view_create = {};
-	image_view_create.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-	image_view_create.image = image;
-	image_view_create.viewType = VK_IMAGE_VIEW_TYPE_2D;
-	image_view_create.format = VK_FORMAT_R8G8B8A8_UNORM;
-	image_view_create.components.r = VK_COMPONENT_SWIZZLE_R;
-	image_view_create.components.g = VK_COMPONENT_SWIZZLE_G;
-	image_view_create.components.b = VK_COMPONENT_SWIZZLE_B;
-	image_view_create.components.a = VK_COMPONENT_SWIZZLE_A;
-	image_view_create.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	image_view_create.subresourceRange.baseMipLevel = 0;
-	image_view_create.subresourceRange.baseArrayLayer = 0;
-	image_view_create.subresourceRange.layerCount = 1;
-	image_view_create.subresourceRange.levelCount = 1;
-	return vkCreateImageView(Valkyrie::VulkanManager::getDevice(), &image_view_create, nullptr, &view);
-}
-
-VkDescriptorImageInfo* Vulkan::Texture::getInformationPointer() {
-	assert(sampler != NULL);
-	assert(view != NULL);
-	assert(layout != NULL);
+VkDescriptorImageInfo* Texture::getInformationPointer() {
+	assert(sampler != VK_NULL_HANDLE);
+	assert(view != VK_NULL_HANDLE);
+	assert(layout != VK_NULL_HANDLE);
 	if (mp_information == nullptr) {
 		mp_information = NEW_NT VkDescriptorImageInfo;
 		mp_information->sampler = sampler;
 		mp_information->imageView = view;
-		mp_information->imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+		mp_information->imageLayout = layout;
 	}
 	return mp_information;
 }
 
-VkResult Vulkan::Texture::initializeImage() {
-	VkImageCreateInfo image_create = {};
-	image_create.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-	image_create.imageType = VK_IMAGE_TYPE_2D;
-	image_create.format = VK_FORMAT_R8G8B8A8_UNORM;
-	image_create.extent.depth = 1;
-	image_create.extent.width = m_image_ptr->getWidth();
-	image_create.extent.height = m_image_ptr->getHeight();
-	image_create.mipLevels = 1;
-	image_create.arrayLayers = 1;
-	image_create.samples = VK_SAMPLE_COUNT_1_BIT;
-	image_create.tiling = VK_IMAGE_TILING_LINEAR;
-	image_create.usage = VK_IMAGE_USAGE_SAMPLED_BIT;
-	image_create.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
-	return vkCreateImage(Valkyrie::VulkanManager::getDevice(), &image_create, nullptr, &image);
-}
-
-VkResult Vulkan::Texture::allocate() {
+VkResult Texture::write() {
 	const auto& device = Valkyrie::VulkanManager::getDevice();
 	assert(m_image_ptr->ready());
-	assert(image != NULL);
-	VkMemoryRequirements memory_requirements = {};
-	vkGetImageMemoryRequirements(device, image, &memory_requirements);
-
-	VkMemoryAllocateInfo memory_allocate = {};
-	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	memory_allocate.allocationSize = memory_requirements.size;
-	m_size = memory_requirements.size;
-
-	bool found = PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memory_allocate.memoryTypeIndex);
-
-	return vkAllocateMemory(device, &memory_allocate, nullptr, &memory);
-}
-
-VkResult Vulkan::Texture::write() {
-	const auto& device = Valkyrie::VulkanManager::getDevice();
-	assert(m_image_ptr->ready());
-	assert(image != NULL);
-	assert(memory != NULL);
+	assert(handle != VK_NULL_HANDLE);
+	assert(memory != VK_NULL_HANDLE);
 	VkResult result;
 	VkImageSubresource subresource = {};
 	subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 
 	VkSubresourceLayout subresource_layout = {};
 
-	vkGetImageSubresourceLayout(device, image, &subresource, &subresource_layout);
+	vkGetImageSubresourceLayout(device, handle, &subresource, &subresource_layout);
 	void* destination;
 	result = vkMapMemory(device, memory, 0, m_size, 0, &destination);
 	assert(result == VK_SUCCESS);
 	memcpy(destination, m_image_ptr->getData(), m_image_ptr->getSize());
 	vkUnmapMemory(device, memory);
-	return vkBindImageMemory(device, image, memory, 0);
+	return vkBindImageMemory(device, handle, memory, 0);
 }

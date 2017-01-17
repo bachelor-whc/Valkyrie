@@ -43,74 +43,76 @@ VkDevice VulkanManager::getDevice() {
 VkResult VulkanManager::initializeImage(Vulkan::Image& image) {
 	const auto& device = VulkanManager::getDevice();
 	VkResult result;
-
 	VkImageCreateInfo image_create = image.getImageCreate();
-
-	VkMemoryAllocateInfo memory_allocate = {};
-	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-
-	VkImageViewCreateInfo image_view_create = image.getImageViewCreate();
-
-	VkMemoryRequirements memory_requirements;
-
 	result = vkCreateImage(device, &image_create, nullptr, &image.handle);
-	vkGetImageMemoryRequirements(device, image.handle, &memory_requirements);
-	memory_allocate.allocationSize = memory_requirements.size;
-	Vulkan::PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memory_allocate.memoryTypeIndex);
-	result = vkAllocateMemory(device, &memory_allocate, nullptr, &image.memory);
-
-	result = vkBindImageMemory(device, image.handle, image.memory, 0);
-	image_view_create.image = image.handle;
+	assert(result == VK_SUCCESS);
+	allocateMemory(image);
+	VkImageViewCreateInfo image_view_create = image.getImageViewCreate();
 	result = vkCreateImageView(device, &image_view_create, nullptr, &image.view);
 	return result;
 }
 
-void VulkanManager::setImageLayout(VkImage image, VkImageAspectFlags aspect_mask, VkImageLayout old_image_layout, VkImageLayout new_image_layout) {
+VkResult VulkanManager::initializeTexture(Vulkan::Texture& texture) {
+	VkResult result = initializeImage(texture);
+	assert(result == VK_SUCCESS);
+	result = texture.write();
+	assert(result == VK_SUCCESS);
+	result = texture.initializeSampler();
+	assert(result == VK_SUCCESS);
+	texture.mask = VK_IMAGE_ASPECT_COLOR_BIT;
+	texture.oldLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+	texture.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	result = setImageLayout(texture);
+	assert(result == VK_SUCCESS);
+	return result;
+}
+
+VkResult VulkanManager::setImageLayout(const Vulkan::Image& image) {
 	VkImageMemoryBarrier image_memory_barrier = {};
 	image_memory_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-	image_memory_barrier.oldLayout = old_image_layout;
-	image_memory_barrier.newLayout = new_image_layout;
-	image_memory_barrier.image = image;
-	image_memory_barrier.subresourceRange.aspectMask = aspect_mask;
+	image_memory_barrier.oldLayout = image.oldLayout;
+	image_memory_barrier.newLayout = image.newLayout;
+	image_memory_barrier.image = image.handle;
+	image_memory_barrier.subresourceRange.aspectMask = image.mask;
 	image_memory_barrier.subresourceRange.baseMipLevel = 0;
 	image_memory_barrier.subresourceRange.levelCount = 1;
 	image_memory_barrier.subresourceRange.layerCount = 1;
 
-	if (old_image_layout == VK_IMAGE_LAYOUT_UNDEFINED) {
+	if (image.oldLayout == VK_IMAGE_LAYOUT_UNDEFINED) {
 		image_memory_barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
 	}
 
-	if (old_image_layout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
+	if (image.oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
 		image_memory_barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 	}
 
-	if (old_image_layout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL) {
+	if (image.oldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL) {
 		image_memory_barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 	}
 
-	if (old_image_layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+	if (image.oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
 		image_memory_barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
 	}
 
-	if (new_image_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
+	if (image.newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
 		image_memory_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 	}
 
-	if (new_image_layout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL) {
+	if (image.newLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL) {
 		image_memory_barrier.srcAccessMask = image_memory_barrier.srcAccessMask | VK_ACCESS_TRANSFER_READ_BIT;
 		image_memory_barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 	}
 
-	if (new_image_layout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
+	if (image.newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
 		image_memory_barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 		image_memory_barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 	}
 
-	if (new_image_layout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+	if (image.newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
 		image_memory_barrier.dstAccessMask = image_memory_barrier.dstAccessMask | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 	}
 
-	if (new_image_layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+	if (image.newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
 		image_memory_barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
 		image_memory_barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 	}
@@ -118,7 +120,11 @@ void VulkanManager::setImageLayout(VkImage image, VkImageAspectFlags aspect_mask
 	VkPipelineStageFlags source_flag = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 	VkPipelineStageFlags destination_flag = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 
-	vkCmdPipelineBarrier(getSetupCommandBuffer(), source_flag, destination_flag, 0, 0, NULL, 0, NULL, 1, &image_memory_barrier);
+	auto command_buffer = getSetupCommandBuffer();
+	command_buffer.begin();
+	vkCmdPipelineBarrier(command_buffer.handle, source_flag, destination_flag, 0, 0, NULL, 0, NULL, 1, &image_memory_barrier);
+	command_buffer.end();
+	return command_buffer.submit(getGraphicsQueue());
 }
 
 bool VulkanManager::getSupportFormat(VkFormat& format, const VkFlags flag) {
@@ -153,26 +159,6 @@ VulkanManager::~VulkanManager() {
 	Vulkan::DestroyInstance(m_instatnce);
 }
 
-void VulkanManager::initailizeTexture(Vulkan::Texture& texture) {
-	VkResult result;
-	result = texture.initializeImage();
-	assert(result == VK_SUCCESS);
-	result = texture.allocate();
-	assert(result == VK_SUCCESS);
-	result = texture.write();
-	assert(result == VK_SUCCESS);
-	result = texture.initializeSampler();
-	assert(result == VK_SUCCESS);
-	result = texture.initializeView();
-	assert(result == VK_SUCCESS);
-	result = m_setup_command_buffer.begin();
-	assert(result == VK_SUCCESS);
-	setImageLayout(texture.image, VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PREINITIALIZED, texture.layout);
-	m_setup_command_buffer.end();
-	result = m_setup_command_buffer.submit(m_graphics_queue);
-	assert(result == VK_SUCCESS);
-}
-
 Vulkan::CommandBuffer VulkanManager::createCommandBuffer() {
 	return gp_vulkan_manager->m_command_pool_ptr->createCommandBuffer();
 }
@@ -181,8 +167,27 @@ VulkanManager::VulkanManager() {
 	
 }
 
-VkCommandBuffer VulkanManager::getSetupCommandBuffer() {
-	return gp_vulkan_manager->m_setup_command_buffer.handle;
+Vulkan::CommandBuffer VulkanManager::getSetupCommandBuffer() {
+	return gp_vulkan_manager->m_setup_command_buffer;
+}
+
+VkResult VulkanManager::allocateMemory(Vulkan::Image & image) {
+	const auto& device = VulkanManager::getDevice();
+	VkResult result;
+
+	VkMemoryAllocateInfo memory_allocate = {};
+	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+
+	VkMemoryRequirements memory_requirements;
+	vkGetImageMemoryRequirements(device, image.handle, &memory_requirements);
+
+	memory_allocate.allocationSize = memory_requirements.size;
+	Vulkan::PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memory_allocate.memoryTypeIndex);
+	result = vkAllocateMemory(device, &memory_allocate, nullptr, &image.memory);
+	if (result != VK_SUCCESS)
+		return result;
+	result = vkBindImageMemory(device, image.handle, image.memory, 0);
+	return result;
 }
 
 void VulkanManager::initializeVulkan() {

@@ -66,7 +66,7 @@ VkResult RenderContext::render() {
 	submit.commandBufferCount = 1;
 	submit.pCommandBuffers = &renderCommands[mp_swapchain->getCurrent()].handle;
 
-	result = vkQueueSubmit(queue, 1, &submit, m_present_fence);
+	result = vkQueueSubmit(queue.handle, 1, &submit, m_present_fence);
 	assert(result == VK_SUCCESS);
 
 	do {
@@ -75,7 +75,7 @@ VkResult RenderContext::render() {
 	assert(result == VK_SUCCESS);
 	vkResetFences(VulkanManager::getDevice(), 1, &m_present_fence);
 
-	result = mp_swapchain->queuePresent(queue);
+	result = mp_swapchain->queuePresent(queue.handle);
 	assert(result == VK_SUCCESS);
 
 	return VK_SUCCESS;

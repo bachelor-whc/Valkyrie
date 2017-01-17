@@ -23,15 +23,16 @@ namespace Valkyrie {
 		static VkPhysicalDevice getPhysicalDevice();
 		static VkDevice getDevice();
 		static VkResult initializeImage(Vulkan::Image& image);
-		static void setImageLayout(VkImage image, VkImageAspectFlags aspect_mask, VkImageLayout old_image_layout, VkImageLayout new_image_layout);
+		static VkResult initializeTexture(Vulkan::Texture& texture);
+		static VkResult setImageLayout(const Vulkan::Image& image);
 		static bool getSupportFormat(VkFormat& format, const VkFlags flag);
-		static inline VkQueue getGraphicsQueue() { return gp_vulkan_manager->m_graphics_queue.handle; }
+		static inline Vulkan::Queue getGraphicsQueue() { return gp_vulkan_manager->m_graphics_queue; }
 		static Vulkan::CommandBuffer createCommandBuffer();
 		virtual ~VulkanManager();
 
-		void initailizeTexture(Vulkan::Texture& texture);
 	private:
-		static VkCommandBuffer getSetupCommandBuffer();
+		static Vulkan::CommandBuffer getSetupCommandBuffer();
+		static VkResult allocateMemory(Vulkan::Image& image);
 
 		void initializeVulkan();
 		void initializeInstance();

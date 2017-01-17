@@ -156,31 +156,16 @@ VkResult SwapChain::initializeImages(const Surface& surface) {
 	m_buffers.resize(buffer_count);
 
 	for (uint32_t i = 0; i < getImageCount(); i++) {
-		VkImageViewCreateInfo image_view_create = {};
-		image_view_create.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		VkImageViewCreateInfo image_view_create = m_buffers[i].getImageViewCreate();
 		image_view_create.format = surface.format.format;
-		image_view_create.components.r = VK_COMPONENT_SWIZZLE_R;
-		image_view_create.components.g = VK_COMPONENT_SWIZZLE_G;
-		image_view_create.components.b = VK_COMPONENT_SWIZZLE_B;
-		image_view_create.components.a = VK_COMPONENT_SWIZZLE_A;
-		image_view_create.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		image_view_create.subresourceRange.baseMipLevel = 0;
-		image_view_create.subresourceRange.levelCount = 1;
-		image_view_create.subresourceRange.baseArrayLayer = 0;
-		image_view_create.subresourceRange.layerCount = 1;
-		image_view_create.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		image_view_create.flags = 0;
+		image_view_create.image = m_buffers[i].handle;
 
-		m_buffers[i].image = swapchain_images[i];
+		m_buffers[i].handle = swapchain_images[i];
+		m_buffers[i].mask = VK_IMAGE_ASPECT_COLOR_BIT;
+		m_buffers[i].oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		m_buffers[i].newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-		Valkyrie::VulkanManager::setImageLayout(
-			m_buffers[i].image,
-			VK_IMAGE_ASPECT_COLOR_BIT,
-			VK_IMAGE_LAYOUT_UNDEFINED,
-			VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
-		);
-
-		image_view_create.image = m_buffers[i].image;
+		Valkyrie::VulkanManager::setImageLayout(m_buffers[i]);
 
 		result = vkCreateImageView(device, &image_view_create, nullptr, &m_buffers[i].view);
 		if(result != VK_SUCCESS)
@@ -226,4 +211,14 @@ void Vulkan::DestroyFramebuffers(Framebuffers& framebuffers) {
 	for (auto& framebuffer : framebuffers.handles) {
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}
+}
+
+VkImageCreateInfo SwapChainBuffer::getImageCreate() const {
+	VkImageCreateInfo create = {};
+	return create;
+}
+
+VkImageViewCreateInfo SwapChainBuffer::getImageViewCreate() const {
+	VkImageViewCreateInfo create = VK_DEFAULT_SWAPCHAIN_IMAGE_VIEW_CREATE_INFO;
+	return create;
 }

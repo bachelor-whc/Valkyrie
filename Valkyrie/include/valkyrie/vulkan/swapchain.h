@@ -1,5 +1,6 @@
 #ifndef _VULKAN_SWAPCHAIN_H
 #define _VULKAN_SWAPCHAIN_H
+#include "valkyrie/vulkan/image.h"
 #include "common.h"
 
 namespace Vulkan {
@@ -10,9 +11,11 @@ namespace Vulkan {
 	struct RenderPass;
 	struct Queue;
 	
-	struct SwapChainBuffer {
-		VkImage image = NULL;
-		VkImageView view = NULL;
+	struct SwapChainBuffer : public Image {
+		/// \brief This function is useless.
+		/// vkGetSwapchainImagesKHR will create image and allocate memory.
+		virtual VkImageCreateInfo getImageCreate() const;
+		virtual VkImageViewCreateInfo getImageViewCreate() const;
 	};
 
 	struct Framebuffers {
@@ -43,8 +46,8 @@ namespace Vulkan {
 		inline uint32_t getImageCount() const { return (uint32_t)m_buffers.size(); }
 		inline uint32_t getCurrent() const { return m_current_buffer; }
 		inline Framebuffers* getFramebuffers() const { return mp_framebuffers; }
-		inline VkImage getCurrentImage() const { return m_buffers[m_current_buffer].image; }
-		inline VkImage getImage(int index) const { return m_buffers[index].image; }
+		inline VkImage getCurrentImage() const { return m_buffers[m_current_buffer].handle; }
+		inline VkImage getImage(int index) const { return m_buffers[index].handle; }
 		VkResult acquireNextImage(uint64_t timeout, const VkSemaphore semaphore, const VkFence fence);
 		VkResult queuePresent(const VkQueue& queue);
 
