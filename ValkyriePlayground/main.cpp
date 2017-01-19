@@ -16,18 +16,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	std::string title("Playground");
 	ValkyrieEngine::initializeValkyrieEngine();
-	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
-	window_manager.createMainWindow(title, width, height);
 	auto& valkyrie = *ValkyrieEngine::getGlobalValkyriePtr();
-	valkyrie.initialize();
-	
-	auto& main_window_ptr = window_manager.getMainWindowPtr();
-	RenderContextPtr render_context_ptr = MAKE_SHARED(RenderContext)(main_window_ptr);
-
 	while (valkyrie.execute()) {
 
 	}
-	render_context_ptr.reset();
 	ValkyrieEngine::closeValkyrieEngine();
 	return 0;
 }

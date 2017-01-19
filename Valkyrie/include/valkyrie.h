@@ -34,7 +34,6 @@ public:
 	virtual ~ValkyrieEngine();
 
 	virtual bool execute();
-	virtual VkResult initialize();
 
 	inline double getFPS() { return (1 / m_deltatime); }
 
@@ -47,12 +46,10 @@ private:
 	static ValkyrieEngine* gp_valkyrie;
 
 private:
+	virtual VkResult initialize();
 	void initializeImGuiInput();
 	void updateUserInput(const SDL_Event& s_event);
 	void updateTime();
-
-private:
-	std::map<std::string, Valkyrie::RenderPFN> m_render_pfns;
 
 private:
 	Valkyrie::RenderContextPtr m_render_context_ptr;

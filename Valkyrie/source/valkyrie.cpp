@@ -6,6 +6,7 @@
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/utility/sdl_manager.h"
 #include "valkyrie/utility/vulkan_manager.h"
+#include "valkyrie/render_context.h"
 
 ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
 bool ValkyrieEngine::SDLInitialized = false;
@@ -34,23 +35,33 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 		return 5;
 	if (result_vm != 0)
 		return 6;
+	const int width = 1024;
+	const int height = 768;
+	std::string title("Playground");
+	ValkyrieEngine::initializeValkyrieEngine();
+	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	window_manager.createMainWindow(title, width, height);
+	auto& main_window_ptr = window_manager.getMainWindowPtr();
+	gp_valkyrie->m_render_context_ptr = MAKE_SHARED(Valkyrie::RenderContext)(main_window_ptr);
+	gp_valkyrie->initialize();
 	return 0;
 }
 
 void ValkyrieEngine::closeValkyrieEngine() {
+	if (gp_valkyrie != nullptr)
+		delete gp_valkyrie;
+	gp_valkyrie = nullptr;
 	Valkyrie::VulkanManager::close();
 	Valkyrie::WindowManager::close();
 	Valkyrie::SDLManager::close();
 	Valkyrie::AssetManager::close();
 	Valkyrie::ThreadManager::close();
-	if(gp_valkyrie != nullptr)
-		delete gp_valkyrie;
-	gp_valkyrie = nullptr;
+	
 }
 
 ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	m_application_name(application_name),
-	m_render_pfns() {
+	m_render_context_ptr() {
 	
 }
 
