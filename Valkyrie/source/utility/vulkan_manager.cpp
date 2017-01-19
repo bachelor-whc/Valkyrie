@@ -55,14 +55,14 @@ VkResult VulkanManager::initializeImage(Vulkan::Image& image) {
 VkResult VulkanManager::initializeTexture(Vulkan::Texture& texture) {
 	VkResult result = initializeImage(texture);
 	assert(result == VK_SUCCESS);
-	result = texture.write();
-	assert(result == VK_SUCCESS);
-	result = texture.initializeSampler();
-	assert(result == VK_SUCCESS);
 	texture.mask = VK_IMAGE_ASPECT_COLOR_BIT;
 	texture.oldLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
 	texture.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	result = setImageLayout(texture);
+	assert(result == VK_SUCCESS);
+	result = texture.write();
+	assert(result == VK_SUCCESS);
+	result = texture.initializeSampler();
 	assert(result == VK_SUCCESS);
 	return result;
 }
@@ -171,7 +171,7 @@ Vulkan::CommandBuffer VulkanManager::getSetupCommandBuffer() {
 	return gp_vulkan_manager->m_setup_command_buffer;
 }
 
-VkResult VulkanManager::allocateMemory(Vulkan::Image & image) {
+VkResult VulkanManager::allocateMemory(Vulkan::Image& image) {
 	const auto& device = VulkanManager::getDevice();
 	VkResult result;
 
@@ -182,7 +182,7 @@ VkResult VulkanManager::allocateMemory(Vulkan::Image & image) {
 	vkGetImageMemoryRequirements(device, image.handle, &memory_requirements);
 
 	memory_allocate.allocationSize = memory_requirements.size;
-	Vulkan::PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memory_allocate.memoryTypeIndex);
+	Vulkan::PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, image.getMemoryType(), memory_allocate.memoryTypeIndex);
 	result = vkAllocateMemory(device, &memory_allocate, nullptr, &image.memory);
 	if (result != VK_SUCCESS)
 		return result;

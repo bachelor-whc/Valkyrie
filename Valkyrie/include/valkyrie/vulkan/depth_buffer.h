@@ -19,6 +19,7 @@ namespace Vulkan{
 		virtual VkAttachmentDescription getAttachmentDescription() const;
 		virtual VkImageCreateInfo getImageCreate() const;
 		virtual VkImageViewCreateInfo getImageViewCreate() const;
+		virtual VkFlags getMemoryType() const;
 
 	private:
 		uint32_t m_width;

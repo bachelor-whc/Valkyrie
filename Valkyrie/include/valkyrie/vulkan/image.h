@@ -17,6 +17,7 @@ namespace Vulkan {
 
 		virtual VkImageCreateInfo getImageCreate() const = 0;
 		virtual VkImageViewCreateInfo getImageViewCreate() const = 0;
+		virtual VkFlags getMemoryType() const = 0;
 	private:
 		
 	};

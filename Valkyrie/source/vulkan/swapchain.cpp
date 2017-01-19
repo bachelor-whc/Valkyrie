@@ -219,3 +219,7 @@ VkImageViewCreateInfo SwapChainBuffer::getImageViewCreate() const {
 	VkImageViewCreateInfo create = VK_DEFAULT_SWAPCHAIN_IMAGE_VIEW_CREATE_INFO;
 	return create;
 }
+
+VkFlags SwapChainBuffer::getMemoryType() const {
+	return VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;;
+}

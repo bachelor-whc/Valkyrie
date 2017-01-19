@@ -7,7 +7,7 @@
 using namespace Vulkan;
 
 Texture::Texture(const Valkyrie::ImageMemoryPointer & image_ptr) : m_image_ptr(image_ptr) {
-
+	m_size = m_image_ptr->getSize();
 }
 
 Texture::~Texture() {
@@ -26,6 +26,10 @@ VkImageViewCreateInfo Texture::getImageViewCreate() const {
 	VkImageViewCreateInfo create = VK_DEFAULT_TEXTURE_IMAGE_VIEW_CREATE_INFO;
 	create.image = handle;
 	return create;
+}
+
+VkFlags Vulkan::Texture::getMemoryType() const {
+	return VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
 }
 
 VkResult Texture::initializeSampler() {
@@ -79,4 +83,13 @@ VkResult Texture::write() {
 	memcpy(destination, m_image_ptr->getData(), m_image_ptr->getSize());
 	vkUnmapMemory(device, memory);
 	return vkBindImageMemory(device, handle, memory, 0);
+}
+
+VkWriteDescriptorSet Vulkan::Texture::getWriteSet() {
+	VkWriteDescriptorSet write = {};
+	write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	write.descriptorCount = 1;
+	write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	write.pImageInfo = getInformationPointer();
+	return write;
 }

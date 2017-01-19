@@ -17,6 +17,7 @@ namespace Vulkan {
 		/// vkGetSwapchainImagesKHR will create image and allocate memory.
 		virtual VkImageCreateInfo getImageCreate() const;
 		virtual VkImageViewCreateInfo getImageViewCreate() const;
+		virtual VkFlags getMemoryType() const;
 	};
 
 	struct Framebuffers {

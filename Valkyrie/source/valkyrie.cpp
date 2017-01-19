@@ -136,8 +136,7 @@ bool ValkyrieEngine::execute() {
 		updateUserInput(s_event);
 	}
 	updateTime();
-	if (m_render_context_ptr != nullptr)
-		m_render_context_ptr->render();
+	m_render_context_ptr->render();
 	return true;
 }
 
@@ -145,10 +144,6 @@ VkResult ValkyrieEngine::initialize() {
 	VkResult result;
 
 	SDL_StartTextInput();
-
-	// VULKAN MANAGER
-	// RENDER CONTEXT
-	
 	initializeImGuiInput();
 
 	return VK_SUCCESS;

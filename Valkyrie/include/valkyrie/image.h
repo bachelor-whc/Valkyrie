@@ -26,7 +26,6 @@ namespace Valkyrie {
 	private:
 		int m_width;
 		int m_height;
-		size_t m_size;
 	};
 
 	typedef std::shared_ptr<RGBA32Memory> ImageMemoryPointer;

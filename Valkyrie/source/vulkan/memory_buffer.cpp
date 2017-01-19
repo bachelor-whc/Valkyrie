@@ -81,17 +81,22 @@ void MemoryBuffer::endWriting() {
 	m_writing_state = false;
 }
 
-VkDescriptorBufferInfo* Vulkan::MemoryBuffer::getInformationPointer() {
-	return getInformationPointer(0, m_size);
+VkWriteDescriptorSet MemoryBuffer::getWriteSet() {
+	VkWriteDescriptorSet write = {};
+	write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	write.descriptorCount = 1;
+	write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	write.pBufferInfo = getInformationPointer();
+	return write;
 }
 
-VkDescriptorBufferInfo* MemoryBuffer::getInformationPointer(const uint32_t offset, const uint32_t size) {
+VkDescriptorBufferInfo* MemoryBuffer::getInformationPointer() {
 	if (mp_information == nullptr) {
 		mp_information = NEW_NT VkDescriptorBufferInfo();
 		assert(mp_information != nullptr);
 		mp_information->buffer = handle;
-		mp_information->range = size;
-		mp_information->offset = offset;
+		mp_information->range = m_size;
+		mp_information->offset = 0;
 	}
 	return mp_information;
 }

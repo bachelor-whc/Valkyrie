@@ -2,12 +2,14 @@
 #define _VULKAN_MEMORY_BUFFER_H
 #include "common.h"
 #include "valkyrie/vulkan/default_create_info.h"
+#include "valkyrie/vulkan/set_updatable.h"
 
 namespace Vulkan {
 	struct PhysicalDevice;
 	struct Device;
 
-	struct MemoryBuffer {
+	struct MemoryBuffer : 
+		public SetUpdable {
 		MemoryBuffer();
 		~MemoryBuffer();
 
@@ -15,13 +17,16 @@ namespace Vulkan {
 		VkResult write(const void *data, const uint32_t offset, const uint32_t size);
 		void* startWriting(const uint32_t offset, const uint32_t size);
 		void endWriting();
-		VkDescriptorBufferInfo* getInformationPointer();
-		VkDescriptorBufferInfo* getInformationPointer(const uint32_t offset, const uint32_t size);
+		
+		virtual VkWriteDescriptorSet getWriteSet();
+
 		inline uint32_t getSize() { return m_size; }
 
 		VkBuffer handle = VK_NULL_HANDLE;
 		VkDeviceMemory memory = VK_NULL_HANDLE;
 	private:
+		VkDescriptorBufferInfo* getInformationPointer();
+
 		uint32_t m_size = 0;
 		VkDescriptorBufferInfo* mp_information = nullptr;
 		bool m_writing_state = false;

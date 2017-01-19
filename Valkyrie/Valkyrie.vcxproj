@@ -63,6 +63,7 @@
     <ClInclude Include="include\valkyrie\vulkan\pipeline_module.h" />
     <ClInclude Include="include\valkyrie\vulkan\queue.h" />
     <ClInclude Include="include\valkyrie\vulkan\render_pass.h" />
+    <ClInclude Include="include\valkyrie\vulkan\set_updatable.h" />
     <ClInclude Include="include\valkyrie\vulkan\shader.h" />
     <ClInclude Include="include\valkyrie\vulkan\surface.h" />
     <ClInclude Include="include\valkyrie\vulkan\swapchain.h" />

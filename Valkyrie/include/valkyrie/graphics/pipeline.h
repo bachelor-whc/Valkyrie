@@ -18,20 +18,14 @@ namespace Valkyrie {
 			Pipeline();
 			virtual ~Pipeline();
 
-			void writeSets(const std::vector<VkWriteDescriptorSet>& writes);
 			void initializePipeline();
-			void initializeDescriptorPool();
-			void initializeDescriptorSets();
-			void initializeShaderModules();
-			void initializePipelineLayout(const std::string& pipeline_name);
-			void initializeDescriptorSetLayouts();
 
 			Vulkan::VertexInput vertexInput;
-			Vulkan::DescriptorPool descriptorPool;
+			Vulkan::DescriptorPoolPtr descriptorPoolPtr;
+			std::map<ShaderStage, Vulkan::ShaderPointer> shaders;
 
 		private:
 			Vulkan::PipelineModule module;
-			std::map<ShaderStage, Vulkan::ShaderPointer> shaders;
 		};
 	}
 }

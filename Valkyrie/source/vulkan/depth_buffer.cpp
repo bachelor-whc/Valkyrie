@@ -44,3 +44,7 @@ VkImageViewCreateInfo DepthBuffer::getImageViewCreate() const {
 	create.image = handle;
 	return create;
 }
+
+VkFlags DepthBuffer::getMemoryType() const {
+	return VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+}

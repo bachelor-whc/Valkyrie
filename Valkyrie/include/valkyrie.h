@@ -19,6 +19,7 @@
 #include "valkyrie/UI/window.h"
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/render_context.h"
+#include "valkyrie/utility/vulkan_manager.h"
 
 class ValkyrieEngine {
 public:
