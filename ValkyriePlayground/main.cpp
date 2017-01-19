@@ -140,6 +140,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = duck_transform.getWorldMatrix();
 		normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
 	}
+	render_context_ptr.reset();
 	ValkyrieEngine::closeValkyrieEngine();
 	return 0;
 }
