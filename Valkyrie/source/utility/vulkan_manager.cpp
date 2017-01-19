@@ -55,14 +55,14 @@ VkResult VulkanManager::initializeImage(Vulkan::Image& image) {
 VkResult VulkanManager::initializeTexture(Vulkan::Texture& texture) {
 	VkResult result = initializeImage(texture);
 	assert(result == VK_SUCCESS);
+	result = texture.write();
+	assert(result == VK_SUCCESS);
+	result = texture.initializeSampler();
+	assert(result == VK_SUCCESS);
 	texture.mask = VK_IMAGE_ASPECT_COLOR_BIT;
 	texture.oldLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
 	texture.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	result = setImageLayout(texture);
-	assert(result == VK_SUCCESS);
-	result = texture.write();
-	assert(result == VK_SUCCESS);
-	result = texture.initializeSampler();
 	assert(result == VK_SUCCESS);
 	return result;
 }

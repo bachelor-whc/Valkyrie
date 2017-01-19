@@ -21,17 +21,20 @@ namespace Valkyrie {
 		inline VkFramebuffer getFramebuffer(int index) { return mp_swapchain->getFramebuffers()->handles[index]; }
 		inline VkImage getSwapChainImage(int index) { return mp_swapchain->getImage(index); }
 		inline int getCurrentBuffer() { return mp_swapchain->getCurrent(); }
+		VkRenderPassBeginInfo getRenderPassBegin();
+		std::vector<Vulkan::CommandBuffer> renderCommands;
+
+		void commandSetViewport(const Vulkan::CommandBuffer& command_buffer);
+		void commandSetScissor(const Vulkan::CommandBuffer& command_buffer);
+
 	private:
 		void initializeSwapChain();
 		void initializeDepthBuffer();
 		void initializeRenderPass();
 		void initializeFramebuffers();
 		void initializeSurface();
-		void commandSetViewport(const Vulkan::CommandBuffer& command_buffer);
-		void commandSetScissor(const Vulkan::CommandBuffer& command_buffer);
-
+		
 		WindowPtr m_window_ptr;
-		std::vector<Vulkan::CommandBuffer> renderCommands;
 		Vulkan::CommandBuffer m_present_command_buffer;
 		Vulkan::Surface m_surface;
 		Vulkan::SwapChain* mp_swapchain;

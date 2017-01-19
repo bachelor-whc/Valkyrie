@@ -2,6 +2,7 @@
 #include "valkyrie/utility/vulkan_manager.h"
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/UI/window.h"
+#include "valkyrie/vulkan/default_create_info.h"
 using namespace Valkyrie;
 
 RenderContext::RenderContext(const WindowPtr& window_ptr) : m_window_ptr(window_ptr) {
@@ -75,6 +76,14 @@ VkResult RenderContext::render() {
 	assert(result == VK_SUCCESS);
 
 	return VK_SUCCESS;
+}
+
+VkRenderPassBeginInfo Valkyrie::RenderContext::getRenderPassBegin() {
+	auto rpb = VK_DEFAULT_RENDER_PASS_BEGIN;
+	rpb.renderArea.extent.width = m_window_ptr->getWidth();
+	rpb.renderArea.extent.height = m_window_ptr->getHeight();
+	rpb.renderPass = m_render_pass.handle;
+	return rpb;
 }
 
 void RenderContext::initializeSwapChain() {

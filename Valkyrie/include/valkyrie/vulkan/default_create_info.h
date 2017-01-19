@@ -134,4 +134,35 @@ const VkImageViewCreateInfo VK_DEFAULT_SWAPCHAIN_IMAGE_VIEW_CREATE_INFO = {
 	}
 };
 
+const VkClearValue VK_DEFAULT_COLOR_CLEAR_VALUE = {
+	{
+		0.1f,
+		0.1f,
+		0.1f,
+		0.1f
+	}
+};
+
+const VkClearValue VK_DEFAULT_DEPTH_CLEAR_VALUE = {
+	{
+		1.0f,
+		0
+	}
+};
+
+const VkClearValue VK_DEFAULT_CLEAR_VALUES[2] = {
+	VK_DEFAULT_COLOR_CLEAR_VALUE,
+	VK_DEFAULT_DEPTH_CLEAR_VALUE
+};
+
+const VkRenderPassBeginInfo VK_DEFAULT_RENDER_PASS_BEGIN = {
+	VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+	nullptr,
+	VK_NULL_HANDLE,
+	VK_NULL_HANDLE,
+	{ },
+	2,
+	VK_DEFAULT_CLEAR_VALUES
+};
+
 #endif

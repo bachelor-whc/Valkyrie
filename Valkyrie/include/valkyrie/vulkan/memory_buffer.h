@@ -19,13 +19,13 @@ namespace Vulkan {
 		void endWriting();
 		
 		virtual VkWriteDescriptorSet getWriteSet();
+		VkDescriptorBufferInfo* getInformationPointer();
 
 		inline uint32_t getSize() { return m_size; }
 
 		VkBuffer handle = VK_NULL_HANDLE;
 		VkDeviceMemory memory = VK_NULL_HANDLE;
 	private:
-		VkDescriptorBufferInfo* getInformationPointer();
 
 		uint32_t m_size = 0;
 		VkDescriptorBufferInfo* mp_information = nullptr;

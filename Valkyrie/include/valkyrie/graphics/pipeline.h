@@ -4,6 +4,7 @@
 #include "valkyrie/vulkan/vertex_input.h"
 #include "valkyrie/vulkan/shader.h"
 #include "valkyrie/vulkan/descriptor.h"
+#include "valkyrie/vulkan/command_buffer.h"
 #include "common.h"
 
 namespace Valkyrie {
@@ -18,11 +19,12 @@ namespace Valkyrie {
 			Pipeline();
 			virtual ~Pipeline();
 
-			void initializePipeline();
+			void initialize();
+			void commandBind(const Vulkan::CommandBuffer& command);
 
 			Vulkan::VertexInput vertexInput;
 			Vulkan::DescriptorPoolPtr descriptorPoolPtr;
-			std::map<ShaderStage, Vulkan::ShaderPointer> shaders;
+			std::map<ShaderStage, Vulkan::ShaderPointer> shaderPtrs;
 
 		private:
 			Vulkan::PipelineModule module;

@@ -59,6 +59,10 @@ void ValkyrieEngine::closeValkyrieEngine() {
 	
 }
 
+Valkyrie::RenderContextPtr ValkyrieEngine::getRenderContextPtr() {
+	return m_render_context_ptr;
+}
+
 ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	m_application_name(application_name),
 	m_render_context_ptr() {

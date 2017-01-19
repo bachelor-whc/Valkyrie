@@ -24,6 +24,7 @@ namespace Vulkan {
 		void addPoolSize(VkDescriptorType type, uint32_t count);
 		VkResult initializePool(uint32_t max_set);
 		VkResult initializeSets();
+		std::vector<VkDescriptorSetLayout> getSetLayoutHandles();
 		void updateDescriptorSet(SetUpdable& write, const uint32_t set_index, const uint32_t binding);
 
 		VkDescriptorPool handle = VK_NULL_HANDLE;
@@ -31,7 +32,6 @@ namespace Vulkan {
 		std::vector<VkDescriptorSet> sets;
 	private:
 		VkResult initializeSetLayouts();
-		std::vector<VkDescriptorSetLayout> getSetLayoutHandles();
 		uint32_t m_max_sets = 0;
 		std::vector<VkDescriptorPoolSize> m_pool_sizes;
 	};

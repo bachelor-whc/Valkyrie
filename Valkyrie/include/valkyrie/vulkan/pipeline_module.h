@@ -11,12 +11,12 @@ namespace Vulkan {
 	struct PipelineModule {
 		static VkPipelineCache cache;
 		static VkResult initializeCache();
-		VkResult initializeLayout(const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
 
 		PipelineModule();
 		virtual ~PipelineModule();
 
 		VkResult initialize();
+		VkResult initializeLayout(const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
 		void setRenderPass(const RenderPass& render_pass, uint32_t index);
 		void setVertexInput(const VertexInput& vertex_input);
 

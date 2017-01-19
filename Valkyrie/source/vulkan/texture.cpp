@@ -6,7 +6,7 @@
 #include "valkyrie/vulkan/default_create_info.h"
 using namespace Vulkan;
 
-Texture::Texture(const Valkyrie::ImageMemoryPointer & image_ptr) : m_image_ptr(image_ptr) {
+Texture::Texture(const Valkyrie::ImageMemoryPointer& image_ptr) : m_image_ptr(image_ptr) {
 	m_size = m_image_ptr->getSize();
 }
 
@@ -89,7 +89,7 @@ VkWriteDescriptorSet Vulkan::Texture::getWriteSet() {
 	VkWriteDescriptorSet write = {};
 	write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 	write.descriptorCount = 1;
-	write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	write.pImageInfo = getInformationPointer();
 	return write;
 }
