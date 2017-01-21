@@ -101,23 +101,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mesh_renderer.recordDrawCommand(command);
 
 		vkCmdEndRenderPass(command.handle);
-
-		VkImageMemoryBarrier previous_present_barrier = {};
-		previous_present_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		previous_present_barrier.pNext = NULL;
-		previous_present_barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		previous_present_barrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-		previous_present_barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		previous_present_barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-		previous_present_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		previous_present_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		previous_present_barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		previous_present_barrier.subresourceRange.baseMipLevel = 0;
-		previous_present_barrier.subresourceRange.levelCount = 1;
-		previous_present_barrier.subresourceRange.baseArrayLayer = 0;
-		previous_present_barrier.subresourceRange.layerCount = 1;
-		previous_present_barrier.image = render_context_ptr->getSwapChainImage(i);
-		vkCmdPipelineBarrier(command.handle, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, NULL, 0, NULL, 1, &previous_present_barrier);
 		result = command.end();
 		assert(result == VK_SUCCESS);
 	}
