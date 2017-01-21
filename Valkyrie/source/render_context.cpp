@@ -19,13 +19,6 @@ RenderContext::RenderContext(const WindowPtr& window_ptr) : m_window_ptr(window_
 
 	VkResult result;
 
-	VkFenceCreateInfo present_fence_create = {};
-	present_fence_create.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-	present_fence_create.pNext = nullptr;
-	present_fence_create.flags = 0;
-	result = vkCreateFence(device, &present_fence_create, nullptr, &m_present_fence);
-	assert(result == VK_SUCCESS);
-
 	VkSemaphoreCreateInfo present_semaphore_create = {};
 	present_semaphore_create.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 	present_semaphore_create.pNext = nullptr;
@@ -37,7 +30,6 @@ RenderContext::RenderContext(const WindowPtr& window_ptr) : m_window_ptr(window_
 RenderContext::~RenderContext() {
 	const auto& device = VulkanManager::getDevice();
 	vkDestroySemaphore(device, m_present_semaphore, nullptr);
-	vkDestroyFence(device, m_present_fence, nullptr);
 	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
 	DestroySwapChain(*mp_swapchain);
 	DestroySurface(m_surface);
@@ -51,9 +43,18 @@ RenderContext::~RenderContext() {
 
 VkResult RenderContext::render() {
 	VkResult result;
+	const auto& device = VulkanManager::getDevice();
 	const auto& queue = VulkanManager::getGraphicsQueue();
 
-	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, m_present_fence);
+	VkFence fence = VK_NULL_HANDLE;
+	VkFenceCreateInfo present_fence_create = {};
+	present_fence_create.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	present_fence_create.pNext = nullptr;
+	present_fence_create.flags = 0;
+	result = vkCreateFence(device, &present_fence_create, nullptr, &fence);
+	assert(result == VK_SUCCESS);
+
+	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, VK_NULL_HANDLE);
 	assert(result == VK_SUCCESS);
 
 	const VkPipelineStageFlags wait_stage_mask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -66,14 +67,14 @@ VkResult RenderContext::render() {
 	submit.pWaitDstStageMask = &wait_stage_mask;
 	submit.waitSemaphoreCount = 1;
 
-	result = vkQueueSubmit(queue.handle, 1, &submit, m_present_fence);
+	result = vkQueueSubmit(queue.handle, 1, &submit, fence);
 	assert(result == VK_SUCCESS);
 
 	do {
-		result = vkWaitForFences(VulkanManager::getDevice(), 1, &m_present_fence, VK_TRUE, 100000000);
+		result = vkWaitForFences(VulkanManager::getDevice(), 1, &fence, VK_TRUE, 100000000);
 	} while (result == VK_TIMEOUT);
 	assert(result == VK_SUCCESS);
-	vkResetFences(VulkanManager::getDevice(), 1, &m_present_fence);
+	vkDestroyFence(device, fence, nullptr);
 
 	result = mp_swapchain->queuePresent(queue.handle);
 	assert(result == VK_SUCCESS);

@@ -54,8 +54,8 @@ VkAttachmentDescription Surface::getAttachmentDescription() const {
 	attachment_description.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	attachment_description.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	attachment_description.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	attachment_description.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-	attachment_description.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	attachment_description.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	attachment_description.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 	attachment_description.flags = 0;
 	return attachment_description;
 }

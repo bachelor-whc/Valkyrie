@@ -42,7 +42,6 @@ namespace Valkyrie {
 		Vulkan::RenderPass m_render_pass;
 		VkViewport m_viewport = {};
 		VkRect2D m_scissor = {};
-		VkFence m_present_fence = VK_NULL_HANDLE;
 		VkSemaphore m_present_semaphore = VK_NULL_HANDLE;
 	};
 

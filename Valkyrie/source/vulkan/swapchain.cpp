@@ -155,7 +155,7 @@ VkResult SwapChain::initializeImages(const Surface& surface) {
 		m_buffers[i].oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		m_buffers[i].newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-		Valkyrie::VulkanManager::setImageLayout(m_buffers[i]);
+		//Valkyrie::VulkanManager::setImageLayout(m_buffers[i]);
 
 		result = vkCreateImageView(device, &image_view_create, nullptr, &m_buffers[i].view);
 		if(result != VK_SUCCESS)
