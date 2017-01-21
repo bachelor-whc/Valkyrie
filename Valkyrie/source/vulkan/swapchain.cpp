@@ -26,26 +26,19 @@ Framebuffers::~Framebuffers() {
 
 void Framebuffers::initialize(const RenderPass& render_pass, const int width, const int height) {
 	const auto& device = Valkyrie::VulkanManager::getDevice();
-	int extended_count = extendedAttachments.size();
-	std::vector<VkImageView> attachments(1 + extended_count);
-	if(extended_count > 0) {
-		VkImageView* destination = attachments.data();
-		destination += 1;
-		memcpy(destination, extendedAttachments.data(), extended_count * sizeof(VkImageView));
-	}
 
 	VkFramebufferCreateInfo frame_buffer_info = {};
 	frame_buffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 	frame_buffer_info.renderPass = render_pass.handle;
-	frame_buffer_info.attachmentCount = attachments.size();
-	frame_buffer_info.pAttachments = attachments.data();
+	frame_buffer_info.attachmentCount = extendedAttachments.size();
+	frame_buffer_info.pAttachments = extendedAttachments.data();
 	frame_buffer_info.width = width;
 	frame_buffer_info.height = height;
 	frame_buffer_info.layers = 1;
 
 	VkResult result;
 	for (int i = 0; i < m_count; ++i) {
-		attachments[0] = m_swap_chain_views[i];
+		extendedAttachments[0] = m_swap_chain_views[i];
 		result = vkCreateFramebuffer(device, &frame_buffer_info, nullptr, &handles[i]);
 		assert(result == VK_SUCCESS);
 	}
@@ -178,9 +171,11 @@ void SwapChain::initializeFramebuffers(const RenderPass& render_pass, const VkIm
 	mp_framebuffers = NEW_NT Framebuffers(VALKYRIE_FRAME_BUFFER_COUNT, m_buffers);
 	assert(mp_framebuffers != nullptr && m_images_initialized);
 	mp_framebuffers->extendedAttachments.resize(count);
-	memcpy(mp_framebuffers->extendedAttachments.data(), 
+	memcpy(
+		mp_framebuffers->extendedAttachments.data() + 1, 
 		extended_attachments, 
-		count * sizeof(VkImageView));
+		sizeof(VkImageView)
+	);
 	mp_framebuffers->initialize(render_pass, m_width, m_height);
 }
 
@@ -221,5 +216,5 @@ VkImageViewCreateInfo SwapChainBuffer::getImageViewCreate() const {
 }
 
 VkFlags SwapChainBuffer::getMemoryType() const {
-	return VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;;
+	return VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 }

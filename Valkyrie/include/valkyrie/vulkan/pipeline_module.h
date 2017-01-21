@@ -17,7 +17,7 @@ namespace Vulkan {
 
 		VkResult initialize();
 		VkResult initializeLayout(const std::vector<VkDescriptorSetLayout>& descriptor_set_layouts);
-		void setRenderPass(const RenderPass& render_pass, uint32_t index);
+		void setRenderPass(const VkRenderPass render_pass);
 		void setVertexInput(const VertexInput& vertex_input);
 
 		VkPipeline handle = VK_NULL_HANDLE;

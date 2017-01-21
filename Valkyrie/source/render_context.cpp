@@ -56,12 +56,15 @@ VkResult RenderContext::render() {
 	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, m_present_fence);
 	assert(result == VK_SUCCESS);
 
+	const VkPipelineStageFlags wait_stage_mask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	VkSubmitInfo submit = {};
 	submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submit.waitSemaphoreCount = 1;
 	submit.pWaitSemaphores = &m_present_semaphore;
 	submit.commandBufferCount = 1;
 	submit.pCommandBuffers = &renderCommands[mp_swapchain->getCurrent()].handle;
+	submit.pWaitDstStageMask = &wait_stage_mask;
+	submit.waitSemaphoreCount = 1;
 
 	result = vkQueueSubmit(queue.handle, 1, &submit, m_present_fence);
 	assert(result == VK_SUCCESS);

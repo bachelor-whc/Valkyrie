@@ -77,12 +77,13 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto fragment_shader = MAKE_SHARED(Vulkan::Shader)(fragment_code, VK_SHADER_STAGE_FRAGMENT_BIT);
 	pipeline.shaderPtrs[Graphics::Pipeline::ShaderStage::VERTEX] = vertex_shader;
 	pipeline.shaderPtrs[Graphics::Pipeline::ShaderStage::FRAGMENT] = fragment_shader;
-	pipeline.initialize();
+	
+	auto render_context_ptr = valkyrie.getRenderContextPtr();
+	pipeline.initialize(render_context_ptr);
 
 	pipeline.descriptorPoolPtr->updateDescriptorSet(normal_uniform_buffer, 0, 0);
 	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 0, 1);
 
-	auto render_context_ptr = valkyrie.getRenderContextPtr();
 	VkRenderPassBeginInfo render_pass_begin = render_context_ptr->getRenderPassBegin();
 	int render_command_size = render_context_ptr->renderCommands.size();
 	
@@ -105,7 +106,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		previous_present_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 		previous_present_barrier.pNext = NULL;
 		previous_present_barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		previous_present_barrier.dstAccessMask = 0;
+		previous_present_barrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
 		previous_present_barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		previous_present_barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 		previous_present_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;

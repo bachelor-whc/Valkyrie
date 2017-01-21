@@ -13,7 +13,7 @@ Pipeline::~Pipeline() {
 
 }
 
-void Pipeline::initialize() {
+void Pipeline::initialize(const Valkyrie::RenderContextPtr render_context_ptr) {
 	VkResult result;
 	for (auto& kv : shaderPtrs) {
 		auto shader_ptr = kv.second;
@@ -23,6 +23,7 @@ void Pipeline::initialize() {
 	module.setVertexInput(vertexInput);
 	result = module.initializeLayout(descriptorPoolPtr->getSetLayoutHandles());
 	assert(result == VK_SUCCESS);
+	module.setRenderPass(render_context_ptr->getRenderPassHandle());
 	result = module.initialize();
 	assert(result == VK_SUCCESS);
 }

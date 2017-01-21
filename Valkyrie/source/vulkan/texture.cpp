@@ -82,7 +82,7 @@ VkResult Texture::write() {
 	assert(result == VK_SUCCESS);
 	memcpy(destination, m_image_ptr->getData(), m_image_ptr->getSize());
 	vkUnmapMemory(device, memory);
-	return vkBindImageMemory(device, handle, memory, 0);
+	return result;
 }
 
 VkWriteDescriptorSet Vulkan::Texture::getWriteSet() {

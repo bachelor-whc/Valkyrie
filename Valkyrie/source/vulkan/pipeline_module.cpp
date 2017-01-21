@@ -68,9 +68,8 @@ VkResult PipelineModule::initialize() {
 	return vkCreateGraphicsPipelines(device, cache, 1, &m_pipeline_create, nullptr, &handle);
 }
 
-void PipelineModule::setRenderPass(const RenderPass& render_pass, uint32_t index) {
-	m_pipeline_create.renderPass = render_pass.handle;
-	m_pipeline_create.subpass = index;
+void PipelineModule::setRenderPass(const VkRenderPass render_pass) {
+	m_pipeline_create.renderPass = render_pass;
 }
 
 void PipelineModule::setVertexInput(const VertexInput& vertex_input) {

@@ -2,6 +2,7 @@
 #include "valkyrie/utility/vulkan_manager.h"
 #include "valkyrie/vulkan/pipeline_module.h"
 #include "common.h"
+#include "valkyrie/vulkan/debug.h"
 using namespace Valkyrie;
 
 VulkanManager* VulkanManager::gp_vulkan_manager = nullptr;
@@ -79,7 +80,7 @@ VkResult VulkanManager::setImageLayout(const Vulkan::Image& image) {
 	image_memory_barrier.subresourceRange.layerCount = 1;
 
 	if (image.oldLayout == VK_IMAGE_LAYOUT_UNDEFINED) {
-		image_memory_barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
+		image_memory_barrier.srcAccessMask = VK_IMAGE_LAYOUT_UNDEFINED;
 	}
 
 	if (image.oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
@@ -113,8 +114,12 @@ VkResult VulkanManager::setImageLayout(const Vulkan::Image& image) {
 	}
 
 	if (image.newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
-		image_memory_barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
+		image_memory_barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
 		image_memory_barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+	}
+
+	if (image.newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR) {
+		image_memory_barrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
 	}
 
 	VkPipelineStageFlags source_flag = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
@@ -192,6 +197,10 @@ VkResult VulkanManager::allocateMemory(Vulkan::Image& image) {
 
 void VulkanManager::initializeVulkan() {
 	initializeInstance();
+	Vulkan::SetupDebug(
+		VK_DEBUG_REPORT_ERROR_BIT_EXT |
+		VK_DEBUG_REPORT_WARNING_BIT_EXT |
+		VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT);
 	initializePhysicalDevice();
 	initializeDevice();
 	initializeCommandPool();
