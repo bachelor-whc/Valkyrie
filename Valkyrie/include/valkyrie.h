@@ -2,14 +2,12 @@
 #define _VALKYRIE_H
 #define GLFW_INCLUDE_VULKAN
 #include "common.h"
-#include "valkyrie/thread/thread.h"
 #include "valkyrie/image.h"
 #include "valkyrie/vulkan/texture.h"
 #include "valkyrie/render_function.h"
 #include "valkyrie/UI/user_input.h"
 #include "valkyrie/asset/lavy_loader.h"
 #include "valkyrie/memory_chunk.h"
-#include "valkyrie/thread/thread_manager.h"
 #include "valkyrie/asset/asset_manager.h"
 #include "valkyrie/asset/mesh_asset.h"
 #include "valkyrie/component/component_attacher.h"

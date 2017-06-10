@@ -41,8 +41,6 @@
     <ClInclude Include="include\valkyrie\render_function.h" />
     <ClInclude Include="include\valkyrie\scene\object.h" />
     <ClInclude Include="include\valkyrie\scene\transform.h" />
-    <ClInclude Include="include\valkyrie\thread\thread.h" />
-    <ClInclude Include="include\valkyrie\thread\thread_manager.h" />
     <ClInclude Include="include\valkyrie\UI\user_input.h" />
     <ClInclude Include="include\valkyrie\UI\window.h" />
     <ClInclude Include="include\valkyrie\UI\window_manager.h" />
@@ -86,8 +84,6 @@
     <ClCompile Include="source\rgba32_memory.cpp" />
     <ClCompile Include="source\scene\camera.cpp" />
     <ClCompile Include="source\scene\object.cpp" />
-    <ClCompile Include="source\thread\thread.cpp" />
-    <ClCompile Include="source\thread\thread_manager.cpp" />
     <ClCompile Include="source\scene\transform.cpp" />
     <ClCompile Include="source\UI\user_input.cpp" />
     <ClCompile Include="source\base_unit.cpp" />

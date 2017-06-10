@@ -159,12 +159,6 @@
     <ClInclude Include="include\valkyrie\utility\memory_access.h">
       <Filter>Header Files\valkyrie\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\thread\thread_manager.h">
-      <Filter>Header Files\valkyrie\thread</Filter>
-    </ClInclude>
-    <ClInclude Include="include\valkyrie\thread\thread.h">
-      <Filter>Header Files\valkyrie\thread</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\command_pool.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
@@ -308,14 +302,8 @@
     <ClCompile Include="third_party\imgui_draw.cpp">
       <Filter>Source Files\third_party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="source\thread\thread_manager.cpp">
-      <Filter>Source Files\thread</Filter>
-    </ClCompile>
     <ClCompile Include="source\vulkan\command_pool.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\thread\thread.cpp">
-      <Filter>Source Files\thread</Filter>
     </ClCompile>
     <ClCompile Include="source\asset\asset_manager.cpp">
       <Filter>Source Files\asset</Filter>

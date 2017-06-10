@@ -20,21 +20,18 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 	gp_valkyrie = NEW_NT ValkyrieEngine("Valkyrie");
 	if (gp_valkyrie == nullptr)
 		return 1;
-	int result_tm = Valkyrie::ThreadManager::initialize();
 	int result_am = Valkyrie::AssetManager::initialize();
 	int result_sm = Valkyrie::SDLManager::initialize();
 	int result_wm = Valkyrie::WindowManager::initialize();
 	int result_vm = Valkyrie::VulkanManager::initialize();
-	if (result_tm != 0)
-		return 2;
 	if (result_am != 0)
-		return 3;
+		return 2;
 	if (result_sm != 0)
-		return 4;
+		return 3;
 	if (result_wm != 0)
-		return 5;
+		return 4;
 	if (result_vm != 0)
-		return 6;
+		return 5;
 	const int width = 1024;
 	const int height = 768;
 	std::string title("Playground");
@@ -55,7 +52,6 @@ void ValkyrieEngine::closeValkyrieEngine() {
 	Valkyrie::WindowManager::close();
 	Valkyrie::SDLManager::close();
 	Valkyrie::AssetManager::close();
-	Valkyrie::ThreadManager::close();
 	
 }
 
