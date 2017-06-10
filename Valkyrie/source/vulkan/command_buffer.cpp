@@ -4,9 +4,7 @@
 using namespace Vulkan;
 
 VkResult CommandBuffer::begin() {
-	VkCommandBufferBeginInfo command_buffer_info = {};
-	command_buffer_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	return vkBeginCommandBuffer(handle, &command_buffer_info);
+	return vkBeginCommandBuffer(handle, &beginInformation);
 }
 
 VkResult CommandBuffer::end() {
