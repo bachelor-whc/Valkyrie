@@ -9,7 +9,8 @@
 #include <imgui.h>
 #include <stb_image.h>
 #include <valkyrie/graphics/pipeline.h>
-
+#include <tbb/tbb.h>
+using namespace tbb;
 using namespace Valkyrie;
 
 struct ModelViewProjection {
