@@ -6,7 +6,7 @@
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/utility/sdl_manager.h"
 #include "valkyrie/utility/vulkan_manager.h"
-#include "valkyrie/render_context.h"
+#include "valkyrie/renderer.h"
 
 ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
 bool ValkyrieEngine::SDLInitialized = false;
@@ -39,7 +39,7 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
 	window_manager.createMainWindow(title, width, height);
 	auto& main_window_ptr = window_manager.getMainWindowPtr();
-	gp_valkyrie->m_render_context_ptr = MAKE_SHARED(Valkyrie::RenderContext)(main_window_ptr);
+	gp_valkyrie->m_renderer_ptr = MAKE_SHARED(Valkyrie::Renderer)(main_window_ptr);
 	gp_valkyrie->initialize();
 	return 0;
 }
@@ -55,13 +55,13 @@ void ValkyrieEngine::closeValkyrieEngine() {
 	
 }
 
-Valkyrie::RenderContextPtr ValkyrieEngine::getRenderContextPtr() {
-	return m_render_context_ptr;
+Valkyrie::RendererPtr ValkyrieEngine::getRenderContextPtr() {
+	return m_renderer_ptr;
 }
 
 ValkyrieEngine::ValkyrieEngine(std::string application_name) :
 	m_application_name(application_name),
-	m_render_context_ptr() {
+	m_renderer_ptr() {
 	
 }
 
@@ -136,7 +136,7 @@ bool ValkyrieEngine::execute() {
 		updateUserInput(s_event);
 	}
 	updateTime();
-	m_render_context_ptr->render();
+	m_renderer_ptr->render();
 	return true;
 }
 

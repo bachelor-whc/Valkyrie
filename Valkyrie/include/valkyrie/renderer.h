@@ -10,11 +10,11 @@
 #include "valkyrie/UI/window.h"
 
 namespace Valkyrie {
-	class RenderContext {
+	class Renderer {
 	public:
-		RenderContext() = delete;
-		RenderContext(const WindowPtr& window_ptr);
-		virtual ~RenderContext();
+		Renderer() = delete;
+		Renderer(const WindowPtr& window_ptr);
+		virtual ~Renderer();
 
 		virtual VkResult render();
 		inline VkRenderPass getRenderPassHandle() { return m_render_pass.handle; }
@@ -45,7 +45,7 @@ namespace Valkyrie {
 		VkSemaphore m_present_semaphore = VK_NULL_HANDLE;
 	};
 
-	using RenderContextPtr = std::shared_ptr<RenderContext>;
+	using RendererPtr = std::shared_ptr<Renderer>;
 }
 
 #endif

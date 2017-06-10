@@ -5,7 +5,7 @@
 #include "valkyrie/vulkan/shader.h"
 #include "valkyrie/vulkan/descriptor.h"
 #include "valkyrie/vulkan/command_buffer.h"
-#include "valkyrie/render_context.h"
+#include "valkyrie/renderer.h"
 #include "common.h"
 
 namespace Valkyrie {
@@ -20,7 +20,7 @@ namespace Valkyrie {
 			Pipeline();
 			virtual ~Pipeline();
 
-			void initialize(const RenderContextPtr render_context_ptr);
+			void initialize(const RendererPtr render_context_ptr);
 			void commandBind(const Vulkan::CommandBuffer& command);
 
 			Vulkan::VertexInput vertexInput;

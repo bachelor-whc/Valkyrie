@@ -37,7 +37,7 @@
     <ClInclude Include="include\valkyrie\graphics_api_support\attribute.h" />
     <ClInclude Include="include\valkyrie\image.h" />
     <ClInclude Include="include\valkyrie\memory_chunk.h" />
-    <ClInclude Include="include\valkyrie\render_context.h" />
+    <ClInclude Include="include\valkyrie\renderer.h" />
     <ClInclude Include="include\valkyrie\render_function.h" />
     <ClInclude Include="include\valkyrie\scene\object.h" />
     <ClInclude Include="include\valkyrie\scene\transform.h" />
@@ -79,7 +79,7 @@
     <ClCompile Include="source\graphics\pipeline.cpp" />
     <ClCompile Include="source\graphics_api_support\attribute.cpp" />
     <ClCompile Include="source\memory_chunk.cpp" />
-    <ClCompile Include="source\render_context.cpp" />
+    <ClCompile Include="source\renderer.cpp" />
     <ClCompile Include="source\render_function.cpp" />
     <ClCompile Include="source\rgba32_memory.cpp" />
     <ClCompile Include="source\scene\camera.cpp" />

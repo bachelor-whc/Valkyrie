@@ -16,7 +16,7 @@
 #include "valkyrie/scene/object.h"
 #include "valkyrie/UI/window.h"
 #include "valkyrie/UI/window_manager.h"
-#include "valkyrie/render_context.h"
+#include "valkyrie/renderer.h"
 #include "valkyrie/utility/vulkan_manager.h"
 
 class ValkyrieEngine {
@@ -38,7 +38,7 @@ public:
 
 	std::vector<Vulkan::MemoryBuffer> memoryBuffers;
 	UserInput userInput = {};
-	Valkyrie::RenderContextPtr getRenderContextPtr();
+	Valkyrie::RendererPtr getRenderContextPtr();
 	
 private:
 	ValkyrieEngine() = delete;
@@ -52,7 +52,7 @@ private:
 	void updateTime();
 
 private:
-	Valkyrie::RenderContextPtr m_render_context_ptr;
+	Valkyrie::RendererPtr m_renderer_ptr;
 	std::string m_application_name;
 	double m_previous_timestamp = 0.0;
 	double m_current_timestamp = 0.0;

@@ -13,7 +13,7 @@ Pipeline::~Pipeline() {
 
 }
 
-void Pipeline::initialize(const Valkyrie::RenderContextPtr render_context_ptr) {
+void Pipeline::initialize(const Valkyrie::RendererPtr render_context_ptr) {
 	VkResult result;
 	for (auto& kv : shaderPtrs) {
 		auto shader_ptr = kv.second;

@@ -1,11 +1,11 @@
-#include "valkyrie/render_context.h"
+#include "valkyrie/renderer.h"
 #include "valkyrie/utility/vulkan_manager.h"
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/UI/window.h"
 #include "valkyrie/vulkan/default_create_info.h"
 using namespace Valkyrie;
 
-RenderContext::RenderContext(const WindowPtr& window_ptr) : m_window_ptr(window_ptr) {
+Renderer::Renderer(const WindowPtr& window_ptr) : m_window_ptr(window_ptr) {
 	const auto& device = VulkanManager::getDevice();
 	initializeSurface();
 	initializeSwapChain();
@@ -27,7 +27,7 @@ RenderContext::RenderContext(const WindowPtr& window_ptr) : m_window_ptr(window_
 	assert(result == VK_SUCCESS);
 }
 
-RenderContext::~RenderContext() {
+Renderer::~Renderer() {
 	const auto& device = VulkanManager::getDevice();
 	vkDestroySemaphore(device, m_present_semaphore, nullptr);
 	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
@@ -41,7 +41,7 @@ RenderContext::~RenderContext() {
 	}
 }
 
-VkResult RenderContext::render() {
+VkResult Renderer::render() {
 	VkResult result;
 	const auto& device = VulkanManager::getDevice();
 	const auto& queue = VulkanManager::getGraphicsQueue();
@@ -82,7 +82,7 @@ VkResult RenderContext::render() {
 	return VK_SUCCESS;
 }
 
-VkRenderPassBeginInfo Valkyrie::RenderContext::getRenderPassBegin() {
+VkRenderPassBeginInfo Valkyrie::Renderer::getRenderPassBegin() {
 	auto rpb = VK_DEFAULT_RENDER_PASS_BEGIN;
 	rpb.renderArea.extent.width = m_window_ptr->getWidth();
 	rpb.renderArea.extent.height = m_window_ptr->getHeight();
@@ -90,21 +90,21 @@ VkRenderPassBeginInfo Valkyrie::RenderContext::getRenderPassBegin() {
 	return rpb;
 }
 
-void RenderContext::initializeSwapChain() {
+void Renderer::initializeSwapChain() {
 	VkResult result;
 	mp_swapchain = NEW_NT Vulkan::SwapChain(m_surface, m_window_ptr);
 	result = mp_swapchain->initializeImages(m_surface);
 	assert(result == VK_SUCCESS);
 }
 
-void RenderContext::initializeDepthBuffer() {
+void Renderer::initializeDepthBuffer() {
 	VkResult result;
 	mp_depth_buffer = NEW_NT Vulkan::DepthBuffer(m_window_ptr->getWidth(), m_window_ptr->getHeight());
 	result = VulkanManager::initializeImage(*mp_depth_buffer);
 	assert(result == VK_SUCCESS);
 }
 
-void RenderContext::initializeRenderPass() {
+void Renderer::initializeRenderPass() {
 	m_render_pass.attachments.push_back(m_surface.getAttachmentDescription());
 	m_render_pass.attachments.push_back(mp_depth_buffer->getAttachmentDescription());
 
@@ -128,17 +128,17 @@ void RenderContext::initializeRenderPass() {
 	assert(initialized);
 }
 
-void RenderContext::initializeFramebuffers() {
+void Renderer::initializeFramebuffers() {
 	mp_swapchain->initializeFramebuffers(m_render_pass, &(mp_depth_buffer->view), 2);
 }
 
-void RenderContext::initializeSurface() {
+void Renderer::initializeSurface() {
 	VkResult result;
 	result = setSurface(m_surface, m_window_ptr);
 	assert(result == VK_SUCCESS);
 }
 
-void RenderContext::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
+void Renderer::commandSetViewport(const Vulkan::CommandBuffer& command_buffer) {
 	m_viewport.width = m_window_ptr->getWidth();
 	m_viewport.height = m_window_ptr->getHeight();
 	m_viewport.minDepth = 0.0f;
@@ -148,7 +148,7 @@ void RenderContext::commandSetViewport(const Vulkan::CommandBuffer& command_buff
 	vkCmdSetViewport(command_buffer.handle, 0, 1, &m_viewport);
 }
 
-void RenderContext::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
+void Renderer::commandSetScissor(const Vulkan::CommandBuffer& command_buffer) {
 	m_scissor.extent.width = m_window_ptr->getWidth();
 	m_scissor.extent.height = m_window_ptr->getHeight();
 	m_scissor.offset.x = 0;

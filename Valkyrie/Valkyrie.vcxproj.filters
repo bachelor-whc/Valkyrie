@@ -207,9 +207,6 @@
     <ClInclude Include="include\valkyrie\UI\window.h">
       <Filter>Header Files\valkyrie\UI</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\render_context.h">
-      <Filter>Header Files\valkyrie</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\utility\vulkan_manager.h">
       <Filter>Header Files\valkyrie\utility</Filter>
     </ClInclude>
@@ -227,6 +224,9 @@
     </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\set_updatable.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\renderer.h">
+      <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -350,9 +350,6 @@
     <ClCompile Include="source\graphics\pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\render_context.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\scene\transform.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
@@ -361,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="source\vulkan\pipeline_module.cpp">
       <Filter>Source Files\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="source\renderer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
