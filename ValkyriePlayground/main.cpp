@@ -10,7 +10,6 @@
 #include <stb_image.h>
 #include <valkyrie/graphics/pipeline.h>
 #include <tbb/tbb.h>
-using namespace tbb;
 using namespace Valkyrie;
 
 struct ModelViewProjection {
@@ -33,6 +32,10 @@ ImageMemoryPointer loadPNG(const std::string file_path) {
 }
 
 int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, int command_show) {
+	int number_of_threads = tbb::task_scheduler_init::default_num_threads();
+
+	tbb::task_group g;
+
 	ValkyrieEngine::initializeValkyrieEngine();
 	auto& valkyrie = *ValkyrieEngine::getGlobalValkyriePtr();
 

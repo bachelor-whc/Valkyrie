@@ -1,6 +1,7 @@
 #ifndef _VALKYRIE_RENDER_CONTEXT_H
 #define _VALKYRIE_RENDER_CONTEXT_H
 #include <vulkan/vulkan.h>
+#include <tbb/task_group.h>
 #include "valkyrie/vulkan/command_buffer.h"
 #include "valkyrie/vulkan/surface.h"
 #include "valkyrie/vulkan/swapchain.h"
@@ -43,6 +44,7 @@ namespace Valkyrie {
 		VkViewport m_viewport = {};
 		VkRect2D m_scissor = {};
 		VkSemaphore m_present_semaphore = VK_NULL_HANDLE;
+		tbb::task_group m_task_group;
 	};
 
 	using RendererPtr = std::shared_ptr<Renderer>;

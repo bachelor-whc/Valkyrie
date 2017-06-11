@@ -228,6 +228,9 @@
     <ClInclude Include="include\valkyrie\renderer.h">
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\utility\task_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -360,6 +363,9 @@
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="source\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\task_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

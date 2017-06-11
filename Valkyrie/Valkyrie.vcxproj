@@ -31,6 +31,7 @@
     <ClInclude Include="include\valkyrie\component\component.h" />
     <ClInclude Include="include\valkyrie\component\component_attacher.h" />
     <ClInclude Include="include\valkyrie\component\mesh_renderer.h" />
+    <ClInclude Include="include\valkyrie\utility\task_manager.h" />
     <ClInclude Include="include\valkyrie\vulkan\default_create_info.h" />
     <ClInclude Include="include\valkyrie\factory\mesh.h" />
     <ClInclude Include="include\valkyrie\graphics\pipeline.h" />
@@ -90,6 +91,7 @@
     <ClCompile Include="source\UI\window.cpp" />
     <ClCompile Include="source\UI\window_manager.cpp" />
     <ClCompile Include="source\utility\sdl_manager.cpp" />
+    <ClCompile Include="source\utility\task_manager.cpp" />
     <ClCompile Include="source\utility\vulkan_manager.cpp" />
     <ClCompile Include="source\valkyrie.cpp" />
     <ClCompile Include="source\vulkan\command_buffer.cpp" />

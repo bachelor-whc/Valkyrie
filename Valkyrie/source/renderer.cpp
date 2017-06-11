@@ -5,7 +5,9 @@
 #include "valkyrie/vulkan/default_create_info.h"
 using namespace Valkyrie;
 
-Renderer::Renderer(const WindowPtr& window_ptr) : m_window_ptr(window_ptr) {
+Renderer::Renderer(const WindowPtr& window_ptr) : 
+	m_window_ptr(window_ptr),
+	m_task_group() {
 	const auto& device = VulkanManager::getDevice();
 	initializeSurface();
 	initializeSwapChain();

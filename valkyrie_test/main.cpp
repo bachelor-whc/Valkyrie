@@ -1,8 +1,10 @@
 #include <iostream>
 #include <gtest/gtest.h>
 #include <glm/glm.hpp>
-#include <tbb/tbb.h>
+#include <tbb/tick_count.h>
+#include <tbb/task_scheduler_init.h>
 #include "valkyrie.h"
+#include "valkyrie/utility/task_manager.h"
 #include "valkyrie/graphics_api_support/attribute.h"
 
 using Valkyrie::MemoryChunk;
@@ -10,7 +12,7 @@ using Valkyrie::MemoryChunkPtr;
 using Valkyrie::GrpahicsAPIAttributeSupport;
 using Valkyrie::GAPIAttributeSupportPtr;
 using Valkyrie::GrpahicsAPIAttribute;
-using Valkyrie::ThreadManager;
+using Valkyrie::TaskManager;
 using Valkyrie::AssetManager;
 
 TEST(MemoryChunckCheck, Normal) {
@@ -77,20 +79,6 @@ TEST(FillMemoryCheck, File) {
 	ASSERT_FALSE(cptr->ready());
 	cptr->unsetFlags(MemoryAccess::ALLOCATED);
 	ASSERT_FALSE(cptr->allocated());
-}
-
-TEST(ThreadManager, Initialization) {
-	ThreadManager::initialize();
-	ThreadManager& thread_manager = *ThreadManager::getGlobalThreadManagerPtr();
-	auto hardware_count = std::thread::hardware_concurrency();
-	unsigned int count = hardware_count == 0 ? 2 : hardware_count;
-	ASSERT_EQ(thread_manager.getThreadCount(), count);
-}
-
-TEST(TBB, Flask) {
-	int sum = 0;
-	tbb::parallel_for(0, 101, [=, &sum](int i) {sum += i; }); // 0 ~ 100
-	ASSERT_TRUE(sum == 5050);
 }
 
 int main(int argc, char **argv) {
