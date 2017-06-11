@@ -168,6 +168,13 @@ Vulkan::CommandBuffer VulkanManager::createCommandBuffer() {
 	return gp_vulkan_manager->m_command_pool_ptr->createCommandBuffer();
 }
 
+Vulkan::CommandPoolPtr Valkyrie::VulkanManager::createCommandPool(VkQueueFlags queue) {
+	std::shared_ptr<Vulkan::CommandPool> ptr;
+	if (queue == VK_QUEUE_GRAPHICS_BIT)
+		ptr = MAKE_SHARED(Vulkan::CommandPool)(VulkanManager::instance().m_graphics_queue);
+	return ptr;
+}
+
 VulkanManager::VulkanManager() {
 	
 }

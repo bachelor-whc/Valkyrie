@@ -18,7 +18,7 @@ namespace Valkyrie {
 		static int initialize();
 		static void close();
 		static bool initialized();
-		static VulkanManager* getGlobalVulkanManagerPtr() { return gp_vulkan_manager; }
+		static VulkanManager& instance() { return *gp_vulkan_manager; }
 		static VkInstance getInstance();
 		static VkPhysicalDevice getPhysicalDevice();
 		static VkDevice getDevice();
@@ -28,6 +28,7 @@ namespace Valkyrie {
 		static bool getSupportFormat(VkFormat& format, const VkFlags flag);
 		static inline Vulkan::Queue getGraphicsQueue() { return gp_vulkan_manager->m_graphics_queue; }
 		static Vulkan::CommandBuffer createCommandBuffer();
+		static Vulkan::CommandPoolPtr createCommandPool(VkQueueFlags queue);
 		virtual ~VulkanManager();
 
 	private:

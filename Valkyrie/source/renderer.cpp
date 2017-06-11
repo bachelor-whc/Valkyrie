@@ -16,7 +16,7 @@ Renderer::Renderer(const WindowPtr& window_ptr) :
 	initializeFramebuffers();
 	renderCommands.resize(mp_swapchain->getImageCount());
 	for (auto& command : renderCommands) {
-		command = VulkanManager::getGlobalVulkanManagerPtr()->createCommandBuffer();
+		command = VulkanManager::instance().createCommandBuffer();
 	}
 
 	VkResult result;
