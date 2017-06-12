@@ -53,6 +53,6 @@ void LavyLoader::loadBufferDescriptions(const LavyAssetPtr& asset_ptr, const JSO
 }
 
 void Valkyrie::LavyLoader::loadBinaryFile(const Valkyrie::LavyAssetPtr& asset_ptr, const path& bin_file_path) {
-	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
+	auto& asset_manager = AssetManager::instance();
 	asset_manager.fillMemoryFromFile(asset_ptr->m_buffer_ptr, bin_file_path);
 }

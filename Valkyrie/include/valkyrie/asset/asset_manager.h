@@ -10,7 +10,7 @@ namespace Valkyrie {
 	public:
 		static int initialize();
 		static void close();
-		static AssetManager* getGlobalAssetMangerPtr() { return gp_asset_manager; }
+		static AssetManager& instance() { return *gp_asset_manager; }
 
 		virtual ~AssetManager();
 

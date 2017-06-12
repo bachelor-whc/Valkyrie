@@ -234,6 +234,9 @@
     <ClInclude Include="include\valkyrie\vulkan\thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\scene\object_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -372,6 +375,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\vulkan\thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\object_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

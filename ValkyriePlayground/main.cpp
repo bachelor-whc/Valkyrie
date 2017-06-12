@@ -54,7 +54,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
 	CreateThreadRenderData(thread_ptrs, 4, 1000);
 
-	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
+	auto& asset_manager = AssetManager::instance();
 	asset_manager.load("duck.lavy");
 	auto& mesh_ptr = std::static_pointer_cast<Mesh>(asset_manager.getAsset("duck.lavy"));
 	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);

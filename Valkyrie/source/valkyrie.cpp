@@ -8,6 +8,7 @@
 #include "valkyrie/utility/vulkan_manager.h"
 #include "valkyrie/renderer.h"
 #include "valkyrie/utility/task_manager.h"
+#include "valkyrie/scene/object_manager.h"
 
 ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
 bool ValkyrieEngine::SDLInitialized = false;
@@ -26,6 +27,7 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 	int result_wm = Valkyrie::WindowManager::initialize();
 	int result_vm = Valkyrie::VulkanManager::initialize();
 	int result_tm = Valkyrie::TaskManager::initialize();
+	int result_om = Valkyrie::ObjectManager::initialize();
 	if (result_am != 0)
 		return 2;
 	if (result_sm != 0)
@@ -36,6 +38,8 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 		return 5;
 	if (result_tm != 0)
 		return 6;
+	if (result_om != 0)
+		return 7;
 	const int width = 1024;
 	const int height = 768;
 	std::string title("Playground");
@@ -52,6 +56,8 @@ void ValkyrieEngine::closeValkyrieEngine() {
 	if (gp_valkyrie != nullptr)
 		delete gp_valkyrie;
 	gp_valkyrie = nullptr;
+	Valkyrie::ObjectManager::close();
+	Valkyrie::TaskManager::close();
 	Valkyrie::VulkanManager::close();
 	Valkyrie::WindowManager::close();
 	Valkyrie::SDLManager::close();

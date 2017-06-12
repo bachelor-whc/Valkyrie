@@ -31,6 +31,7 @@
     <ClInclude Include="include\valkyrie\component\component.h" />
     <ClInclude Include="include\valkyrie\component\component_attacher.h" />
     <ClInclude Include="include\valkyrie\component\mesh_renderer.h" />
+    <ClInclude Include="include\valkyrie\scene\object_manager.h" />
     <ClInclude Include="include\valkyrie\utility\task_manager.h" />
     <ClInclude Include="include\valkyrie\vulkan\default_create_info.h" />
     <ClInclude Include="include\valkyrie\factory\mesh.h" />
@@ -86,6 +87,7 @@
     <ClCompile Include="source\rgba32_memory.cpp" />
     <ClCompile Include="source\scene\camera.cpp" />
     <ClCompile Include="source\scene\object.cpp" />
+    <ClCompile Include="source\scene\object_manager.cpp" />
     <ClCompile Include="source\scene\transform.cpp" />
     <ClCompile Include="source\UI\user_input.cpp" />
     <ClCompile Include="source\base_unit.cpp" />
