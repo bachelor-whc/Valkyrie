@@ -1,6 +1,7 @@
 #ifndef _COMMON_H 
 #define _COMMON_H 
 #ifdef _WIN32
+#define NOMINMAX
 #include <Windows.h>
 #define SDL_MAIN_HANDLED
 #define VK_USE_PLATFORM_WIN32_KHR

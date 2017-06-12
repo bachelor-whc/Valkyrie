@@ -1,8 +1,16 @@
 #ifndef _VALKYRIE_BASE_H
 #define _VALKYRIE_BASE_H
+#include <memory>
+#include <climits>
+
+namespace ValkyrieFactory {
+	class ObjectFactory;
+}
 
 namespace Valkyrie {
 	class Base {
+		friend class ValkyrieFactory::ObjectFactory;
+
 	public:
 		Base() {}
 		virtual ~Base() {}
@@ -13,8 +21,9 @@ namespace Valkyrie {
 		unsigned int getID();
 
 	private:
-		unsigned int m_ID = -1;
+		unsigned int m_ID = UINT_MAX;
 	};
+	using BasePtr = std::shared_ptr<Base>;
 
 	class DirtyFlagView {
 	public:

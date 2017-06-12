@@ -6,6 +6,8 @@
 #include "valkyrie.h"
 #include "valkyrie/utility/task_manager.h"
 #include "valkyrie/graphics_api_support/attribute.h"
+#include "valkyrie/factory/object.h"
+#include "valkyrie/scene/object_manager.h"
 
 using Valkyrie::MemoryChunk;
 using Valkyrie::MemoryChunkPtr;
@@ -14,6 +16,8 @@ using Valkyrie::GAPIAttributeSupportPtr;
 using Valkyrie::GrpahicsAPIAttribute;
 using Valkyrie::TaskManager;
 using Valkyrie::AssetManager;
+using Valkyrie::ObjectManager;
+using ValkyrieFactory::ObjectFactory;
 
 TEST(MemoryChunckCheck, Normal) {
 	MemoryChunk c1;
@@ -47,7 +51,7 @@ TEST(MemoryChunckCheck, SharedPtr) {
 
 TEST(FillMemoryCheck, File) {
 	AssetManager::initialize();
-	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
+	auto& asset_manager = AssetManager::instance();
 
 	const unsigned char test_bin[] = {
 		0x12, 0x34, 0x56, 0x78, 0x9A,
@@ -79,6 +83,21 @@ TEST(FillMemoryCheck, File) {
 	ASSERT_FALSE(cptr->ready());
 	cptr->unsetFlags(MemoryAccess::ALLOCATED);
 	ASSERT_FALSE(cptr->allocated());
+}
+
+TEST(ObjectFactory, CreateAndQueryObject) {
+	ObjectManager::initialize();
+	ObjectFactory::initialize();
+	auto& manager = ObjectManager::instance();
+	auto& factory = ObjectFactory::instance();
+	auto& duck = factory.createObject();
+	auto ID = duck->getID();
+	auto& query = manager.getObject(ID);
+	ASSERT_EQ(ID, query->getID());
+	ASSERT_EQ(duck.get(), query.get());
+	ASSERT_EQ(nullptr, manager.getObject(-1));
+	ObjectFactory::close();
+	ObjectManager::close();
 }
 
 int main(int argc, char **argv) {

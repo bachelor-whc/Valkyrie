@@ -4,7 +4,7 @@ using namespace Valkyrie;
 using namespace ValkyrieFactory;
 MeshFactory* MeshFactory::gp_mesh_factory = nullptr;
 
-int ValkyrieFactory::MeshFactory::initialize() {
+int MeshFactory::initialize() {
 	if (gp_mesh_factory != nullptr) {
 		return 0;
 	}
@@ -14,18 +14,18 @@ int ValkyrieFactory::MeshFactory::initialize() {
 	return 0;
 }
 
-void ValkyrieFactory::MeshFactory::close() {
+void MeshFactory::close() {
 	if (gp_mesh_factory != nullptr) {
 		delete gp_mesh_factory;
 		gp_mesh_factory = nullptr;
 	}
 }
 
-ValkyrieFactory::MeshFactory::~MeshFactory() {
+MeshFactory::~MeshFactory() {
 
 }
 
-Valkyrie::MeshPtr ValkyrieFactory::MeshFactory::createMesh(const Valkyrie::LavyAssetPtr lavy_ptr) {
+MeshPtr MeshFactory::createMesh(const LavyAssetPtr lavy_ptr) {
 	MeshPtr ptr = MAKE_SHARED(Mesh)(lavy_ptr);
 	auto& lavy = *lavy_ptr;
 	auto& buffer = ptr->m_vulkan_buffer;
@@ -38,6 +38,6 @@ Valkyrie::MeshPtr ValkyrieFactory::MeshFactory::createMesh(const Valkyrie::LavyA
 	return ptr;
 }
 
-ValkyrieFactory::MeshFactory::MeshFactory() {
+MeshFactory::MeshFactory() {
 
 }

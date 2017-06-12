@@ -79,8 +79,8 @@
     <ClCompile Include="source\asset\mesh_asset.cpp" />
     <ClCompile Include="source\component\component_attacher.cpp" />
     <ClCompile Include="source\component\mesh_renderer.cpp" />
-    <ClCompile Include="source\factory\factory.cpp" />
-    <ClCompile Include="source\factory\mesh.cpp" />
+    <ClCompile Include="source\factory\object_factory.cpp" />
+    <ClCompile Include="source\factory\mesh_factory.cpp" />
     <ClCompile Include="source\graphics\pipeline.cpp" />
     <ClCompile Include="source\graphics_api_support\attribute.cpp" />
     <ClCompile Include="source\memory_chunk.cpp" />

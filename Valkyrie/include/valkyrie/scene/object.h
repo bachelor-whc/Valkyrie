@@ -27,6 +27,7 @@ namespace Valkyrie {
 			friend class Valkyrie::ComponentAttacher;
 			std::set<ValkyrieComponent::ComponentPtr> m_component_ptrs;
 		};
+		using ObjectPtr = std::shared_ptr<Object>;
 	}
 }
 

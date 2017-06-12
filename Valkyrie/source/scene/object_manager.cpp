@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <limits>
 #include "common.h"
 #include "valkyrie/scene/object_manager.h"
 using namespace Valkyrie;
@@ -39,4 +40,23 @@ unsigned int ObjectManager::acquireNextID() {
 	m_unused_ID.pop_front();
 	m_used_ID.push_back(result);
 	return result;
+}
+
+int Valkyrie::ObjectManager::registerObject(const Scene::ObjectPtr& ptr) {
+	if (ptr->getID() == std::numeric_limits<unsigned int>::max()) {
+		return ILLEGAL_ID;
+	}
+	else if (m_table.count(ptr->getID()) != 0) {
+		return ALREADY_REGISTERED;
+	}
+	m_table[ptr->getID()] = ptr;
+	return 0;
+}
+
+Scene::ObjectPtr ObjectManager::getObject(const unsigned int ID) {
+	const auto& result = m_table.find(ID);
+	if (result == m_table.end())
+		return nullptr;
+	else
+		return result->second;
 }

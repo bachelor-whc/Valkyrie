@@ -329,9 +329,6 @@
     <ClCompile Include="source\asset\lavy_loader.cpp">
       <Filter>Source Files\asset</Filter>
     </ClCompile>
-    <ClCompile Include="source\factory\mesh.cpp">
-      <Filter>Source Files\factory</Filter>
-    </ClCompile>
     <ClCompile Include="source\asset\mesh_asset.cpp">
       <Filter>Source Files\asset</Filter>
     </ClCompile>
@@ -383,8 +380,11 @@
     <ClCompile Include="source\scene\object_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\factory\factory.cpp">
+    <ClCompile Include="source\factory\object_factory.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\factory\mesh_factory.cpp">
+      <Filter>Source Files\factory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
