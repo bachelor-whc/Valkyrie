@@ -31,6 +31,7 @@
     <ClInclude Include="include\valkyrie\component\component.h" />
     <ClInclude Include="include\valkyrie\component\component_attacher.h" />
     <ClInclude Include="include\valkyrie\component\mesh_renderer.h" />
+    <ClInclude Include="include\valkyrie\factory\object.h" />
     <ClInclude Include="include\valkyrie\scene\object_manager.h" />
     <ClInclude Include="include\valkyrie\utility\task_manager.h" />
     <ClInclude Include="include\valkyrie\vulkan\default_create_info.h" />
@@ -78,6 +79,7 @@
     <ClCompile Include="source\asset\mesh_asset.cpp" />
     <ClCompile Include="source\component\component_attacher.cpp" />
     <ClCompile Include="source\component\mesh_renderer.cpp" />
+    <ClCompile Include="source\factory\factory.cpp" />
     <ClCompile Include="source\factory\mesh.cpp" />
     <ClCompile Include="source\graphics\pipeline.cpp" />
     <ClCompile Include="source\graphics_api_support\attribute.cpp" />
