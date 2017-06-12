@@ -24,6 +24,10 @@ namespace Valkyrie {
 		HWND getWindowHandle() const;
 		HINSTANCE getWindowInstance() const;
 #endif
+
+		void setWindowTitle(const std::string& title);
+		void appendWindowTitle(const std::string& str);
+
 	private:
 		SDL_Window* mp_window = nullptr;
 		SDL_SysWMinfo m_window_information = {};

@@ -67,6 +67,7 @@
     <ClInclude Include="include\valkyrie\vulkan\surface.h" />
     <ClInclude Include="include\valkyrie\vulkan\swapchain.h" />
     <ClInclude Include="include\valkyrie\vulkan\texture.h" />
+    <ClInclude Include="include\valkyrie\vulkan\thread.h" />
     <ClInclude Include="include\valkyrie\vulkan\vertex_input.h" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +112,7 @@
     <ClCompile Include="source\vulkan\surface.cpp" />
     <ClCompile Include="source\vulkan\swapchain.cpp" />
     <ClCompile Include="source\vulkan\texture.cpp" />
+    <ClCompile Include="source\vulkan\thread.cpp" />
     <ClCompile Include="source\vulkan\vertex_input.cpp" />
     <ClCompile Include="third_party\imgui.cpp" />
     <ClCompile Include="third_party\imgui_demo.cpp" />

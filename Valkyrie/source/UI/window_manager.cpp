@@ -34,7 +34,7 @@ WindowManager::~WindowManager() {
 
 }
 
-void Valkyrie::WindowManager::createMainWindow(const std::string& title, int width, int height) {
+void WindowManager::createMainWindow(const std::string& title, int width, int height) {
 	mp_main_window = MAKE_SHARED(Window)(title, width, height);
 }
 

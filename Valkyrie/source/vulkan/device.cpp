@@ -22,7 +22,7 @@ void WriteDeviceQueueCreates(std::vector<VkDeviceQueueCreateInfo>& device_queue_
 VkResult Vulkan::CreateDevice(Device& device) {
 	const auto& physical_device = Valkyrie::VulkanManager::getPhysicalDevice();
 	VkResult result;
-	uint32_t number_of_queue_family = PhysicalDevice::queueFamilyProperties.size();
+	uint32_t number_of_queue_families = PhysicalDevice::queueFamilyProperties.size();
 
 	const uint32_t queue_count = PhysicalDevice::queueFamilyProperties.size();
 	std::vector<VkDeviceQueueCreateInfo> device_queue_creates(queue_count);

@@ -7,6 +7,7 @@
 #include "valkyrie/utility/sdl_manager.h"
 #include "valkyrie/utility/vulkan_manager.h"
 #include "valkyrie/renderer.h"
+#include "valkyrie/utility/task_manager.h"
 
 ValkyrieEngine* ValkyrieEngine::gp_valkyrie = nullptr;
 bool ValkyrieEngine::SDLInitialized = false;
@@ -24,6 +25,7 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 	int result_sm = Valkyrie::SDLManager::initialize();
 	int result_wm = Valkyrie::WindowManager::initialize();
 	int result_vm = Valkyrie::VulkanManager::initialize();
+	int result_tm = Valkyrie::TaskManager::initialize();
 	if (result_am != 0)
 		return 2;
 	if (result_sm != 0)
@@ -32,11 +34,13 @@ int ValkyrieEngine::initializeValkyrieEngine() {
 		return 4;
 	if (result_vm != 0)
 		return 5;
+	if (result_tm != 0)
+		return 6;
 	const int width = 1024;
 	const int height = 768;
 	std::string title("Playground");
 	ValkyrieEngine::initializeValkyrieEngine();
-	auto& window_manager = *Valkyrie::WindowManager::getGlobalWindowManagerPtr();
+	auto& window_manager = Valkyrie::WindowManager::instance();
 	window_manager.createMainWindow(title, width, height);
 	auto& main_window_ptr = window_manager.getMainWindowPtr();
 	gp_valkyrie->m_renderer_ptr = MAKE_SHARED(Valkyrie::Renderer)(main_window_ptr);
@@ -52,7 +56,6 @@ void ValkyrieEngine::closeValkyrieEngine() {
 	Valkyrie::WindowManager::close();
 	Valkyrie::SDLManager::close();
 	Valkyrie::AssetManager::close();
-	
 }
 
 Valkyrie::RendererPtr ValkyrieEngine::getRenderContextPtr() {
@@ -136,6 +139,10 @@ bool ValkyrieEngine::execute() {
 		updateUserInput(s_event);
 	}
 	updateTime();
+	float FPS = 1 / ImGui::GetIO().DeltaTime;
+	Valkyrie::WindowManager::instance().getMainWindowPtr()->appendWindowTitle(
+		std::to_string(FPS)
+	);
 	m_renderer_ptr->render();
 	return true;
 }

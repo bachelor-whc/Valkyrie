@@ -9,7 +9,7 @@
 #include <imgui.h>
 #include <stb_image.h>
 #include <valkyrie/graphics/pipeline.h>
-#include <tbb/tbb.h>
+#include <valkyrie/vulkan/thread.h>
 using namespace Valkyrie;
 
 struct ModelViewProjection {
@@ -18,7 +18,7 @@ struct ModelViewProjection {
 	glm::mat4 projection;
 };
 
-ImageMemoryPointer loadPNG(const std::string file_path) {
+ImageMemoryPointer LoadPNG(const std::string file_path) {
 	FILE* p_png_file = fopen(file_path.c_str(), "rb");
 	int png_w;
 	int png_h;
@@ -31,13 +31,28 @@ ImageMemoryPointer loadPNG(const std::string file_path) {
 	return p_image;
 }
 
+void CreateThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_ptrs, int num_of_threads, int num_of_objects) {
+	thread_ptrs.resize(num_of_threads);
+	auto queue =  Valkyrie::VulkanManager::getGraphicsQueue();
+	int num_of_objects_per_thread = num_of_objects / num_of_objects;
+	for (int i = 0; i < num_of_threads; ++i) {
+		thread_ptrs[i] = MAKE_SHARED(Vulkan::ThreadCommandPool)(queue);
+		thread_ptrs[i]->initializeSecondaryCommandBuffers(num_of_objects_per_thread);
+	}
+}
+
+void ReleaseThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_ptrs) {
+	for (auto& tp : thread_ptrs) {
+		Vulkan::DestroyCommandPool(*tp);
+	}
+}
+
 int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, int command_show) {
-	int number_of_threads = tbb::task_scheduler_init::default_num_threads();
-
-	tbb::task_group g;
-
 	ValkyrieEngine::initializeValkyrieEngine();
 	auto& valkyrie = *ValkyrieEngine::getGlobalValkyriePtr();
+
+	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
+	CreateThreadRenderData(thread_ptrs, 4, 1000);
 
 	auto& asset_manager = *AssetManager::getGlobalAssetMangerPtr();
 	asset_manager.load("duck.lavy");
@@ -56,7 +71,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	mvp.projection = camera_ptr->getPerspective();
 
 	Vulkan::MemoryBuffer normal_uniform_buffer;
-	auto image_ptr = loadPNG("assets/gltf/test.png");
+	auto image_ptr = LoadPNG("assets/gltf/test.png");
 	Vulkan::Texture texture(image_ptr);
 	VulkanManager::initializeTexture(texture);
 
@@ -129,6 +144,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
 	}
 	render_context_ptr.reset();
+
+	ReleaseThreadRenderData(thread_ptrs);
 	ValkyrieEngine::closeValkyrieEngine();
 	return 0;
 }

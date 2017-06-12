@@ -10,7 +10,7 @@ namespace Valkyrie {
 	public:
 		static int initialize();
 		static void close();
-		static WindowManager* getGlobalWindowManagerPtr() { return gp_window_manager; }
+		static WindowManager& instance() { return *gp_window_manager; }
 
 		virtual ~WindowManager();
 

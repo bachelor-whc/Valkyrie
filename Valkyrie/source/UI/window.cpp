@@ -51,5 +51,15 @@ HWND Window::getWindowHandle() const {
 HINSTANCE Window::getWindowInstance() const {
 	return (HINSTANCE)GetWindowLongPtr(getWindowHandle(), GWLP_HINSTANCE);
 }
+
+void Window::setWindowTitle(const std::string& title) {
+	m_title = title;
+	SDL_SetWindowTitle(mp_window, m_title.c_str());
+}
+
+void Window::appendWindowTitle(const std::string& str) {
+	SDL_SetWindowTitle(mp_window, (m_title + str).c_str());
+}
+
 #endif
 
