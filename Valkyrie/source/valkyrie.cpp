@@ -115,6 +115,16 @@ void ValkyrieEngine::updateTime() {
 	imgui_io.DeltaTime = (float)m_deltatime;
 }
 
+void ValkyrieEngine::updateFPS() {
+	m_FPS = 1.0f / ImGui::GetIO().DeltaTime;
+}
+
+void ValkyrieEngine::updateFPSStatus() {
+	Valkyrie::WindowManager::instance().getMainWindowPtr()->appendWindowTitle(
+		std::to_string(m_FPS)
+	);
+}
+
 bool ValkyrieEngine::execute() {
 	static SDL_Event s_event;
 	while (SDL_PollEvent(&s_event)) {
@@ -139,10 +149,8 @@ bool ValkyrieEngine::execute() {
 		updateUserInput(s_event);
 	}
 	updateTime();
-	float FPS = 1 / ImGui::GetIO().DeltaTime;
-	Valkyrie::WindowManager::instance().getMainWindowPtr()->appendWindowTitle(
-		std::to_string(FPS)
-	);
+	updateFPS();
+	updateFPSStatus();
 	m_renderer_ptr->render();
 	return true;
 }

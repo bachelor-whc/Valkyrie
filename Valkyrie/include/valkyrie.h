@@ -50,6 +50,8 @@ private:
 	void initializeImGuiInput();
 	void updateUserInput(const SDL_Event& s_event);
 	void updateTime();
+	void updateFPS();
+	void updateFPSStatus();
 
 private:
 	Valkyrie::RendererPtr m_renderer_ptr;
@@ -57,6 +59,7 @@ private:
 	double m_previous_timestamp = 0.0;
 	double m_current_timestamp = 0.0;
 	double m_deltatime = 0.0;
+	float m_FPS = 0.0;
 };
 
 #endif
