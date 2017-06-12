@@ -15,6 +15,8 @@ namespace Valkyrie {
 
 		virtual ~ObjectManager();
 
+		unsigned int acquireNextID();
+
 	private:
 		static ObjectManager* gp_object_manager;
 		ObjectManager();

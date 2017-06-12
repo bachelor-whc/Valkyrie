@@ -33,3 +33,10 @@ ObjectManager::ObjectManager() :
 ObjectManager::~ObjectManager() {
 
 }
+
+unsigned int ObjectManager::acquireNextID() {
+	auto result = m_unused_ID.front();
+	m_unused_ID.pop_front();
+	m_used_ID.push_back(result);
+	return result;
+}

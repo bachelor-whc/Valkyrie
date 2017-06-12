@@ -38,7 +38,7 @@ void Valkyrie::AssetManager::load(path file_path) throw(...) {
 	if (file_path.extension() == ".lavy") {
 		LavyAssetPtr lavy_ptr;
 		lavy_ptr = m_lavy_loader.load(file_path);
-		auto& factory = *ValkyrieFactory::MeshFactory::getGlobalMeshFactoryPtr();
+		auto& factory = ValkyrieFactory::MeshFactory::instance();
 		m_asset_map[file_path.u8string()] = factory.createMesh(lavy_ptr);
 	}
 	else if (exists(file_path) && is_regular_file(file_path)) {

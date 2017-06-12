@@ -9,6 +9,11 @@ namespace Valkyrie {
 
 		virtual void start() = 0;
 		virtual void update() = 0;
+
+		unsigned int getID();
+
+	private:
+		unsigned int m_ID = -1;
 	};
 
 	class DirtyFlagView {

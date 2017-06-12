@@ -1,7 +1,5 @@
 #include "valkyrie/base_unit.h"
-
 using namespace Valkyrie;
-
 
 void DirtyFlags::reset() {
 	m_dirty = 0;
@@ -22,4 +20,8 @@ bool DirtyFlags::dirty() const {
 bool DirtyFlags::dirtyAt(const unsigned int flag) const {
 	return (m_dirty & flag) > 0;
 	
+}
+
+unsigned int Valkyrie::Base::getID() {
+	return m_ID;
 }
