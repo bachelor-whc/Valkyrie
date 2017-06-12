@@ -27,8 +27,6 @@ ObjectManager::ObjectManager() :
 	m_mt19937(m_random_device()) {
 	int n = 0;
 	std::generate(m_unused_ID.begin(), m_unused_ID.end(), [&n]() { return n++; });
-	std::random_device random_device;
-	std::mt19937 mt19937(random_device());
 	std::shuffle(m_unused_ID.begin(), m_unused_ID.end(), m_mt19937);
 }
 
