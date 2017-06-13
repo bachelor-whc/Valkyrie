@@ -3,6 +3,7 @@ bl_info = {
     "category": "Import-Export",
 }
 
+import os
 import bpy
 import json
 import bmesh
@@ -10,6 +11,7 @@ import ctypes
 from mathutils import Vector
 from bpy.props import StringProperty, BoolProperty
 from bpy_extras.io_utils import ExportHelper
+from shutil import copyfile
 
 class Vertex:
     __slots__ = (
@@ -43,20 +45,33 @@ class Vertex:
             other.loop_indices = indices
 
         return eq
-
+  
 class LavyExporter(bpy.types.Operator, ExportHelper):
     bl_idname = "export_mesh.lavy"
-    bl_label = "Export .lavy"
+    bl_label = "Export lavy"
     filename_ext = ".lavy"
-    filter_glob = StringProperty(default="*.lavy", options={'HIDDEN'})
-	
+    use_filter_folder = True
+    
     def execute(self, context):
+        directory = os.path.dirname(self.filepath) + "/"
         if bpy.context.active_object.mode!='OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
         scene = bpy.context.scene
-		
+        
         if len(bpy.context.selected_objects)>0:
             exporting_obj = bpy.context.selected_objects[0]
+            texture_index = 0
+            textures = list()
+            for material_slot in exporting_obj.material_slots:
+                for texture_slot in material_slot.material.texture_slots:
+                    if texture_slot == None:
+                        continue
+                    if texture_slot.texture.type == 'IMAGE':
+                        ext = texture_slot.texture.image.file_format
+                        filename = str(texture_index) + "." +  ext
+                        textures.append(filename)
+                        copyfile(bpy.path.abspath(texture_slot.texture.image.filepath), directory + filename)
+                        texture_index = texture_index + 1
             mesh = exporting_obj.data
 
             export_json = open(self.filepath + ".json", "w")
@@ -114,7 +129,8 @@ class LavyExporter(bpy.types.Operator, ExportHelper):
                     'indices': {
                         'byteLength': indices_byte_length,
                         'byteOffset': vertices_byte_length
-                    }
+                    },
+                    'textures': textures
                 }
             )
 
