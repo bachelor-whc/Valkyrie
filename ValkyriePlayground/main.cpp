@@ -49,7 +49,7 @@ void ReleaseThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_p
 
 int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, int command_show) {
 	ValkyrieEngine::initializeValkyrieEngine();
-	auto& valkyrie = *ValkyrieEngine::getGlobalValkyriePtr();
+	auto& valkyrie = ValkyrieEngine::instance();
 
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
 	CreateThreadRenderData(thread_ptrs, 4, 1000);

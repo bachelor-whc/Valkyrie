@@ -26,7 +26,7 @@ public:
 	};
 	static int initializeValkyrieEngine();
 	static void closeValkyrieEngine();
-	static ValkyrieEngine* getGlobalValkyriePtr() { return gp_valkyrie; }
+	static ValkyrieEngine& instance() { return *gp_valkyrie; }
 	static bool SDLInitialized;
 	
 public:
