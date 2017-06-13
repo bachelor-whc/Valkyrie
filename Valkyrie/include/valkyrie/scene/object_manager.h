@@ -1,7 +1,8 @@
 #ifndef _VALKYRIE_OBJECT_MANAGER_H
 #define _VALKYRIE_OBJECT_MANAGER_H
-#include <queue>
+#include <deque>
 #include <unordered_map>
+#include <unordered_set>
 #include <random>
 #include <mutex>
 #include "valkyrie/base_unit.h"
@@ -22,6 +23,7 @@ namespace Valkyrie {
 
 		unsigned int acquireNextID();
 		int registerObject(const Scene::ObjectPtr& ptr);
+		void unregisterObject(const unsigned int ID);
 		Scene::ObjectPtr getObject(const unsigned int ID) const;
 
 	private:
@@ -29,12 +31,14 @@ namespace Valkyrie {
 		ObjectManager();
 
 		void expandQueue();
+		void setTable(const unsigned int ID, const Scene::ObjectPtr& ptr);
+		void returnID(const unsigned int ID);
 
 		unsigned short m_resize_times = 0;
 		std::mutex m_registration_mutex;
 		std::mutex m_acquire_mutex;
 		std::deque<unsigned int> m_unused_ID;
-		std::deque<unsigned int> m_used_ID;
+		std::unordered_set<unsigned int> m_used_ID;
 		std::unordered_map<unsigned int, Scene::ObjectPtr> m_table;
 		std::random_device m_random_device;
 		std::mt19937 m_mt19937;

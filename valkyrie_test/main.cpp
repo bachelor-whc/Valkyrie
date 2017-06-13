@@ -90,12 +90,15 @@ TEST(ObjectFactory, CreateAndQueryObject) {
 	ObjectFactory::initialize();
 	auto& manager = ObjectManager::instance();
 	auto& factory = ObjectFactory::instance();
-	auto& duck = factory.createObject();
-	auto ID = duck->getID();
+	auto& duck1 = factory.createObject();
+	auto& duck2 = factory.createObject();
+	auto ID = duck1->getID();
 	auto& query = manager.getObject(ID);
 	ASSERT_EQ(ID, query->getID());
-	ASSERT_EQ(duck.get(), query.get());
+	ASSERT_EQ(duck1.get(), query.get());
 	ASSERT_EQ(nullptr, manager.getObject(-1));
+	manager.unregisterObject(ID);
+	manager.unregisterObject(ID);
 	ObjectFactory::close();
 	ObjectManager::close();
 }

@@ -45,17 +45,27 @@ void ObjectManager::expandQueue() {
 	}
 }
 
+void ObjectManager::setTable(const unsigned int ID, const Scene::ObjectPtr& ptr) {
+	std::lock_guard<std::mutex> lock(m_registration_mutex);
+	if (ptr == nullptr && m_table.count(ID) > 0) {
+		m_table.erase(ID);
+	}
+	else if(ptr != nullptr) {
+		m_table[ptr->getID()] = ptr;
+	}
+}
+
 ObjectManager::~ObjectManager() {
 
 }
 
 unsigned int ObjectManager::acquireNextID() {
-	std::lock_guard<std::mutex> lock(m_registration_mutex);
+	std::lock_guard<std::mutex> lock(m_acquire_mutex);
 	if (m_unused_ID.empty())
 		expandQueue();
 	auto result = m_unused_ID.front();
 	m_unused_ID.pop_front();
-	m_used_ID.push_back(result);
+	m_used_ID.insert(result);
 	return result;
 }
 
@@ -66,9 +76,21 @@ int Valkyrie::ObjectManager::registerObject(const Scene::ObjectPtr& ptr) {
 	else if (m_table.count(ptr->getID()) != 0) {
 		return ALREADY_REGISTERED;
 	}
-	std::lock_guard<std::mutex> lock(m_registration_mutex);
-	m_table[ptr->getID()] = ptr;
+	setTable(ptr->getID(), ptr);
 	return 0;
+}
+
+void ObjectManager::unregisterObject(const unsigned int ID) {
+	setTable(ID, nullptr);
+	returnID(ID);
+}
+
+void ObjectManager::returnID(const unsigned int ID) {
+	std::lock_guard<std::mutex> lock(m_acquire_mutex);
+	if(m_used_ID.count(ID) > 0) {
+		m_used_ID.erase(ID);
+		m_unused_ID.push_back(ID);
+	}
 }
 
 Scene::ObjectPtr ObjectManager::getObject(const unsigned int ID) const {
