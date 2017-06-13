@@ -12,7 +12,7 @@ using std::experimental::filesystem::is_regular_file;
 
 AssetManager* AssetManager::gp_asset_manager = nullptr;
 
-int Valkyrie::AssetManager::initialize() {
+int AssetManager::initialize() {
 	if (gp_asset_manager != nullptr)
 		return 0;
 	gp_asset_manager = NEW_NT AssetManager();
@@ -21,17 +21,21 @@ int Valkyrie::AssetManager::initialize() {
 	return 0;
 }
 
-void Valkyrie::AssetManager::close() {
+void AssetManager::close() {
 	if (gp_asset_manager != nullptr)
 		delete gp_asset_manager;
 	gp_asset_manager = nullptr;
 }
 
-Valkyrie::AssetManager::~AssetManager() {
+bool AssetManager::initialized() {
+	return gp_asset_manager != nullptr;
+}
+
+AssetManager::~AssetManager() {
 
 }
 
-void Valkyrie::AssetManager::load(path file_path) throw(...) {
+void AssetManager::load(path file_path) throw(...) {
 	if (file_path.is_relative()) {
 		file_path = m_path / file_path;
 	}
@@ -52,7 +56,7 @@ void Valkyrie::AssetManager::load(path file_path) throw(...) {
 	}
 }
 
-Valkyrie::AssetManager::AssetManager() :
+AssetManager::AssetManager() :
 	m_lavy_loader() {
 	m_path = current_path() / "assets";
 	if (!exists(m_path)) {

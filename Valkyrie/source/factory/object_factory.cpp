@@ -7,6 +7,7 @@ using namespace ValkyrieFactory;
 ObjectFactory* ObjectFactory::gp_object_factory = nullptr;
 
 int ObjectFactory::initialize() {
+	assert(ObjectManager::initialized());
 	gp_object_factory = NEW_NT ObjectFactory;
 	if (gp_object_factory == nullptr)
 		return 1;
@@ -18,6 +19,10 @@ void ObjectFactory::close() {
 		delete gp_object_factory;
 		gp_object_factory = nullptr;
 	}
+}
+
+bool ObjectFactory::initialized() {
+	return gp_object_factory != nullptr;
 }
 
 ObjectFactory::ObjectFactory() {

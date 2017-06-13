@@ -8,6 +8,7 @@ namespace ValkyrieFactory {
 	public:
 		static int initialize();
 		static void close();
+		static bool initialized();
 		static ObjectFactory& instance() { return *gp_object_factory; }
 
 		virtual ~ObjectFactory();

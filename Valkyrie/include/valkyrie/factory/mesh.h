@@ -8,6 +8,7 @@ namespace ValkyrieFactory {
 	public:
 		static int initialize();
 		static void close();
+		static bool initialized();
 		static MeshFactory& instance() { return *gp_mesh_factory; }
 
 		virtual ~MeshFactory();

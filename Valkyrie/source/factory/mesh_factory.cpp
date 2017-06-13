@@ -21,6 +21,10 @@ void MeshFactory::close() {
 	}
 }
 
+bool MeshFactory::initialized() {
+	return gp_mesh_factory != nullptr;
+}
+
 MeshFactory::~MeshFactory() {
 
 }

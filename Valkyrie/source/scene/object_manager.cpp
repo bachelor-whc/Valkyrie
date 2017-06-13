@@ -13,6 +13,10 @@ int ObjectManager::initialize() {
 	return 0;
 }
 
+bool ObjectManager::initialized() {
+	return gp_object_manager != nullptr;
+}
+
 void ObjectManager::close() {
 	if (gp_object_manager != nullptr) {
 		delete gp_object_manager;

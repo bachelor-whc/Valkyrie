@@ -15,6 +15,7 @@ namespace Valkyrie {
 		static const int ALREADY_REGISTERED = -2;
 		static int initialize();
 		static void close();
+		static bool initialized();
 		static ObjectManager& instance() { return *gp_object_manager; }
 
 		virtual ~ObjectManager();
