@@ -3,9 +3,10 @@
 #include <queue>
 #include <unordered_map>
 #include <random>
+#include <mutex>
 #include "valkyrie/base_unit.h"
 #include "valkyrie/scene/object.h"
-#define MAX_NUM_OF_OBJECTS 65536
+#define DEFAULT_NUM_OF_OBJECTS 65536
 
 namespace Valkyrie {
 	class ObjectManager {
@@ -20,12 +21,17 @@ namespace Valkyrie {
 
 		unsigned int acquireNextID();
 		int registerObject(const Scene::ObjectPtr& ptr);
-		Scene::ObjectPtr getObject(const unsigned int ID);
+		Scene::ObjectPtr getObject(const unsigned int ID) const;
 
 	private:
 		static ObjectManager* gp_object_manager;
 		ObjectManager();
 
+		void expandQueue();
+
+		unsigned short m_resize_times = 0;
+		std::mutex m_registration_mutex;
+		std::mutex m_acquire_mutex;
 		std::deque<unsigned int> m_unused_ID;
 		std::deque<unsigned int> m_used_ID;
 		std::unordered_map<unsigned int, Scene::ObjectPtr> m_table;
