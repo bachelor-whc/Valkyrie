@@ -74,8 +74,8 @@ void ValkyrieEngine::closeValkyrieEngine() {
 	Valkyrie::AssetManager::close();
 }
 
-Valkyrie::RendererPtr ValkyrieEngine::getRenderContextPtr() {
-	return m_renderer_ptr;
+Valkyrie::Renderer& ValkyrieEngine::getRenderer() {
+	return *m_renderer_ptr;
 }
 
 ValkyrieEngine::ValkyrieEngine(std::string application_name) :

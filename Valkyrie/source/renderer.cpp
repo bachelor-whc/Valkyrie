@@ -55,8 +55,6 @@ VkResult Renderer::render() {
 	const auto& device = VulkanManager::getDevice();
 	const auto& queue = VulkanManager::getGraphicsQueue();
 
-	
-
 	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, VK_NULL_HANDLE);
 	assert(result == VK_SUCCESS);
 
@@ -85,7 +83,7 @@ VkResult Renderer::render() {
 	return VK_SUCCESS;
 }
 
-VkRenderPassBeginInfo Renderer::getRenderPassBegin() {
+VkRenderPassBeginInfo Renderer::getRenderPassBegin() const {
 	auto rpb = VK_DEFAULT_RENDER_PASS_BEGIN;
 	rpb.renderArea.extent.width = m_window_ptr->getWidth();
 	rpb.renderArea.extent.height = m_window_ptr->getHeight();

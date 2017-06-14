@@ -20,7 +20,7 @@ namespace Valkyrie {
 			Pipeline();
 			virtual ~Pipeline();
 
-			void initialize(const RendererPtr render_context_ptr);
+			void initialize(const Renderer& renderer);
 			void commandBind(const Vulkan::CommandBuffer& command);
 
 			Vulkan::VertexInput vertexInput;

@@ -18,11 +18,11 @@ namespace Valkyrie {
 		virtual ~Renderer();
 
 		virtual VkResult render();
-		inline VkRenderPass getRenderPassHandle() { return m_render_pass.handle; }
-		inline VkFramebuffer getFramebuffer(int index) { return mp_swapchain->getFramebuffers()->handles[index]; }
-		inline VkImage getSwapChainImage(int index) { return mp_swapchain->getImage(index); }
-		inline int getCurrentBuffer() { return mp_swapchain->getCurrent(); }
-		VkRenderPassBeginInfo getRenderPassBegin();
+		inline VkRenderPass getRenderPassHandle() const { return m_render_pass.handle; }
+		inline VkFramebuffer getFramebuffer(int index) const { return mp_swapchain->getFramebuffers()->handles[index]; }
+		inline VkImage getSwapChainImage(int index) const { return mp_swapchain->getImage(index); }
+		inline int getCurrentBuffer() const { return mp_swapchain->getCurrent(); }
+		VkRenderPassBeginInfo getRenderPassBegin() const;
 		std::vector<Vulkan::CommandBuffer> renderCommands;
 
 		void commandSetViewport(const Vulkan::CommandBuffer& command_buffer);

@@ -115,24 +115,24 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	pipeline.shaderPtrs[Graphics::Pipeline::ShaderStage::VERTEX] = vertex_shader;
 	pipeline.shaderPtrs[Graphics::Pipeline::ShaderStage::FRAGMENT] = fragment_shader;
 	
-	auto render_context_ptr = valkyrie.getRenderContextPtr();
-	pipeline.initialize(render_context_ptr);
+	auto& renderer = valkyrie.getRenderer();
+	pipeline.initialize(renderer);
 
 	pipeline.descriptorPoolPtr->updateDescriptorSet(normal_uniform_buffer, 0, 0);
 	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 0, 1);
 
-	VkRenderPassBeginInfo render_pass_begin = render_context_ptr->getRenderPassBegin();
-	int render_command_size = render_context_ptr->renderCommands.size();
+	VkRenderPassBeginInfo render_pass_begin = renderer.getRenderPassBegin();
+	int render_command_size = renderer.renderCommands.size();
 	
 	VkResult result;
 	for (int i = 0; i < render_command_size; ++i) {
-		auto& command = render_context_ptr->renderCommands[i];
+		auto& command = renderer.renderCommands[i];
 		command.begin();
-		render_pass_begin.framebuffer = render_context_ptr->getFramebuffer(i);
+		render_pass_begin.framebuffer = renderer.getFramebuffer(i);
 		vkCmdBeginRenderPass(command.handle, &render_pass_begin, VK_SUBPASS_CONTENTS_INLINE);
 
-		render_context_ptr->commandSetViewport(command);
-		render_context_ptr->commandSetScissor(command);
+		renderer.commandSetViewport(command);
+		renderer.commandSetScissor(command);
 
 		pipeline.commandBind(command);
 		mesh_renderer.recordDrawCommand(command);
@@ -161,7 +161,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.model = duck_transform.getWorldMatrix();
 		normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
 	}
-	render_context_ptr.reset();
 
 	ReleaseThreadRenderData(thread_ptrs);
 	ValkyrieEngine::closeValkyrieEngine();

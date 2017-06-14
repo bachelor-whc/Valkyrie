@@ -41,7 +41,7 @@ public:
 
 	std::vector<Vulkan::MemoryBuffer> memoryBuffers;
 	UserInput userInput = {};
-	Valkyrie::RendererPtr getRenderContextPtr();
+	Valkyrie::Renderer& getRenderer();
 	
 private:
 	ValkyrieEngine() = delete;
