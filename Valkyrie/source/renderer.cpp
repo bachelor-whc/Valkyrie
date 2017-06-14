@@ -50,13 +50,16 @@ Renderer::~Renderer() {
 	}
 }
 
+void Renderer::prepareFrame() {
+	VkResult result;
+	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, VK_NULL_HANDLE);
+	assert(result == VK_SUCCESS);
+}
+
 VkResult Renderer::render() {
 	VkResult result;
 	const auto& device = VulkanManager::getDevice();
 	const auto& queue = VulkanManager::getGraphicsQueue();
-
-	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, VK_NULL_HANDLE);
-	assert(result == VK_SUCCESS);
 
 	const VkPipelineStageFlags wait_stage_mask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	VkSubmitInfo submit = {};

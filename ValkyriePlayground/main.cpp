@@ -150,6 +150,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	duck_transform.setScale(s, s, s);
 
 	while (valkyrie.execute()) {
+		renderer.prepareFrame();
 		camera_obj_ptr->update();
 		camera_obj_ptr->transform.getTranslteRef().z = 25.0f * sin(ty) + 30.0f;
 		camera_obj_ptr->transform.getRotationRef().z = glm::radians<float>(ry);
@@ -160,6 +161,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		mvp.view = camera_ptr->getView();
 		mvp.model = duck_transform.getWorldMatrix();
 		normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
+		renderer.render();
 	}
 
 	ReleaseThreadRenderData(thread_ptrs);

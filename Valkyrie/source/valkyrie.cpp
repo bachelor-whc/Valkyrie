@@ -167,7 +167,6 @@ bool ValkyrieEngine::execute() {
 	updateTime();
 	updateFPS();
 	updateFPSStatus();
-	m_renderer_ptr->render();
 	return true;
 }
 

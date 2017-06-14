@@ -17,6 +17,7 @@ namespace Valkyrie {
 		Renderer(const WindowPtr& window_ptr);
 		virtual ~Renderer();
 
+		void prepareFrame();
 		virtual VkResult render();
 		inline VkRenderPass getRenderPassHandle() const { return m_render_pass.handle; }
 		inline VkFramebuffer getFramebuffer(int index) const { return mp_swapchain->getFramebuffers()->handles[index]; }
