@@ -6,8 +6,7 @@
 using namespace Valkyrie;
 
 Renderer::Renderer(const WindowPtr& window_ptr) : 
-	m_window_ptr(window_ptr),
-	m_task_group() {
+	m_window_ptr(window_ptr) {
 	const auto& device = VulkanManager::getDevice();
 	initializeSurface();
 	initializeSwapChain();
@@ -27,10 +26,18 @@ Renderer::Renderer(const WindowPtr& window_ptr) :
 	present_semaphore_create.flags = 0;
 	result = vkCreateSemaphore(device, &present_semaphore_create, nullptr, &m_present_semaphore);
 	assert(result == VK_SUCCESS);
+
+	VkFenceCreateInfo present_fence_create = {};
+	present_fence_create.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	present_fence_create.pNext = nullptr;
+	present_fence_create.flags = 0;
+	result = vkCreateFence(device, &present_fence_create, nullptr, &m_fence);
+	assert(result == VK_SUCCESS);
 }
 
 Renderer::~Renderer() {
 	const auto& device = VulkanManager::getDevice();
+	vkDestroyFence(device, m_fence, nullptr);
 	vkDestroySemaphore(device, m_present_semaphore, nullptr);
 	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
 	DestroySwapChain(*mp_swapchain);
@@ -48,13 +55,7 @@ VkResult Renderer::render() {
 	const auto& device = VulkanManager::getDevice();
 	const auto& queue = VulkanManager::getGraphicsQueue();
 
-	VkFence fence = VK_NULL_HANDLE;
-	VkFenceCreateInfo present_fence_create = {};
-	present_fence_create.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-	present_fence_create.pNext = nullptr;
-	present_fence_create.flags = 0;
-	result = vkCreateFence(device, &present_fence_create, nullptr, &fence);
-	assert(result == VK_SUCCESS);
+	
 
 	result = mp_swapchain->acquireNextImage(UINT64_MAX, m_present_semaphore, VK_NULL_HANDLE);
 	assert(result == VK_SUCCESS);
@@ -69,14 +70,14 @@ VkResult Renderer::render() {
 	submit.pWaitDstStageMask = &wait_stage_mask;
 	submit.waitSemaphoreCount = 1;
 
-	result = vkQueueSubmit(queue.handle, 1, &submit, fence);
+	result = vkQueueSubmit(queue.handle, 1, &submit, m_fence);
 	assert(result == VK_SUCCESS);
 
 	do {
-		result = vkWaitForFences(VulkanManager::getDevice(), 1, &fence, VK_TRUE, 100000000);
+		result = vkWaitForFences(VulkanManager::getDevice(), 1, &m_fence, VK_TRUE, 100000000);
 	} while (result == VK_TIMEOUT);
 	assert(result == VK_SUCCESS);
-	vkDestroyFence(device, fence, nullptr);
+	vkResetFences(device, 1, &m_fence);
 
 	result = mp_swapchain->queuePresent(queue.handle);
 	assert(result == VK_SUCCESS);
@@ -84,7 +85,7 @@ VkResult Renderer::render() {
 	return VK_SUCCESS;
 }
 
-VkRenderPassBeginInfo Valkyrie::Renderer::getRenderPassBegin() {
+VkRenderPassBeginInfo Renderer::getRenderPassBegin() {
 	auto rpb = VK_DEFAULT_RENDER_PASS_BEGIN;
 	rpb.renderArea.extent.width = m_window_ptr->getWidth();
 	rpb.renderArea.extent.height = m_window_ptr->getHeight();

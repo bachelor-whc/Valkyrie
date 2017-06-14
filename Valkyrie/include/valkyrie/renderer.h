@@ -44,7 +44,7 @@ namespace Valkyrie {
 		VkViewport m_viewport = {};
 		VkRect2D m_scissor = {};
 		VkSemaphore m_present_semaphore = VK_NULL_HANDLE;
-		tbb::task_group m_task_group;
+		VkFence m_fence = VK_NULL_HANDLE;
 	};
 
 	using RendererPtr = std::shared_ptr<Renderer>;
