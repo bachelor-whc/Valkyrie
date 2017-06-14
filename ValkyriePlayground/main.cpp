@@ -18,6 +18,9 @@ struct ModelViewProjection {
 	glm::mat4 projection;
 };
 
+using ObjectList = std::vector<unsigned int>;
+std::vector<ObjectList> thread_data;
+
 ImageMemoryPointer LoadPNG(const std::string file_path) {
 	FILE* p_png_file = fopen(file_path.c_str(), "rb");
 	int png_w;
@@ -33,11 +36,26 @@ ImageMemoryPointer LoadPNG(const std::string file_path) {
 
 void CreateThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_ptrs, int num_of_threads, int num_of_objects) {
 	thread_ptrs.resize(num_of_threads);
-	auto queue =  Valkyrie::VulkanManager::getGraphicsQueue();
-	int num_of_objects_per_thread = num_of_objects / num_of_objects;
+	thread_data.resize(num_of_threads);
+	auto& queue = Valkyrie::VulkanManager::getGraphicsQueue();
+	auto& factory = ValkyrieFactory::ObjectFactory::instance();
+	auto& manager = Valkyrie::ObjectManager::instance();
+	std::uniform_real_distribution<float> uniform_distribution(-1.0f, 1.0f);
+	auto& random_generator = manager.getRandomGenerator();
+	int num_of_objects_per_thread = num_of_objects / num_of_threads;
 	for (int i = 0; i < num_of_threads; ++i) {
 		thread_ptrs[i] = MAKE_SHARED(Vulkan::ThreadCommandPool)(queue);
 		thread_ptrs[i]->initializeSecondaryCommandBuffers(num_of_objects_per_thread);
+		for (int j = 0; j < num_of_objects_per_thread; ++j) {
+			auto& object_ptr = factory.createObject();
+			thread_data[i].push_back(object_ptr->getID());
+			object_ptr->transform.setScale(0.01f, 0.01f, 0.01f);
+			object_ptr->transform.setTranslate(
+				uniform_distribution(random_generator),
+				uniform_distribution(random_generator),
+				uniform_distribution(random_generator)
+			);
+		}
 	}
 }
 

@@ -25,6 +25,7 @@ namespace Valkyrie {
 		int registerObject(const Scene::ObjectPtr& ptr);
 		void unregisterObject(const unsigned int ID);
 		Scene::ObjectPtr getObject(const unsigned int ID) const;
+		inline std::mt19937 getRandomGenerator() { return m_mt19937; };
 
 	private:
 		static ObjectManager* gp_object_manager;

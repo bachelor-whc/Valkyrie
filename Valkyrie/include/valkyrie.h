@@ -18,6 +18,9 @@
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/renderer.h"
 #include "valkyrie/utility/vulkan_manager.h"
+#include "valkyrie/scene/object_manager.h"
+#include "valkyrie/factory/object.h"
+#include "valkyrie/factory/mesh.h"
 
 class ValkyrieEngine {
 public:
