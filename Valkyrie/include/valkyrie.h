@@ -21,6 +21,9 @@
 #include "valkyrie/scene/object_manager.h"
 #include "valkyrie/factory/object.h"
 #include "valkyrie/factory/mesh.h"
+#include "valkyrie/graphics/pipeline.h"
+#include "valkyrie/vulkan/thread.h"
+#include "valkyrie/utility/task_manager.h"
 
 class ValkyrieEngine {
 public:

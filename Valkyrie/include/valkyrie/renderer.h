@@ -45,7 +45,10 @@ namespace Valkyrie {
 		VkViewport m_viewport = {};
 		VkRect2D m_scissor = {};
 		VkSemaphore m_present_semaphore = VK_NULL_HANDLE;
+		VkSemaphore m_render_semaphore = VK_NULL_HANDLE;
 		VkFence m_fence = VK_NULL_HANDLE;
+		VkSubmitInfo m_submit = {};
+		VkPipelineStageFlags m_submit_pipeline_stages = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	};
 
 	using RendererPtr = std::shared_ptr<Renderer>;

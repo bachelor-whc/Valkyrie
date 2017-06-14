@@ -184,12 +184,16 @@ VkResult SwapChain::acquireNextImage(uint64_t timeout, const VkSemaphore semapho
 	return vkAcquireNextImageKHR(device, handle, timeout, semaphore, fence, &m_current_buffer);
 }
 
-VkResult SwapChain::queuePresent(const VkQueue& queue) {
+VkResult SwapChain::queuePresent(const VkQueue& queue, VkSemaphore semaphore) {
 	VkPresentInfoKHR present = {};
 	present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 	present.swapchainCount = 1;
 	present.pSwapchains = &handle;
 	present.pImageIndices = &m_current_buffer;
+	if (semaphore != VK_NULL_HANDLE) {
+		present.waitSemaphoreCount = 1;
+		present.pWaitSemaphores = &semaphore;
+	}
 	return vkQueuePresentKHR(queue, &present);
 }
 

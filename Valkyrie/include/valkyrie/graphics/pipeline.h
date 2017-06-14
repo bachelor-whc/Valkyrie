@@ -27,7 +27,6 @@ namespace Valkyrie {
 			Vulkan::DescriptorPoolPtr descriptorPoolPtr;
 			std::map<ShaderStage, Vulkan::ShaderPointer> shaderPtrs;
 
-		private:
 			Vulkan::PipelineModule module;
 		};
 	}

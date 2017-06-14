@@ -8,18 +8,12 @@
 #include <cassert>
 #include <imgui.h>
 #include <stb_image.h>
-#include <valkyrie/graphics/pipeline.h>
-#include <valkyrie/vulkan/thread.h>
 using namespace Valkyrie;
 
-struct ModelViewProjection {
-	glm::mat4 model;
-	glm::mat4 view;
-	glm::mat4 projection;
-};
 
+using ModelViewProjection = glm::mat4;
 using ObjectList = std::vector<unsigned int>;
-std::vector<ObjectList> thread_data;
+std::vector<ObjectList> thread_IDs;
 
 ImageMemoryPointer LoadPNG(const std::string file_path) {
 	FILE* p_png_file = fopen(file_path.c_str(), "rb");
@@ -36,11 +30,11 @@ ImageMemoryPointer LoadPNG(const std::string file_path) {
 
 void CreateThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_ptrs, int num_of_threads, int num_of_objects) {
 	thread_ptrs.resize(num_of_threads);
-	thread_data.resize(num_of_threads);
+	thread_IDs.resize(num_of_threads);
 	auto& queue = Valkyrie::VulkanManager::getGraphicsQueue();
 	auto& factory = ValkyrieFactory::ObjectFactory::instance();
 	auto& manager = Valkyrie::ObjectManager::instance();
-	std::uniform_real_distribution<float> uniform_distribution(-1.0f, 1.0f);
+	std::uniform_real_distribution<float> uniform_distribution(-1000.0f, 1000.0f);
 	auto& random_generator = manager.getRandomGenerator();
 	int num_of_objects_per_thread = num_of_objects / num_of_threads;
 	for (int i = 0; i < num_of_threads; ++i) {
@@ -48,7 +42,7 @@ void CreateThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_pt
 		thread_ptrs[i]->initializeSecondaryCommandBuffers(num_of_objects_per_thread);
 		for (int j = 0; j < num_of_objects_per_thread; ++j) {
 			auto& object_ptr = factory.createObject();
-			thread_data[i].push_back(object_ptr->getID());
+			thread_IDs[i].push_back(object_ptr->getID());
 			object_ptr->transform.setScale(0.01f, 0.01f, 0.01f);
 			object_ptr->transform.setTranslate(
 				uniform_distribution(random_generator),
@@ -70,7 +64,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto& valkyrie = ValkyrieEngine::instance();
 
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
-	CreateThreadRenderData(thread_ptrs, 4, 1000);
+	int num_of_threads = Valkyrie::TaskManager::instance().getNumberOfThreads();
+	int num_of_objects = 600;
+	int num_of_objects_per_thread = num_of_objects / num_of_threads;
+	CreateThreadRenderData(thread_ptrs, num_of_threads, num_of_objects);
 
 	auto& asset_manager = AssetManager::instance();
 	asset_manager.load("duck.lavy");
@@ -84,17 +81,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	camera_ptr->setRatio(1024, 768);
 	camera_ptr->update();
 
-	ModelViewProjection mvp;
-	mvp.view = camera_ptr->getView();
-	mvp.projection = camera_ptr->getPerspective();
-
-	Vulkan::MemoryBuffer normal_uniform_buffer;
 	auto image_ptr = LoadPNG("assets/gltf/test.png");
 	Vulkan::Texture texture(image_ptr);
 	VulkanManager::initializeTexture(texture);
-
-	normal_uniform_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, sizeof(mvp));
-	normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
 
 	Graphics::Pipeline pipeline;
 	pipeline.descriptorPoolPtr = MAKE_SHARED(Vulkan::DescriptorPool)();
@@ -114,53 +103,84 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto fragment_shader = MAKE_SHARED(Vulkan::Shader)(fragment_code, VK_SHADER_STAGE_FRAGMENT_BIT);
 	pipeline.shaderPtrs[Graphics::Pipeline::ShaderStage::VERTEX] = vertex_shader;
 	pipeline.shaderPtrs[Graphics::Pipeline::ShaderStage::FRAGMENT] = fragment_shader;
-	
+	pipeline.module.pushConstantRanges.resize(1);
+	pipeline.module.pushConstantRanges[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	pipeline.module.pushConstantRanges[0].offset = 0;
+	pipeline.module.pushConstantRanges[0].size = sizeof(ModelViewProjection);
+
 	auto& renderer = valkyrie.getRenderer();
 	pipeline.initialize(renderer);
 
-	pipeline.descriptorPoolPtr->updateDescriptorSet(normal_uniform_buffer, 0, 0);
 	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 0, 1);
 
-	VkRenderPassBeginInfo render_pass_begin = renderer.getRenderPassBegin();
-	int render_command_size = renderer.renderCommands.size();
-	
-	VkResult result;
-	for (int i = 0; i < render_command_size; ++i) {
-		auto& command = renderer.renderCommands[i];
-		command.begin();
-		render_pass_begin.framebuffer = renderer.getFramebuffer(i);
-		vkCmdBeginRenderPass(command.handle, &render_pass_begin, VK_SUBPASS_CONTENTS_INLINE);
-
-		renderer.commandSetViewport(command);
-		renderer.commandSetScissor(command);
-
-		pipeline.commandBind(command);
-		mesh_renderer.recordDrawCommand(command);
-
-		vkCmdEndRenderPass(command.handle);
-		result = command.end();
-		assert(result == VK_SUCCESS);
-	}
-
-	auto& duck_transform = duck.transform;
-	duck_transform.setRotation(0.0f, 0.0f, -90.0f);
 	auto ty = 0.0f;
 	auto ry = 0.0f;
-	auto s = 0.01f;
-	duck_transform.setScale(s, s, s);
 
+	VkRenderPassBeginInfo render_pass_begin = renderer.getRenderPassBegin();
+
+	auto& task_manager = Valkyrie::TaskManager::instance();
+	auto& object_manager = Valkyrie::ObjectManager::instance();
 	while (valkyrie.execute()) {
 		renderer.prepareFrame();
-		camera_obj_ptr->update();
+
+		int current = renderer.getCurrentBuffer();
+		auto& command = renderer.renderCommands[current];
+		command.begin();
+		render_pass_begin.framebuffer = renderer.getFramebuffer(current);
+		vkCmdBeginRenderPass(command.handle, &render_pass_begin, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+
+		VkCommandBufferInheritanceInfo inheritance = {};
+		inheritance.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+		inheritance.renderPass = renderer.getRenderPassHandle();
+		inheritance.framebuffer = renderer.getFramebuffer(current);
+
 		camera_obj_ptr->transform.getTranslteRef().z = 25.0f * sin(ty) + 30.0f;
 		camera_obj_ptr->transform.getRotationRef().z = glm::radians<float>(ry);
-		duck_transform.getTranslteRef().y = sin(ty);
-		duck_transform.getRotationRef().x = glm::radians<float>(ry);
+		camera_obj_ptr->update();
 		ry += 1.0f;
 		ty += 0.01f;
-		mvp.view = camera_ptr->getView();
-		mvp.model = duck_transform.getWorldMatrix();
-		normal_uniform_buffer.write(&mvp, 0, sizeof(mvp));
+		for (int i = 0; i < num_of_threads; ++i) {
+			auto& thread = *thread_ptrs[i];
+			auto& objects = thread_IDs[i];
+			task_manager.group.run([&]() {
+				for (int c = 0; c < num_of_objects_per_thread; ++c) {
+					Vulkan::InheritanceCommandBuffer icb(thread.commands[c], inheritance);
+					icb.begin();
+					renderer.commandSetViewport(icb);
+					renderer.commandSetScissor(icb);
+					pipeline.commandBind(icb);
+					
+					int ID = objects[c];
+					auto& object = *object_manager.getObject(objects[c]);
+					auto mvp = camera_ptr->getPerspective() * camera_ptr->getView() * object.transform.getWorldMatrix();
+					vkCmdPushConstants(
+						icb.handle,
+						pipeline.module.layout,
+						VK_SHADER_STAGE_VERTEX_BIT,
+						0,
+						sizeof(mvp),
+						&mvp
+					);
+
+					mesh_renderer.recordDrawCommand(icb);
+
+					icb.end();
+				}
+			});
+		}
+		task_manager.group.wait();
+
+		for (auto& thread_ptr : thread_ptrs) {
+			vkCmdExecuteCommands(
+				command.handle,
+				thread_ptr->commands.size(),
+				thread_ptr->commands.data()
+			);
+		}
+
+		vkCmdEndRenderPass(command.handle);
+		command.end();
+
 		renderer.render();
 	}
 

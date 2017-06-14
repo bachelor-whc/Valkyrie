@@ -20,11 +20,12 @@ Renderer::Renderer(const WindowPtr& window_ptr) :
 
 	VkResult result;
 
-	VkSemaphoreCreateInfo present_semaphore_create = {};
-	present_semaphore_create.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-	present_semaphore_create.pNext = nullptr;
-	present_semaphore_create.flags = 0;
-	result = vkCreateSemaphore(device, &present_semaphore_create, nullptr, &m_present_semaphore);
+	VkSemaphoreCreateInfo semaphore_create = {};
+	semaphore_create.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+	semaphore_create.pNext = nullptr;
+	semaphore_create.flags = 0;
+	result = vkCreateSemaphore(device, &semaphore_create, nullptr, &m_render_semaphore);
+	result = vkCreateSemaphore(device, &semaphore_create, nullptr, &m_present_semaphore);
 	assert(result == VK_SUCCESS);
 
 	VkFenceCreateInfo present_fence_create = {};
@@ -33,11 +34,19 @@ Renderer::Renderer(const WindowPtr& window_ptr) :
 	present_fence_create.flags = 0;
 	result = vkCreateFence(device, &present_fence_create, nullptr, &m_fence);
 	assert(result == VK_SUCCESS);
+
+	m_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	m_submit.pWaitDstStageMask = &m_submit_pipeline_stages;
+	m_submit.waitSemaphoreCount = 1;
+	m_submit.pWaitSemaphores = &m_present_semaphore;
+	m_submit.signalSemaphoreCount = 1;
+	m_submit.pSignalSemaphores = &m_render_semaphore;
 }
 
 Renderer::~Renderer() {
 	const auto& device = VulkanManager::getDevice();
 	vkDestroyFence(device, m_fence, nullptr);
+	vkDestroySemaphore(device, m_render_semaphore, nullptr);
 	vkDestroySemaphore(device, m_present_semaphore, nullptr);
 	DestroyFramebuffers(*mp_swapchain->getFramebuffers());
 	DestroySwapChain(*mp_swapchain);
@@ -61,17 +70,10 @@ VkResult Renderer::render() {
 	const auto& device = VulkanManager::getDevice();
 	const auto& queue = VulkanManager::getGraphicsQueue();
 
-	const VkPipelineStageFlags wait_stage_mask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	VkSubmitInfo submit = {};
-	submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submit.waitSemaphoreCount = 1;
-	submit.pWaitSemaphores = &m_present_semaphore;
-	submit.commandBufferCount = 1;
-	submit.pCommandBuffers = &renderCommands[mp_swapchain->getCurrent()].handle;
-	submit.pWaitDstStageMask = &wait_stage_mask;
-	submit.waitSemaphoreCount = 1;
+	m_submit.commandBufferCount = 1;
+	m_submit.pCommandBuffers = &renderCommands[mp_swapchain->getCurrent()].handle;
 
-	result = vkQueueSubmit(queue.handle, 1, &submit, m_fence);
+	result = vkQueueSubmit(queue.handle, 1, &m_submit, m_fence);
 	assert(result == VK_SUCCESS);
 
 	do {
@@ -80,9 +82,10 @@ VkResult Renderer::render() {
 	assert(result == VK_SUCCESS);
 	vkResetFences(device, 1, &m_fence);
 
-	result = mp_swapchain->queuePresent(queue.handle);
+	result = mp_swapchain->queuePresent(queue.handle, m_render_semaphore);
 	assert(result == VK_SUCCESS);
-
+	result = vkQueueWaitIdle(queue.handle);
+	assert(result == VK_SUCCESS);
 	return VK_SUCCESS;
 }
 

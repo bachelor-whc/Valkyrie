@@ -51,7 +51,7 @@ namespace Vulkan {
 		inline VkImage getCurrentImage() const { return m_buffers[m_current_buffer].handle; }
 		inline VkImage getImage(int index) const { return m_buffers[index].handle; }
 		VkResult acquireNextImage(uint64_t timeout, const VkSemaphore semaphore, const VkFence fence);
-		VkResult queuePresent(const VkQueue& queue);
+		VkResult queuePresent(const VkQueue& queue, VkSemaphore semaphore = VK_NULL_HANDLE);
 
 	private:
 		std::vector<SwapChainBuffer> m_buffers;

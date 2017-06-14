@@ -2,7 +2,6 @@
 #include "valkyrie/utility/vulkan_manager.h"
 using namespace Valkyrie::Graphics;
 
-
 Pipeline::Pipeline() :
 	module(),
 	vertexInput() {
@@ -28,7 +27,7 @@ void Pipeline::initialize(const Valkyrie::Renderer& renderer) {
 	assert(result == VK_SUCCESS);
 }
 
-void Pipeline::commandBind(const Vulkan::CommandBuffer & command) {
+void Pipeline::commandBind(const Vulkan::CommandBuffer& command) {
 	vkCmdBindDescriptorSets(
 		command.handle,
 		VK_PIPELINE_BIND_POINT_GRAPHICS,

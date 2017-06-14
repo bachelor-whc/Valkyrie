@@ -3,6 +3,7 @@
 #include <tbb/task_group.h>
 #include <tbb/task_scheduler_init.h>
 #include <vector>
+#include <functional>
 
 namespace Valkyrie {
 	class Job {
@@ -21,15 +22,13 @@ namespace Valkyrie {
 		static TaskManager& instance() { return *gp_task_manager; }
 
 		virtual ~TaskManager();
-		
-		virtual void addJob(const Valkyrie::Job& job);
-		virtual void wait();
+		inline unsigned int getNumberOfThreads() { return m_num_of_threads; }
 
+		tbb::task_group group;
 	private:
 		static TaskManager* gp_task_manager;
 		TaskManager();
 
-		tbb::task_group m_task_group;
 		unsigned int m_num_of_threads = 0;
 		tbb::task_scheduler_init* mp_init = nullptr;
 	};

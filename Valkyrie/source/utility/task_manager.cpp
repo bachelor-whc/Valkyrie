@@ -24,8 +24,9 @@ bool TaskManager::initialized() {
 	return gp_task_manager != nullptr;
 }
 
-TaskManager::TaskManager() : m_task_group() {
-	m_num_of_threads = std::thread::hardware_concurrency() * 2 - 1;
+TaskManager::TaskManager() : group() {
+	auto default_num_of_threads = std::thread::hardware_concurrency();
+	m_num_of_threads = default_num_of_threads > 1 ? (default_num_of_threads - 1) : 1;
 	mp_init = NEW_NT tbb::task_scheduler_init(m_num_of_threads);
 }
 
@@ -33,12 +34,4 @@ TaskManager::~TaskManager() {
 	if (mp_init != nullptr) {
 		delete mp_init;
 	}
-}
-
-void Valkyrie::TaskManager::addJob(const Valkyrie::Job & job) {
-	m_task_group.run(job);
-}
-
-void Valkyrie::TaskManager::wait() {
-	m_task_group.wait();
 }
