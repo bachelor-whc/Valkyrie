@@ -26,7 +26,7 @@ bool TaskManager::initialized() {
 
 TaskManager::TaskManager() : group() {
 	auto default_num_of_threads = std::thread::hardware_concurrency();
-	m_num_of_threads = default_num_of_threads > 1 ? (default_num_of_threads - 1) : 1;
+	m_num_of_threads = default_num_of_threads > 1 ? (default_num_of_threads) : 1;
 	mp_init = NEW_NT tbb::task_scheduler_init(m_num_of_threads);
 }
 

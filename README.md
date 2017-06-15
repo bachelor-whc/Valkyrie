@@ -23,6 +23,7 @@ Valkyrie所使用的第三方函式庫或代碼其版權聲明都放置於`licen
 * 載入SPV(使用者自行編譯)
 * 簡易設置Descriptor Pool, Descriptor Set, Descriptor Set Layout(2016/12/22)
 * 專用格式Lavy(仿glTF)與Blender用Exporter
+* Multi-threaded Rendering
 
 ## 未來開發項目
 * 更好的Vulkan封裝與介面
@@ -30,7 +31,6 @@ Valkyrie所使用的第三方函式庫或代碼其版權聲明都放置於`licen
   * 考慮使用glTF或自訂格式，以容量小、輕便簡單為目標
 * 跨平台的GUI系統
 * Data-driven的繪圖控制使用系統
-* Multi-threaded Rendering
 * 物理引擎
 * 場景編輯工具
 * CMake與跨平台編譯環境支援

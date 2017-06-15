@@ -65,7 +65,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
 	int num_of_threads = Valkyrie::TaskManager::instance().getNumberOfThreads();
-	int num_of_objects = 600;
+	int num_of_objects = 512;
 	int num_of_objects_per_thread = num_of_objects / num_of_threads;
 	CreateThreadRenderData(thread_ptrs, num_of_threads, num_of_objects);
 
@@ -113,13 +113,15 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 0, 1);
 
-	auto ty = 0.0f;
 	auto ry = 0.0f;
 
 	VkRenderPassBeginInfo render_pass_begin = renderer.getRenderPassBegin();
 
 	auto& task_manager = Valkyrie::TaskManager::instance();
 	auto& object_manager = Valkyrie::ObjectManager::instance();
+
+	camera_obj_ptr->transform.getTranslteRef().z = 30.0f;
+
 	while (valkyrie.execute()) {
 		renderer.prepareFrame();
 
@@ -133,12 +135,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		inheritance.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
 		inheritance.renderPass = renderer.getRenderPassHandle();
 		inheritance.framebuffer = renderer.getFramebuffer(current);
-
-		camera_obj_ptr->transform.getTranslteRef().z = 25.0f * sin(ty) + 30.0f;
-		camera_obj_ptr->transform.getRotationRef().z = glm::radians<float>(ry);
-		camera_obj_ptr->update();
 		ry += 1.0f;
-		ty += 0.01f;
+		camera_obj_ptr->update();
 		for (int i = 0; i < num_of_threads; ++i) {
 			auto& thread = *thread_ptrs[i];
 			auto& objects = thread_IDs[i];
@@ -152,6 +150,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 					
 					int ID = objects[c];
 					auto& object = *object_manager.getObject(objects[c]);
+					object.transform.getRotationRef().x = glm::radians<float>(ry);
+					object.transform.getRotationRef().z = glm::radians<float>(ry);
 					auto mvp = camera_ptr->getPerspective() * camera_ptr->getView() * object.transform.getWorldMatrix();
 					vkCmdPushConstants(
 						icb.handle,
