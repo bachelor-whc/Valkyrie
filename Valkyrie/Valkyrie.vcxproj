@@ -26,6 +26,7 @@
     <ClInclude Include="include\valkyrie\asset\lavy_asset.h" />
     <ClInclude Include="include\valkyrie\asset\lavy_loader.h" />
     <ClInclude Include="include\valkyrie\asset\mesh_asset.h" />
+    <ClInclude Include="include\valkyrie\scene\bounding_box.h" />
     <ClInclude Include="include\valkyrie\utility\base_unit.h" />
     <ClInclude Include="include\valkyrie\component\camera.h" />
     <ClInclude Include="include\valkyrie\component\component.h" />
@@ -82,6 +83,7 @@
     <ClCompile Include="source\factory\mesh_factory.cpp" />
     <ClCompile Include="source\graphics\pipeline.cpp" />
     <ClCompile Include="source\graphics_api_support\attribute.cpp" />
+    <ClCompile Include="source\scene\bounding_box.cpp" />
     <ClCompile Include="source\utility\memory_chunk.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\asset\rgba32_memory.cpp" />
