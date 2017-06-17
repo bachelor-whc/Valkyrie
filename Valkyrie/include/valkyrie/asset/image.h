@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_IMAGE_H 
 #define _VALKYRIE_IMAGE_H 
-#include "valkyrie/memory_chunk.h"
+#include "valkyrie/utility/memory_chunk.h"
 #include "common.h"
 
 namespace Valkyrie {

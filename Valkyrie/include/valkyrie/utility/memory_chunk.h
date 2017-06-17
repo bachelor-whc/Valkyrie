@@ -27,8 +27,8 @@ namespace Valkyrie {
 		uint32_t m_max_size;
 		unsigned char* mp_data = nullptr;
 	};
-
-	typedef std::shared_ptr<MemoryChunk> MemoryChunkPtr;
+	
+	using MemoryChunkPtr = std::shared_ptr<MemoryChunk>;
 }
 
 #endif

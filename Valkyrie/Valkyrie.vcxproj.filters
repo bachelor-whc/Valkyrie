@@ -132,12 +132,6 @@
     <ClInclude Include="include\valkyrie\vulkan\debug.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\image.h">
-      <Filter>Header Files\valkyrie</Filter>
-    </ClInclude>
-    <ClInclude Include="include\valkyrie\render_function.h">
-      <Filter>Header Files\valkyrie</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\memory_buffer.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
@@ -146,9 +140,6 @@
     </ClInclude>
     <ClInclude Include="include\valkyrie\asset\asset.h">
       <Filter>Header Files\valkyrie\asset</Filter>
-    </ClInclude>
-    <ClInclude Include="include\valkyrie\memory_chunk.h">
-      <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\graphics_api_support\attribute.h">
       <Filter>Header Files\valkyrie\graphics_api_support</Filter>
@@ -192,9 +183,6 @@
     <ClInclude Include="include\valkyrie\component\camera.h">
       <Filter>Header Files\valkyrie\component</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\base_unit.h">
-      <Filter>Header Files\valkyrie</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\component\component_attacher.h">
       <Filter>Header Files\valkyrie\component</Filter>
     </ClInclude>
@@ -225,9 +213,6 @@
     <ClInclude Include="include\valkyrie\vulkan\set_updatable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\valkyrie\renderer.h">
-      <Filter>Header Files\valkyrie</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\utility\task_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -239,6 +224,18 @@
     </ClInclude>
     <ClInclude Include="include\valkyrie\factory\object.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\asset\image.h">
+      <Filter>Header Files\valkyrie</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\utility\base_unit.h">
+      <Filter>Header Files\valkyrie</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\utility\memory_chunk.h">
+      <Filter>Header Files\valkyrie</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\graphics\renderer.h">
+      <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -290,16 +287,7 @@
     <ClCompile Include="source\UI\user_input.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
-    <ClCompile Include="source\render_function.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\rgba32_memory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\valkyrie.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\memory_chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\graphics_api_support\attribute.cpp">
@@ -338,9 +326,6 @@
     <ClCompile Include="source\scene\camera.cpp">
       <Filter>Source Files\component</Filter>
     </ClCompile>
-    <ClCompile Include="source\base_unit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\component\component_attacher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -368,9 +353,6 @@
     <ClCompile Include="source\vulkan\pipeline_module.cpp">
       <Filter>Source Files\vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="source\renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\utility\task_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -385,6 +367,18 @@
     </ClCompile>
     <ClCompile Include="source\factory\mesh_factory.cpp">
       <Filter>Source Files\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\base_unit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\memory_chunk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\asset\rgba32_memory.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

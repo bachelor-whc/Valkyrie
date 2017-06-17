@@ -4,7 +4,7 @@
 #include <set>
 #include <memory>
 #include "valkyrie/scene/transform.h"
-#include "valkyrie/base_unit.h"
+#include "valkyrie/utility/base_unit.h"
 
 namespace ValkyrieComponent {
 	class Component;

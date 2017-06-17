@@ -1,7 +1,7 @@
 #ifndef _VALKYRIECOMPONENT_COMPONENT_H
 #define _VALKYRIECOMPONENT_COMPONENT_H
 #include <memory>
-#include "valkyrie/base_unit.h"
+#include "valkyrie/utility/base_unit.h"
 
 namespace Valkyrie {
 	namespace Scene {

@@ -1,6 +1,5 @@
 #ifndef _VALKYRIE_OBJECT_FACTORY_H
 #define _VALKYRIE_OBJECT_FACTORY_H
-#include "valkyrie/base_unit.h"
 #include "valkyrie/scene/object.h"
 
 namespace ValkyrieFactory {

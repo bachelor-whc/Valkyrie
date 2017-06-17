@@ -1,4 +1,4 @@
-#include "valkyrie/base_unit.h"
+#include "valkyrie/utility/base_unit.h"
 using namespace Valkyrie;
 
 void DirtyFlags::reset() {

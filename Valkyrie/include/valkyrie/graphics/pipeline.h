@@ -5,10 +5,11 @@
 #include "valkyrie/vulkan/shader.h"
 #include "valkyrie/vulkan/descriptor.h"
 #include "valkyrie/vulkan/command_buffer.h"
-#include "valkyrie/renderer.h"
 #include "common.h"
 
 namespace Valkyrie {
+	class Renderer;
+
 	namespace Graphics {
 		class Pipeline {
 		public:

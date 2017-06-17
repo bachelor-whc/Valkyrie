@@ -1,4 +1,4 @@
-#include "valkyrie/memory_chunk.h"
+#include "valkyrie/utility/memory_chunk.h"
 
 Valkyrie::MemoryChunk::MemoryChunk() :
 	m_size(0),

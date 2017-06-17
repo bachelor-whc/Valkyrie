@@ -3,9 +3,11 @@
 #include <filesystem>
 #include "valkyrie/asset/asset.h"
 #include "valkyrie/asset/lavy_loader.h"
-#include "valkyrie/memory_chunk.h"
 
 namespace Valkyrie {
+	class MemoryChunk;
+	using MemoryChunkPtr = std::shared_ptr<MemoryChunk>;
+
 	class AssetManager {
 	public:
 		static int initialize();

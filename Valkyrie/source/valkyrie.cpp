@@ -6,7 +6,7 @@
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/utility/sdl_manager.h"
 #include "valkyrie/utility/vulkan_manager.h"
-#include "valkyrie/renderer.h"
+#include "valkyrie/graphics/renderer.h"
 #include "valkyrie/utility/task_manager.h"
 #include "valkyrie/scene/object_manager.h"
 #include "valkyrie/factory/mesh.h"

@@ -1,7 +1,6 @@
 #ifndef _VALKYRIECOMPONENT_CAMERA_H
 #define _VALKYRIECOMPONENT_CAMERA_H
 #include <glm/glm.hpp>
-#include "valkyrie/base_unit.h"
 #include "valkyrie/component/component.h"
 
 namespace ValkyrieComponent {

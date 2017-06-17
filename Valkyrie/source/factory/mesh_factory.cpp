@@ -1,5 +1,6 @@
-#include "valkyrie/factory/mesh.h"
 #include "common.h"
+#include "valkyrie/factory/mesh.h"
+#include "valkyrie/utility/memory_chunk.h"
 using namespace Valkyrie;
 using namespace ValkyrieFactory;
 MeshFactory* MeshFactory::gp_mesh_factory = nullptr;

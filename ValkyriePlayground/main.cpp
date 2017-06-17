@@ -153,7 +153,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 					pipeline.commandBind(icb);
 					
 					int ID = objects[c];
-					auto& object = *object_manager.getObject(objects[c]);
+					auto& object = *object_manager.getObjectPtr(objects[c]);
 					object.transform.getRotationRef().x = glm::radians<float>(ry);
 					object.transform.getRotationRef().z = glm::radians<float>(ry);
 					MVPs[c] = camera_ptr->getPerspective() * camera_ptr->getView() * object.transform.getWorldMatrix();
@@ -172,7 +172,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		}
 		task_manager.group.wait();
 
-		for (auto& thread_ptr : thread_ptrs) {
+		for(auto& thread_ptr : thread_ptrs) {
 			vkCmdExecuteCommands(
 				command.handle,
 				thread_ptr->commands.size(),

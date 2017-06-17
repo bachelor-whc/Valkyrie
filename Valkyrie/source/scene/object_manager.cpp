@@ -93,7 +93,7 @@ void ObjectManager::returnID(const unsigned int ID) {
 	}
 }
 
-Scene::ObjectPtr ObjectManager::getObject(const unsigned int ID) const {
+Scene::ObjectPtr ObjectManager::getObjectPtr(const unsigned int ID) const {
 	const auto& result = m_table.find(ID);
 	if (result == m_table.end())
 		return nullptr;

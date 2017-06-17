@@ -1,7 +1,8 @@
+#include "common.h"
 #include "valkyrie/asset/asset_manager.h"
 #include "valkyrie/asset/mesh_asset.h"
 #include "valkyrie/factory/mesh.h"
-#include "common.h"
+#include "valkyrie/utility/memory_chunk.h"
 using namespace Valkyrie;
 using std::experimental::filesystem::path;
 using std::experimental::filesystem::exists;

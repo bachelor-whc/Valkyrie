@@ -1,7 +1,7 @@
 #ifndef _VULKAN_TEXTURE_H
 #define _VULKAN_TEXTURE_H
 #include "common.h"
-#include "valkyrie/image.h"
+#include "valkyrie/asset/image.h"
 #include "valkyrie/vulkan/image.h"
 #include "valkyrie/vulkan/set_updatable.h"
 

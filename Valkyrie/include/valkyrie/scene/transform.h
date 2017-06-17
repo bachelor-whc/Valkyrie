@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/euler_angles.hpp>
-#include "valkyrie/base_unit.h"
+#include "valkyrie/utility/base_unit.h"
 
 namespace Valkyrie {
 	namespace Scene {

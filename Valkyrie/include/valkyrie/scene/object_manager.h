@@ -5,7 +5,6 @@
 #include <unordered_set>
 #include <random>
 #include <mutex>
-#include "valkyrie/base_unit.h"
 #include "valkyrie/scene/object.h"
 #define DEFAULT_NUM_OF_OBJECTS 65536
 
@@ -24,7 +23,7 @@ namespace Valkyrie {
 		unsigned int acquireNextID();
 		int registerObject(const Scene::ObjectPtr& ptr);
 		void unregisterObject(const unsigned int ID);
-		Scene::ObjectPtr getObject(const unsigned int ID) const;
+		Scene::ObjectPtr getObjectPtr(const unsigned int ID) const;
 		inline std::mt19937 getRandomGenerator() { return m_mt19937; };
 
 	private:

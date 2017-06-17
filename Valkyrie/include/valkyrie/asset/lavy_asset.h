@@ -5,7 +5,6 @@
 #include "valkyrie/asset/asset.h"
 #include "valkyrie/asset/mesh_asset.h"
 #include "valkyrie/vulkan/memory_buffer.h"
-#include "valkyrie/memory_chunk.h"
 #include "valkyrie/graphics_api_support/attribute.h"
 
 namespace ValkyrieFactory {
@@ -13,6 +12,9 @@ namespace ValkyrieFactory {
 }
 
 namespace Valkyrie {
+	class MemoryChunk;
+	using MemoryChunkPtr = std::shared_ptr<MemoryChunk>;
+
 	class LavyAsset : 
 		public Asset,
 		public Valkyrie::MeshSupport {
@@ -40,7 +42,7 @@ namespace Valkyrie {
 		uint32_t m_indices_count = 0;
 	};
 
-	typedef std::shared_ptr<LavyAsset> LavyAssetPtr;
+	using LavyAssetPtr = std::shared_ptr<LavyAsset>;
 }
 
 #endif

@@ -1,4 +1,5 @@
 #include "valkyrie/graphics/pipeline.h"
+#include "valkyrie/graphics/renderer.h"
 #include "valkyrie/utility/vulkan_manager.h"
 using namespace Valkyrie::Graphics;
 
