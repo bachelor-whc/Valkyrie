@@ -1,3 +1,3 @@
-[submodule "include"]
-	path = Valkyrie/include
+[submodule "valkyrie"]
+	path = Valkyrie/include/valkyrie
 	url = https://github.com/bachelorwhc/valkyrie-include.git
