@@ -1,7 +1,7 @@
 #include "valkyrie/vulkan/instance.h"
 #include "valkyrie/vulkan/physical_device.h"
 #include "valkyrie/utility/vulkan_manager.h"
-#include "common.h"
+#include "valkyrie/common.h"
 using namespace Vulkan;
 
 VkPhysicalDeviceProperties PhysicalDevice::properties = {};

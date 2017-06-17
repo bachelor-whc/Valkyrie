@@ -1,7 +1,7 @@
 #ifndef _VALKYRIE_H 
 #define _VALKYRIE_H
 #define GLFW_INCLUDE_VULKAN
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/vulkan/texture.h"
 #include "valkyrie/UI/user_input.h"
 #include "valkyrie/asset/lavy_loader.h"

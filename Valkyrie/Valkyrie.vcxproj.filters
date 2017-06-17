@@ -84,9 +84,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\valkyrie.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\valkyrie\vulkan\instance.h">
       <Filter>Header Files\valkyrie\vulkan</Filter>
     </ClInclude>
@@ -143,9 +140,6 @@
     </ClInclude>
     <ClInclude Include="include\valkyrie\graphics_api_support\attribute.h">
       <Filter>Header Files\valkyrie\graphics_api_support</Filter>
-    </ClInclude>
-    <ClInclude Include="include\common.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\utility\memory_access.h">
       <Filter>Header Files\valkyrie\utility</Filter>
@@ -238,6 +232,12 @@
       <Filter>Header Files\valkyrie</Filter>
     </ClInclude>
     <ClInclude Include="include\valkyrie\scene\bounding_box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\valkyrie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\valkyrie\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

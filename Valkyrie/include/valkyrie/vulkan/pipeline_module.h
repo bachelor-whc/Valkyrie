@@ -1,6 +1,6 @@
 #ifndef _VULKAN_PIPELINE_H
 #define _VULKAN_PIPELINE_H
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Vulkan {
 	struct Device;

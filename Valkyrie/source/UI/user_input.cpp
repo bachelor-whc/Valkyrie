@@ -1,5 +1,5 @@
 #include <imgui.h>
-#include "valkyrie.h"
+#include "valkyrie/valkyrie.h"
 #include "valkyrie/UI/user_input.h"
 
 void UserInput::handleSDLMouseButtonEvent(const SDL_Event& s_event) {

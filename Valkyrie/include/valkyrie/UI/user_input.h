@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_USER_INPUT_H 
 #define _VALKYRIE_USER_INPUT_H  
-#include "common.h"
+#include "valkyrie/common.h"
 
 struct UserInput {
 	void handleSDLMouseButtonEvent(const SDL_Event& s_event);

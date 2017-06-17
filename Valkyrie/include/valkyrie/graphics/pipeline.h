@@ -5,7 +5,7 @@
 #include "valkyrie/vulkan/shader.h"
 #include "valkyrie/vulkan/descriptor.h"
 #include "valkyrie/vulkan/command_buffer.h"
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Valkyrie {
 	class Renderer;

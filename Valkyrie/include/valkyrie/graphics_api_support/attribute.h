@@ -1,6 +1,6 @@
 #ifndef _VALKYRIE_GRAPHICS_API_ATTRIBUTE_H 
 #define _VALKYRIE_GRAPHICS_API_ATTRIBUTE_H 
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/utility/memory_access.h"
 
 namespace Valkyrie {

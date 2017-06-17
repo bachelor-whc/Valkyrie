@@ -1,7 +1,7 @@
 #ifndef _VULKAN_SURFACE_H
 #define _VULKAN_SURFACE_H
 #include <memory>
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/UI/window.h"
 #include "valkyrie/vulkan/attachment.h"
 

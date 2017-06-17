@@ -1,7 +1,7 @@
 #include <vulkan/vulkan.h>
 #include "valkyrie/utility/vulkan_manager.h"
 #include "valkyrie/vulkan/pipeline_module.h"
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/vulkan/debug.h"
 using namespace Valkyrie;
 

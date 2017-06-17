@@ -1,5 +1,5 @@
 #include <glm/glm.hpp>
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/graphics_api_support/attribute.h"
 using namespace Valkyrie;
 

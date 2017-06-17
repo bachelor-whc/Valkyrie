@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\common.h" />
-    <ClInclude Include="include\valkyrie.h" />
+    <ClInclude Include="include\valkyrie\common.h" />
+    <ClInclude Include="include\valkyrie\valkyrie.h" />
     <ClInclude Include="include\valkyrie\asset\asset.h" />
     <ClInclude Include="include\valkyrie\asset\asset_manager.h" />
     <ClInclude Include="include\valkyrie\asset\lavy_asset.h" />

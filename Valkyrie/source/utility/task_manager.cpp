@@ -1,7 +1,7 @@
 #include <thread>
 #include <tbb/task_scheduler_init.h>
 #include "valkyrie/utility/task_manager.h"
-#include "common.h"
+#include "valkyrie/common.h"
 using namespace Valkyrie;
 
 TaskManager* TaskManager::gp_task_manager = nullptr;

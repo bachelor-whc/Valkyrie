@@ -1,6 +1,6 @@
 #ifndef _VULKAN_PHYSICAL_DEVICE_H 
 #define _VULKAN_PHYSICAL_DEVICE_H
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Vulkan {
 	struct Instance;

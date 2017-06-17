@@ -2,7 +2,7 @@
 #define _VULKAN_SWAPCHAIN_H
 #include "valkyrie/vulkan/image.h"
 #include "valkyrie/UI/window.h"
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Vulkan {
 	struct Device;

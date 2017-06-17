@@ -1,7 +1,7 @@
 #ifndef _VALKYRIE_GLTF_ASSET_H 
 #define _VALKYRIE_GLTF_ASSET_H 
 #include <json.hpp>
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/asset/asset.h"
 #include "valkyrie/asset/mesh_asset.h"
 #include "valkyrie/vulkan/memory_buffer.h"

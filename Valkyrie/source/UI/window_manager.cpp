@@ -1,7 +1,7 @@
 #include "valkyrie/UI/window_manager.h"
 #include "valkyrie/UI/window.h"
 #include "valkyrie/utility/sdl_manager.h"
-#include "common.h"
+#include "valkyrie/common.h"
 using namespace Valkyrie;
 
 WindowManager* WindowManager::gp_window_manager = nullptr;

@@ -1,6 +1,6 @@
 #ifndef _VULKAN_DEBUG_H
 #define _VULKAN_DEBUG_H
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Vulkan {
 	struct Instance;

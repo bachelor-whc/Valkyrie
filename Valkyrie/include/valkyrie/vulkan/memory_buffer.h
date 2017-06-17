@@ -1,6 +1,6 @@
 #ifndef _VULKAN_MEMORY_BUFFER_H
 #define _VULKAN_MEMORY_BUFFER_H
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/vulkan/default_create_info.h"
 #include "valkyrie/vulkan/set_updatable.h"
 

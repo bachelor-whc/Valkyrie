@@ -1,6 +1,6 @@
 #ifndef _VULKAN_INSTANCE_H 
 #define _VULKAN_INSTANCE_H
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Vulkan {
 

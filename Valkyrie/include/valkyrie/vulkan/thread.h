@@ -1,6 +1,6 @@
 #ifndef _VULKAN_THREAD_H 
 #define _VULKAN_THREAD_H 
-#include "common.h"
+#include "valkyrie/common.h"
 #include "command_pool.h"
 #include "queue.h"
 

@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <limits>
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/scene/object_manager.h"
 using namespace Valkyrie;
 

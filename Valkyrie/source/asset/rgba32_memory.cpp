@@ -1,4 +1,4 @@
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/asset/image.h"
 
 Valkyrie::RGBA32Memory::RGBA32Memory(int width, int height) : MemoryChunk() {

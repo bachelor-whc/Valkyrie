@@ -1,5 +1,5 @@
 #include "valkyrie/vulkan/instance.h"
-#include "common.h"
+#include "valkyrie/common.h"
 using namespace Vulkan;
 const std::vector<const char*> g_instance_extensions = { VK_KHR_SURFACE_EXTENSION_NAME, SURFACE_EXTENSION_NAME, "VK_EXT_debug_report" };
 const std::vector<const char*> g_instance_layers = { "VK_LAYER_LUNARG_standard_validation" };

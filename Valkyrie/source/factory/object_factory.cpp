@@ -1,6 +1,6 @@
 #include "valkyrie/factory/object.h"
 #include "valkyrie/scene/object_manager.h"
-#include "common.h"
+#include "valkyrie/common.h"
 using namespace Valkyrie;
 using namespace ValkyrieFactory;
 

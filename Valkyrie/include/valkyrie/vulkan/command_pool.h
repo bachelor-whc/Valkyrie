@@ -1,7 +1,7 @@
 #ifndef _VULKAN_COMMAND_POOL_H 
 #define _VULKAN_COMMAND_POOL_H 
 #include "valkyrie/vulkan/command_buffer.h"
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Vulkan {
 	struct Device;

@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/utility/sdl_manager.h"
 using namespace Valkyrie;
 

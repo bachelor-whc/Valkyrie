@@ -2,7 +2,7 @@
 #define _VALKYRIE_GLTF_LOADER_H 
 #include <json.hpp>
 #include <filesystem>
-#include "common.h"
+#include "valkyrie/common.h"
 #include "lavy_asset.h"
 
 namespace Valkyrie {

@@ -2,7 +2,7 @@
 #define _VALKYRIE_MEMORY_CHUNK_H
 #include "valkyrie/asset/asset.h"
 #include "valkyrie/utility/memory_access.h"
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Valkyrie {
 	class MemoryChunk : 

@@ -1,6 +1,6 @@
 #ifndef _VULKAN_RENDER_PASS_H
 #define _VULKAN_RENDER_PASS_H
-#include "common.h"
+#include "valkyrie/common.h"
 
 namespace Vulkan {
 	typedef std::vector<VkSubpassDependency> SubpassDependencies;

@@ -1,6 +1,6 @@
 #ifndef _VULKAN_DEPTH_BUFFER_H
 #define _VULKAN_DEPTH_BUFFER_H
-#include "common.h"
+#include "valkyrie/common.h"
 #include "valkyrie/vulkan/image.h"
 #include "valkyrie/vulkan/attachment.h"
 
