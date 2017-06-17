@@ -10,7 +10,6 @@
 #include <stb_image.h>
 using namespace Valkyrie;
 
-
 using ModelViewProjections = std::vector<glm::mat4>;
 using ObjectList = std::vector<unsigned int>;
 std::vector<ObjectList> thread_IDs;
