@@ -12,8 +12,10 @@ using namespace Valkyrie;
 
 using ModelViewProjections = std::vector<glm::mat4>;
 using ObjectList = std::vector<unsigned int>;
+using VisibleList = std::vector<int>;
 std::vector<ObjectList> thread_IDs;
 std::vector<ModelViewProjections> thread_MVPs;
+std::vector<VisibleList> thread_visiblelists;
 
 ImageMemoryPointer LoadPNG(const std::string file_path) {
 	FILE* p_png_file = fopen(file_path.c_str(), "rb");
@@ -32,20 +34,22 @@ void CreateThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_pt
 	thread_ptrs.resize(num_of_threads);
 	thread_IDs.resize(num_of_threads);
 	thread_MVPs.resize(num_of_threads);
+	thread_visiblelists.resize(num_of_threads);
 	auto& queue = Valkyrie::VulkanManager::getGraphicsQueue();
 	auto& factory = ValkyrieFactory::ObjectFactory::instance();
 	auto& manager = Valkyrie::ObjectManager::instance();
-	std::uniform_real_distribution<float> uniform_distribution(-1000.0f, 1000.0f);
+	std::uniform_real_distribution<float> uniform_distribution(-750.0f, 750.0f);
 	auto& random_generator = manager.getRandomGenerator();
 	int num_of_objects_per_thread = num_of_objects / num_of_threads;
 	for (int i = 0; i < num_of_threads; ++i) {
 		thread_ptrs[i] = MAKE_SHARED(Vulkan::ThreadCommandPool)(queue);
 		thread_ptrs[i]->initializeSecondaryCommandBuffers(num_of_objects_per_thread);
 		thread_MVPs[i].resize(num_of_objects_per_thread);
+		thread_visiblelists[i].resize(num_of_objects_per_thread);
 		for (int j = 0; j < num_of_objects_per_thread; ++j) {
 			auto& object_ptr = factory.createObject();
 			thread_IDs[i].push_back(object_ptr->getID());
-			object_ptr->transform.setScale(0.01f, 0.01f, 0.01f);
+			object_ptr->transform.setScale(0.1f, 0.1f, 0.1f);
 			object_ptr->transform.setTranslate(
 				uniform_distribution(random_generator),
 				uniform_distribution(random_generator),
@@ -67,7 +71,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
 	int num_of_threads = Valkyrie::TaskManager::instance().getNumberOfThreads();
-	int num_of_objects = 512;
+	int num_of_objects = 1024;
 	int num_of_objects_per_thread = num_of_objects / num_of_threads;
 	CreateThreadRenderData(thread_ptrs, num_of_threads, num_of_objects);
 
@@ -122,8 +126,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto& task_manager = Valkyrie::TaskManager::instance();
 	auto& object_manager = Valkyrie::ObjectManager::instance();
 
-	camera_obj_ptr->transform.getTranslteRef().z = 30.0f;
-
 	while (valkyrie.execute()) {
 		renderer.prepareFrame();
 
@@ -138,24 +140,34 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		inheritance.renderPass = renderer.getRenderPassHandle();
 		inheritance.framebuffer = renderer.getFramebuffer(current);
 		ry += 1.0f;
+		camera_obj_ptr->transform.getTranslteRef().z = 500.0f + sinf(ry / 100.f) * 500.0f;
 		camera_obj_ptr->update();
+		
 		for (int i = 0; i < num_of_threads; ++i) {
 			auto& thread = *thread_ptrs[i];
 			auto& objects = thread_IDs[i];
 			auto& MVPs = thread_MVPs[i];
+			auto& visiblelist = thread_visiblelists[i];
 			task_manager.group.run([&]() {
 				for (int c = 0; c < num_of_objects_per_thread; ++c) {
+					int ID = objects[c];
+					auto& object = *object_manager.getObjectPtr(objects[c]);
+					
+					object.transform.getRotationRef().x = glm::radians<float>(ry);
+					object.transform.getRotationRef().z = glm::radians<float>(ry);
+
+					MVPs[c] = camera_ptr->getPerspective() * camera_ptr->getView() * object.transform.getWorldMatrix();
+					
+					visiblelist[c] = camera_ptr->frustum.checkPosition(object.transform.getTranslteValue()) ? 1 : 0;
+					if (visiblelist[c] == 0)
+						continue;
+
 					Vulkan::InheritanceCommandBuffer icb(thread.commands[c], inheritance);
 					icb.begin();
 					renderer.commandSetViewport(icb);
 					renderer.commandSetScissor(icb);
 					pipeline.commandBind(icb);
-					
-					int ID = objects[c];
-					auto& object = *object_manager.getObjectPtr(objects[c]);
-					object.transform.getRotationRef().x = glm::radians<float>(ry);
-					object.transform.getRotationRef().z = glm::radians<float>(ry);
-					MVPs[c] = camera_ptr->getPerspective() * camera_ptr->getView() * object.transform.getWorldMatrix();
+
 					vkCmdPushConstants(
 						icb.handle,
 						pipeline.module.layout,
@@ -171,13 +183,19 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		}
 		task_manager.group.wait();
 
-		for(auto& thread_ptr : thread_ptrs) {
-			vkCmdExecuteCommands(
-				command.handle,
-				thread_ptr->commands.size(),
-				thread_ptr->commands.data()
-			);
+		std::vector<VkCommandBuffer> recorded_commands;
+		for(int t = 0; t < num_of_threads; ++t) {
+			for (int tvli = 0; tvli < num_of_objects_per_thread; ++tvli) {
+				if(thread_visiblelists[t][tvli] > 0)
+					recorded_commands.push_back(thread_ptrs[t]->commands[tvli]);
+			}
 		}
+
+		vkCmdExecuteCommands(
+			command.handle,
+			recorded_commands.size(),
+			recorded_commands.data()
+		);
 
 		vkCmdEndRenderPass(command.handle);
 		command.end();

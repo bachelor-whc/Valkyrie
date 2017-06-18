@@ -15,10 +15,9 @@ Transform::~Transform() {
 
 void Transform::update() {
 	if (m_dirty.dirty()) {
-		m_world = glm::mat4(1.0f);
-		m_world = glm::scale(m_world, m_scale);
-		m_world = glm::translate(m_world, m_translate);
+		m_world = glm::translate(glm::mat4(), m_translate);
 		m_world *= getRotationMatrix4();
+		m_world = glm::scale(m_world, m_scale);
 		m_dirty.reset();
 	}
 }

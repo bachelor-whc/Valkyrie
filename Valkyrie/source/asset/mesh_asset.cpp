@@ -7,6 +7,15 @@ Mesh::Mesh(const MeshSupportPtr& mesh_ptr) :
 
 }
 
+Mesh::~Mesh() {
+	if (mp_min_xyz != nullptr) {
+		delete mp_min_xyz;
+	}
+	if (mp_max_xyz != nullptr) {
+		delete mp_max_xyz;
+	}
+};
+
 uint32_t Valkyrie::Mesh::getDrawVertexCount() {
 	return m_mesh_support_ptr->getDrawVertexCount();
 }

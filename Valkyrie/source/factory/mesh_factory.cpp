@@ -40,6 +40,33 @@ MeshPtr MeshFactory::createMesh(const LavyAssetPtr lavy_ptr) {
 		lavy.m_buffer_ptr->getSize()
 	);
 	buffer.write(memory_chunk.getData(), 0, memory_chunk.getSize());
+	const int stride = 32;
+	const auto vertex_length = ptr->getVerticeBufferLength();
+	const auto vertex_count = vertex_length / stride;
+	const auto vertex_offset = ptr->getVerticeBufferOffset();
+	std::vector<float> pos_xs(vertex_count);
+	std::vector<float> pos_ys(vertex_count);
+	std::vector<float> pos_zs(vertex_count);
+	unsigned int index = 0;
+	for (int offset = 0; offset < vertex_length; offset += stride) {
+		float* v = (float*)((unsigned char*)memory_chunk.getData() + vertex_offset + offset);
+		pos_xs[index] = v[0];
+		pos_ys[index] = v[1];
+		pos_zs[index] = v[2];
+		++index;
+	}
+	glm::vec3 min_xyz(
+		*std::min_element(pos_xs.begin(), pos_xs.end()),
+		*std::min_element(pos_ys.begin(), pos_ys.end()),
+		*std::min_element(pos_zs.begin(), pos_zs.end())
+	);
+	glm::vec3 max_xyz(
+		*std::max_element(pos_xs.begin(), pos_xs.end()),
+		*std::max_element(pos_ys.begin(), pos_ys.end()),
+		*std::max_element(pos_zs.begin(), pos_zs.end())
+	);
+	ptr->mp_min_xyz = NEW_NT glm::vec3(min_xyz);
+	ptr->mp_max_xyz = NEW_NT glm::vec3(max_xyz);
 	return ptr;
 }
 
