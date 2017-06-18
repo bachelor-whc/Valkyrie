@@ -19,6 +19,7 @@ void Object::start() {
 void Object::update() {
 	transform.update();
 	for (auto& component_ptr : m_component_ptrs) {
-		component_ptr->update();
+		if(component_ptr->isEnabled())
+			component_ptr->update();
 	}
 }
