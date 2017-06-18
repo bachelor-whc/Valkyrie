@@ -85,6 +85,15 @@ class LavyExporter(bpy.types.Operator, ExportHelper):
             offset = 0
 
             for i, vert in enumerate(verts):
+                max_x = vert.pos.y
+                max_y = vert.pos.z
+                max_z = vert.pos.x
+                min_x = vert.pos.y
+                min_y = vert.pos.z
+                min_z = vert.pos.x
+                break
+            
+            for i, vert in enumerate(verts):
                 vert.index = i
                 export_bin.write(ctypes.c_float(vert.pos.y))
                 export_bin.write(ctypes.c_float(vert.pos.z))
@@ -97,7 +106,18 @@ class LavyExporter(bpy.types.Operator, ExportHelper):
                 export_bin.write(ctypes.c_float(uv_x))
                 export_bin.write(ctypes.c_float(1 - uv_y))
                 offset += 32
-
+                if vert.pos.y > max_x :
+                    max_x = vert.pos.y
+                if vert.pos.z > max_y :
+                    max_y = vert.pos.z
+                if vert.pos.x > max_z :
+                    max_z = vert.pos.x
+                if vert.pos.y < min_x :
+                    min_x = vert.pos.y
+                if vert.pos.z < min_y :
+                    min_y = vert.pos.z
+                if vert.pos.x < min_z :
+                    min_z = vert.pos.x
             vertices_byte_length = offset
             vert_dict = { i : v for v in verts for i in v.loop_indices}
 
@@ -130,7 +150,11 @@ class LavyExporter(bpy.types.Operator, ExportHelper):
                         'byteLength': indices_byte_length,
                         'byteOffset': vertices_byte_length
                     },
-                    'textures': textures
+                    'textures': textures,
+                    'bounding_box' : {
+                        'min': [min_x, min_y, min_z],
+                        'max': [max_x, max_y, max_z]
+                    }
                 }
             )
 

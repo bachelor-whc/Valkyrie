@@ -50,6 +50,18 @@ void LavyLoader::loadBufferDescriptions(const LavyAssetPtr& asset_ptr, const JSO
 	get_byte_information(vertices_json, asset_ptr->m_vertices_byte_length, asset_ptr->m_vertices_byte_offset);
 	get_byte_information(indices_json, asset_ptr->m_indices_byte_length, asset_ptr->m_indices_byte_offset);
 	asset_ptr->m_indices_count = asset_ptr->m_indices_byte_length / 4;
+	glm::vec3 min(
+		json["bounding_box"]["min"][0].get<float>(),
+		json["bounding_box"]["min"][1].get<float>(),
+		json["bounding_box"]["min"][2].get<float>()
+	);
+	glm::vec3 max(
+		json["bounding_box"]["max"][0].get<float>(),
+		json["bounding_box"]["max"][1].get<float>(),
+		json["bounding_box"]["max"][2].get<float>()
+	);
+	asset_ptr->m_bounding_box.min = min;
+	asset_ptr->m_bounding_box.max = max;
 }
 
 void Valkyrie::LavyLoader::loadBinaryFile(const Valkyrie::LavyAssetPtr& asset_ptr, const path& bin_file_path) {
