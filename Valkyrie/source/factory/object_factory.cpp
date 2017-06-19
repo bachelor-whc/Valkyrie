@@ -1,6 +1,9 @@
+#include "valkyrie/common.h"
 #include "valkyrie/factory/object.h"
 #include "valkyrie/scene/object_manager.h"
-#include "valkyrie/common.h"
+#include "valkyrie/scene/object.h"
+#include "valkyrie/scene/camera.h"
+#include "valkyrie/component/component_attacher.h"
 using namespace Valkyrie;
 using namespace ValkyrieFactory;
 
@@ -25,8 +28,26 @@ bool ObjectFactory::initialized() {
 	return gp_object_factory != nullptr;
 }
 
-ObjectFactory::ObjectFactory() {
+ObjectFactory::ObjectFactory() : m_component_attacher() {
 
+}
+
+template<typename T>
+std::shared_ptr<T> ObjectFactory::processObjectCreationRoutine() {
+	auto& object_manager = ObjectManager::instance();
+	std::shared_ptr<T> ptr = MAKE_SHARED(T)();
+	std::shared_ptr<Scene::Object> dptr = ptr;
+	acquireID(dptr, object_manager);
+	registerObject(dptr, object_manager);
+	return ptr;
+}
+
+void ObjectFactory::acquireID(std::shared_ptr<Valkyrie::Scene::Object>& ptr, ObjectManager& manager) {
+	ptr->m_ID = manager.acquireNextID();
+}
+
+void ObjectFactory::registerObject(std::shared_ptr<Valkyrie::Scene::Object>& ptr, ObjectManager& manager) {
+	manager.registerObject(ptr);
 }
 
 ObjectFactory::~ObjectFactory() {
@@ -34,9 +55,11 @@ ObjectFactory::~ObjectFactory() {
 }
 
 Scene::ObjectPtr ObjectFactory::createObject() {
-	auto& object_manager = Valkyrie::ObjectManager::instance();
-	Scene::ObjectPtr object_ptr = MAKE_SHARED(Scene::Object)();
-	object_ptr->m_ID = object_manager.acquireNextID();
-	object_manager.registerObject(object_ptr);
-	return object_ptr;
+	return processObjectCreationRoutine<Scene::Object>();
+}
+
+Scene::CameraPtr ObjectFactory::createCamera(float fov, float ratio, float _near, float _far) {
+	auto& ptr = processObjectCreationRoutine<Scene::Camera>();
+	m_component_attacher.attachComponent(ptr, MAKE_SHARED(ValkyrieComponent::Camera)(fov, ratio, _near, _far));
+	return ptr;
 }

@@ -240,6 +240,9 @@
     <ClInclude Include="include\valkyrie\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\scene\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -326,9 +329,6 @@
     <ClCompile Include="source\component\mesh_renderer.cpp">
       <Filter>Source Files\component</Filter>
     </ClCompile>
-    <ClCompile Include="source\scene\camera.cpp">
-      <Filter>Source Files\component</Filter>
-    </ClCompile>
     <ClCompile Include="source\component\component_attacher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -385,6 +385,12 @@
     </ClCompile>
     <ClCompile Include="source\scene\bounding_box.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\component\camera_component.cpp">
+      <Filter>Source Files\component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

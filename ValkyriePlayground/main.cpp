@@ -68,6 +68,7 @@ void ReleaseThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_p
 int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, int command_show) {
 	ValkyrieEngine::initializeValkyrieEngine();
 	auto& valkyrie = ValkyrieEngine::instance();
+	auto& factory = ValkyrieFactory::ObjectFactory::instance();
 
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
 	int num_of_threads = Valkyrie::TaskManager::instance().getNumberOfThreads();
@@ -79,13 +80,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	asset_manager.load("duck.lavy");
 	auto& mesh_ptr = std::static_pointer_cast<Mesh>(asset_manager.getAsset("duck.lavy"));
 	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);
-	ValkyrieComponent::CameraPtr camera_ptr = MAKE_SHARED(ValkyrieComponent::Camera)();
 	Scene::Object duck;
-	Scene::ObjectPtr camera_obj_ptr = MAKE_SHARED(Scene::Object)();
-	Valkyrie::ComponentAttacher attacher;
-	attacher.attachComponent(camera_obj_ptr, camera_ptr);
-	camera_ptr->setRatio(1024, 768);
-	camera_ptr->update();
+	auto& camera_ptr = factory.createCamera(60, 1024.0f/768.0f, 0.1f, 1000.0f);
 
 	auto image_ptr = LoadPNG("assets/gltf/test.png");
 	Vulkan::Texture texture(image_ptr);
@@ -140,8 +136,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		inheritance.renderPass = renderer.getRenderPassHandle();
 		inheritance.framebuffer = renderer.getFramebuffer(current);
 		ry += 1.0f;
-		camera_obj_ptr->transform.getTranslteRef().z = 500.0f + sinf(ry / 100.f) * 500.0f;
-		camera_obj_ptr->update();
+		camera_ptr->transform.getTranslteRef().z = 500.0f + sinf(ry / 100.f) * 500.0f;
+		camera_ptr->update();
+		auto& camera_properties = camera_ptr->getProperties();
 		
 		for (int i = 0; i < num_of_threads; ++i) {
 			auto& thread = *thread_ptrs[i];
@@ -156,9 +153,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 					object.transform.getRotationRef().x = glm::radians<float>(ry);
 					object.transform.getRotationRef().z = glm::radians<float>(ry);
 
-					MVPs[c] = camera_ptr->getPerspective() * camera_ptr->getView() * object.transform.getWorldMatrix();
+					MVPs[c] = camera_properties.getPerspective() * camera_properties.getView() * object.transform.getWorldMatrix();
 					
-					visiblelist[c] = camera_ptr->frustum.checkPosition(object.transform.getTranslteValue()) ? 1 : 0;
+					visiblelist[c] = camera_properties.frustum.checkPosition(object.transform.getTranslteValue()) ? 1 : 0;
 					if (visiblelist[c] == 0)
 						continue;
 

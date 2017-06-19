@@ -171,8 +171,6 @@ bool ValkyrieEngine::execute() {
 }
 
 VkResult ValkyrieEngine::initialize() {
-	VkResult result;
-
 	SDL_StartTextInput();
 	initializeImGuiInput();
 

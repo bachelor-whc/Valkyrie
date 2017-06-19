@@ -1,42 +1,42 @@
 #include "valkyrie/scene/bounding_box.h"
 using namespace Valkyrie;
 
-RoundingBox::RoundingBox() : 
+Scene::RoundingBox::RoundingBox() :
 	min(),
 	max(INFINITY, INFINITY, INFINITY) {
 
 }
 
-RoundingBox::RoundingBox(const glm::vec3& position, const glm::vec3& diagonal) {
+Scene::RoundingBox::RoundingBox(const glm::vec3& position, const glm::vec3& diagonal) {
 	auto&& min_temp = position;
 	auto&& max_temp = diagonal;
 	min = glm::min(min_temp, max_temp);
 	max = glm::max(min_temp, max_temp);
 }
 
-RoundingBox::~RoundingBox() {
+Scene::RoundingBox::~RoundingBox() {
 
 }
 
-bool RoundingBox::overlap(const RoundingBox& rhs) const {
+bool Scene::RoundingBox::overlap(const RoundingBox& rhs) const {
 	bool x = (max.x >= rhs.min.x) && (min.x <= rhs.max.x);
 	bool y = (max.y >= rhs.min.y) && (min.y <= rhs.max.y);
 	bool z = (max.z >= rhs.min.z) && (min.z <= rhs.max.z);
 	return (x && y && z);
 }
 
-Valkyrie::RoundingBox operator&(const Valkyrie::RoundingBox& lhs, const Valkyrie::RoundingBox& rhs) {
+Valkyrie::Scene::RoundingBox operator&(const Valkyrie::Scene::RoundingBox& lhs, const Valkyrie::Scene::RoundingBox& rhs) {
 	if (!lhs.overlap(rhs)) {
-		return RoundingBox();
+		return Scene::RoundingBox();
 	}
-	return RoundingBox(
+	return Scene::RoundingBox(
 		glm::min(lhs.max, rhs.max),
 		glm::max(lhs.min, rhs.min)
 	);
 }
 
-Valkyrie::RoundingBox operator|(const Valkyrie::RoundingBox& lhs, const Valkyrie::RoundingBox& rhs) {
-	return RoundingBox(
+Valkyrie::Scene::RoundingBox operator|(const Valkyrie::Scene::RoundingBox& lhs, const Valkyrie::Scene::RoundingBox& rhs) {
+	return Scene::RoundingBox(
 		glm::min(lhs.min, rhs.min),
 		glm::max(lhs.max, rhs.max)
 	);
