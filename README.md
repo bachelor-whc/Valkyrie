@@ -1,4 +1,4 @@
-![Current](https://github.com/bachelorwhc/Valkyrie/blob/master/doc/result/20170120022003.gif?raw=true)
+![Current](https://github.com/bachelorwhc/Valkyrie/blob/master/doc/result/current.gif?raw=true)
 
 # Valkyrie
 Valkyrie利用Vulkan進行3D Rendering，目標是要作為一個遊戲引擎提供遊戲開發者使用，但<b>目前仍離此目標相當相當遙遠如天與地</b>。作者希望透過達成此目標而學習遊戲開發所需要的各種技術，尤其是Vulkan提供的可能性。
