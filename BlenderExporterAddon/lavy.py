@@ -51,39 +51,32 @@ class LavyExporter(bpy.types.Operator, ExportHelper):
     bl_label = "Export lavy"
     filename_ext = ".lavy"
     use_filter_folder = True
+    directory = None
     
-    def execute(self, context):
-        directory = os.path.dirname(self.filepath) + "/"
-        if bpy.context.active_object.mode!='OBJECT':
-            bpy.ops.object.mode_set(mode='OBJECT')
-        scene = bpy.context.scene
-        
-        if len(bpy.context.selected_objects)>0:
-            exporting_obj = bpy.context.selected_objects[0]
+    def export_meshes(self, meshes , export_bin):
+        offset = 0
+        last_total = 0
+        mesh_table = dict()
+        for mesh_obj in meshes:
             texture_index = 0
             textures = list()
-            for material_slot in exporting_obj.material_slots:
+            for material_slot in mesh_obj.material_slots:
                 for texture_slot in material_slot.material.texture_slots:
                     if texture_slot == None:
                         continue
                     if texture_slot.texture.type == 'IMAGE':
                         ext = texture_slot.texture.image.file_format
-                        filename = str(texture_index) + "." +  ext
+                        filename = texture_slot.texture.image.name
                         textures.append(filename)
-                        copyfile(bpy.path.abspath(texture_slot.texture.image.filepath), directory + filename)
+                        copyfile(bpy.path.abspath(texture_slot.texture.image.filepath), self.directory + filename)
                         texture_index = texture_index + 1
-            mesh = exporting_obj.data
-
-            export_json = open(self.filepath + ".json", "w")
-            export_bin = open(self.filepath + ".bin", "wb")
-
+            mesh = mesh_obj.data
             mesh.calc_normals_split()
             mesh.calc_tessface()
 
             verts = { Vertex(mesh, loop) : 0 for loop in mesh.loops }.keys()
             verts_count = len(verts)
-            offset = 0
-
+            
             for i, vert in enumerate(verts):
                 max_x = vert.pos.y
                 max_y = vert.pos.z
@@ -139,29 +132,57 @@ class LavyExporter(bpy.types.Operator, ExportHelper):
                         offset += 12
             
             indices_byte_length = offset - vertices_byte_length
-
-            j_data = json.dumps(
-                {
-                    'vertices': {
-                        'byteLength': vertices_byte_length,
-                        'byteOffset': 0
-                    },
-                    'indices': {
-                        'byteLength': indices_byte_length,
-                        'byteOffset': vertices_byte_length
-                    },
-                    'textures': textures,
-                    'bounding_box' : {
-                        'min': [min_x, min_y, min_z],
-                        'max': [max_x, max_y, max_z]
-                    }
+            
+            mesh_table[mesh_obj.name] = {
+                'vertices': {
+                    'byteLength': vertices_byte_length,
+                    'byteOffset': last_total
+                },
+                'indices': {
+                    'byteLength': indices_byte_length,
+                    'byteOffset': last_total + vertices_byte_length
+                },
+                'textures': textures,
+                'bounding_box' : {
+                    'min': [min_x, min_y, min_z],
+                    'max': [max_x, max_y, max_z]
                 }
-            )
+            }
+            
+            last_total = last_total + vertices_byte_length + indices_byte_length
 
+        return mesh_table;
+
+    def execute(self, context):
+        self.directory = os.path.dirname(self.filepath) + "/"
+        if bpy.context.active_object.mode!='OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT')
+        scene = bpy.context.scene
+        
+        if len(bpy.context.selected_objects)>0:
+            exporting_obj = bpy.context.selected_objects[0]
+            export_json = open(self.filepath + ".json", "w")
+            export_bin = open(self.filepath + ".bin", "wb")
+            
+            j_data = None
+            if exporting_obj.type == 'MESH':
+                meshes = [exporting_obj]
+                j_data = json.dumps(
+                    {
+                        'meshes' : self.export_meshes(meshes, export_bin)
+                    }
+                )
+            elif exporting_obj.type == 'ARMATURE':
+                j_data = json.dumps(
+                    {
+                        'meshes' : self.export_meshes(exporting_obj.children, export_bin)
+                    }
+                )
+            
             export_json.write(j_data)
-
             export_json.close()
             export_bin.close()
+            
         return {'FINISHED'}
 
 def menu_export(self, context):

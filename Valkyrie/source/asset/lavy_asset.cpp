@@ -2,32 +2,33 @@
 #include "valkyrie/utility/memory_chunk.h"
 using namespace Valkyrie;
 
-LavyAsset::LavyAsset(const JSON& src) : 
+LavyMesh::LavyMesh(const std::string& name, const JSON& src) :
 	m_json(src),
-	m_buffer_ptr(MAKE_SHARED(MemoryChunk)()){
+	m_name(name),
+	m_buffer_ptr(nullptr){
 
 }
 
-LavyAsset::~LavyAsset() {
+LavyMesh::~LavyMesh() {
 
 }
 
-uint32_t LavyAsset::getDrawVertexCount() {
+uint32_t LavyMesh::getDrawVertexCount() {
 	return m_indices_count;
 }
 
-uint32_t LavyAsset::getVerticeBufferOffset() {
+uint32_t LavyMesh::getVerticeBufferOffset() {
 	return m_vertices_byte_offset;
 }
 
-uint32_t LavyAsset::getIndiceBufferOffset() {
+uint32_t LavyMesh::getIndiceBufferOffset() {
 	return m_indices_byte_offset;
 }
 
-uint32_t LavyAsset::getVerticeBufferLength() {
+uint32_t LavyMesh::getVerticeBufferLength() {
 	return m_vertices_byte_length;
 }
 
-uint32_t LavyAsset::getIndiceBufferLength() {
+uint32_t LavyMesh::getIndiceBufferLength() {
 	return m_indices_byte_length;
 }

@@ -78,7 +78,8 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	auto& asset_manager = AssetManager::instance();
 	asset_manager.load("duck.lavy");
-	auto& mesh_ptr = std::static_pointer_cast<Mesh>(asset_manager.getAsset("duck.lavy"));
+	asset_manager.load("duck.lavy");
+	auto& mesh_ptr = asset_manager.getMesh("LOD3sp");
 	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);
 	Scene::Object duck;
 	auto& camera_ptr = factory.createCamera(60, 1024.0f/768.0f, 0.1f, 1000.0f);

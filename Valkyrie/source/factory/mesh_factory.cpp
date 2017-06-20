@@ -30,7 +30,7 @@ MeshFactory::~MeshFactory() {
 
 }
 
-MeshPtr MeshFactory::createMesh(const LavyAssetPtr lavy_ptr) {
+MeshPtr MeshFactory::createMesh(const LavyMeshPtr lavy_ptr) {
 	MeshPtr ptr = MAKE_SHARED(Mesh)(lavy_ptr);
 	auto& lavy = *lavy_ptr;
 	auto& buffer = ptr->m_vulkan_buffer;

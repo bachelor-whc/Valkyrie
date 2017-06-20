@@ -15,7 +15,7 @@ const char* LavyLoader::INDICES = "indices";
 const char* LavyLoader::BYTE_LENGTH = "byteLength";
 const char* LavyLoader::BYTE_OFFSET = "byteOffset";
 
-LavyAssetPtr LavyLoader::load(const path& lavy_file_path) throw(...) {
+std::vector<LavyMeshPtr> LavyLoader::load(const path& lavy_file_path) throw(...) {
 	path lavy_json_path = lavy_file_path.u8string() + ".json";
 	path lavy_bin_path = lavy_file_path.u8string() + ".bin";
 	std::ifstream file(lavy_json_path);
@@ -28,43 +28,50 @@ LavyAssetPtr LavyLoader::load(const path& lavy_file_path) throw(...) {
 	file >> json;
 	file.close();
 
-	LavyAssetPtr& ptr = MAKE_SHARED(LavyAsset)(json);
+	std::vector<LavyMeshPtr> ptrs = std::vector<LavyMeshPtr>();
 
 	try {
-		loadBufferDescriptions(ptr, json);
-		loadBinaryFile(ptr, lavy_bin_path);
+		loadBufferDescriptions(ptrs, json);
+		loadBinaryFile(ptrs, lavy_bin_path);
 	}
 	catch(std::exception& e) {
 		throw e;
 	}
-	return ptr;
+	return ptrs;
 }
 
-void LavyLoader::loadBufferDescriptions(const LavyAssetPtr& asset_ptr, const JSON& json) {
+void LavyLoader::loadBufferDescriptions(std::vector<LavyMeshPtr>& asset_ptrs, const JSON& json) {
 	const auto get_byte_information = [](auto& j, uint32_t& byte_length, uint32_t& byte_offset) {
 		byte_length = j[BYTE_LENGTH].get<uint32_t>();
 		byte_offset = j[BYTE_OFFSET].get<uint32_t>();
 	};
-	auto& vertices_json = json["vertices"];
-	auto& indices_json = json["indices"];
-	get_byte_information(vertices_json, asset_ptr->m_vertices_byte_length, asset_ptr->m_vertices_byte_offset);
-	get_byte_information(indices_json, asset_ptr->m_indices_byte_length, asset_ptr->m_indices_byte_offset);
-	asset_ptr->m_indices_count = asset_ptr->m_indices_byte_length / 4;
-	glm::vec3 min(
-		json["bounding_box"]["min"][0].get<float>(),
-		json["bounding_box"]["min"][1].get<float>(),
-		json["bounding_box"]["min"][2].get<float>()
-	);
-	glm::vec3 max(
-		json["bounding_box"]["max"][0].get<float>(),
-		json["bounding_box"]["max"][1].get<float>(),
-		json["bounding_box"]["max"][2].get<float>()
-	);
-	asset_ptr->m_bounding_box.min = min;
-	asset_ptr->m_bounding_box.max = max;
+
+	auto& mesh_jsons = json["meshes"].get<JSON::object_t>();
+	for (auto j : mesh_jsons) {
+		auto ptr = MAKE_SHARED(LavyMesh)(j.first, j.second);
+		asset_ptrs.push_back(ptr);
+		auto& vertices_json = j.second["vertices"];
+		auto& indices_json = j.second["indices"];
+		get_byte_information(vertices_json, ptr->m_vertices_byte_length, ptr->m_vertices_byte_offset);
+		get_byte_information(indices_json, ptr->m_indices_byte_length, ptr->m_indices_byte_offset);
+		ptr->m_indices_count = ptr->m_indices_byte_length / 4;
+		glm::vec3 min(
+			j.second["bounding_box"]["min"][0].get<float>(),
+			j.second["bounding_box"]["min"][1].get<float>(),
+			j.second["bounding_box"]["min"][2].get<float>()
+		);
+		glm::vec3 max(
+			j.second["bounding_box"]["max"][0].get<float>(),
+			j.second["bounding_box"]["max"][1].get<float>(),
+			j.second["bounding_box"]["max"][2].get<float>()
+		);
+		ptr->m_bounding_box.min = min;
+		ptr->m_bounding_box.max = max;
+	}
 }
 
-void Valkyrie::LavyLoader::loadBinaryFile(const Valkyrie::LavyAssetPtr& asset_ptr, const path& bin_file_path) {
+void Valkyrie::LavyLoader::loadBinaryFile(const std::vector<LavyMeshPtr>& asset_ptrs, const path& bin_file_path) {
 	auto& asset_manager = AssetManager::instance();
-	asset_manager.fillMemoryFromFile(asset_ptr->m_buffer_ptr, bin_file_path);
+	for (auto& p : asset_ptrs)
+		asset_manager.fillMemoryFromFile(p->m_buffer_ptr, bin_file_path);
 }
