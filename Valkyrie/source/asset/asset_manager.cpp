@@ -1,3 +1,4 @@
+#include <stb_image.h>
 #include "valkyrie/common.h"
 #include "valkyrie/asset/asset_manager.h"
 #include "valkyrie/asset/mesh_asset.h"
@@ -40,12 +41,19 @@ void AssetManager::load(path file_path) throw(...) {
 	if (file_path.is_relative()) {
 		file_path = m_path / file_path;
 	}
-	if (file_path.extension() == ".lavy") {
+	std::string ext(file_path.extension().string().c_str());
+	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+	if (ext == ".lavy") {
 		auto& ptrs = m_lavy_loader.load(file_path);
-		for(auto ptr : ptrs) {
+		for (auto ptr : ptrs) {
 			auto& factory = ValkyrieFactory::MeshFactory::instance();
 			m_mesh_map[ptr->getName()] = factory.createMesh(ptr);
 		}
+	}
+	else if (ext == ".png") {
+		std::string file_path_str = file_path.u8string();
+		auto& ptr = loadImage(file_path_str);
+		m_image_map[file_path_str] = ptr;
 	}
 	else if (exists(file_path) && is_regular_file(file_path)) {
 		MemoryChunkPtr ptr = MAKE_SHARED(MemoryChunk)();
@@ -94,17 +102,40 @@ void AssetManager::fillMemoryFromFile(MemoryChunkPtr& ptr, const std::experiment
 	}
 }
 
-AssetPtr AssetManager::getAsset(std::string relative_path) {
-	path& abs_path = m_path / relative_path;
-	if (m_asset_map.count(abs_path.u8string()) > 0)
-		return m_asset_map[abs_path.u8string()];
+ImageMemoryPointer AssetManager::loadImage(const std::string file_path) {
+	FILE* p_png_file = fopen(file_path.c_str(), "rb");
+	int png_w;
+	int png_h;
+	int png_c;
+	void* wang_png_ptr = stbi_load_from_file(p_png_file, &png_w, &png_h, &png_c, STBI_rgb_alpha);
+	fclose(p_png_file);
+	ImageMemoryPointer p_image = std::make_shared<RGBA32Memory>(png_w, png_h);
+	memcpy(p_image->getData(), wang_png_ptr, p_image->getSize());
+	p_image->setFlags(MemoryAccess::READY);
+	return p_image;
+}
+
+AssetPtr AssetManager::getAsset(const std::string& relative_path) {
+	const path& abs_path = m_path / relative_path;
+	const auto& file_path = abs_path.u8string();
+	if (m_asset_map.count(file_path) > 0)
+		return m_asset_map[file_path];
 	else
 		return nullptr;
 }
 
-MeshPtr AssetManager::getMesh(std::string mesh_name) {
+MeshPtr AssetManager::getMesh(const std::string& mesh_name) {
 	if (m_mesh_map.count(mesh_name) > 0)
 		return m_mesh_map[mesh_name];
+	else
+		return nullptr;
+}
+
+ImageMemoryPointer AssetManager::getImage(const std::string& relative_path) {
+	const path& abs_path = m_path / relative_path;
+	const auto& file_path = abs_path.u8string();
+	if (m_image_map.count(file_path) > 0)
+		return m_image_map[file_path];
 	else
 		return nullptr;
 }
