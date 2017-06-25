@@ -246,6 +246,9 @@
     <ClInclude Include="include\valkyrie\scene\light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\valkyrie\graphics\recorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\vulkan\command_buffer.cpp">
@@ -394,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="source\component\camera_component.cpp">
       <Filter>Source Files\component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\light.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

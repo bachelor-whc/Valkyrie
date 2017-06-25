@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\valkyrie\common.h" />
+    <ClInclude Include="include\valkyrie\graphics\recorder.h" />
     <ClInclude Include="include\valkyrie\scene\camera.h" />
     <ClInclude Include="include\valkyrie\scene\light.h" />
     <ClInclude Include="include\valkyrie\valkyrie.h" />
@@ -87,6 +88,7 @@
     <ClCompile Include="source\graphics_api_support\attribute.cpp" />
     <ClCompile Include="source\scene\bounding_box.cpp" />
     <ClCompile Include="source\scene\camera.cpp" />
+    <ClCompile Include="source\scene\light.cpp" />
     <ClCompile Include="source\utility\memory_chunk.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\asset\rgba32_memory.cpp" />
