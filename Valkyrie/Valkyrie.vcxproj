@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\valkyrie\common.h" />
     <ClInclude Include="include\valkyrie\scene\camera.h" />
+    <ClInclude Include="include\valkyrie\scene\light.h" />
     <ClInclude Include="include\valkyrie\valkyrie.h" />
     <ClInclude Include="include\valkyrie\asset\asset.h" />
     <ClInclude Include="include\valkyrie\asset\asset_manager.h" />
