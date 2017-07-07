@@ -23,6 +23,9 @@
     <ClInclude Include="include\valkyrie\graphics\recorder.h" />
     <ClInclude Include="include\valkyrie\scene\camera.h" />
     <ClInclude Include="include\valkyrie\scene\light.h" />
+    <ClInclude Include="include\valkyrie\scene\light_directional.h" />
+    <ClInclude Include="include\valkyrie\scene\light_position.h" />
+    <ClInclude Include="include\valkyrie\scene\light_spot.h" />
     <ClInclude Include="include\valkyrie\valkyrie.h" />
     <ClInclude Include="include\valkyrie\asset\asset.h" />
     <ClInclude Include="include\valkyrie\asset\asset_manager.h" />
@@ -89,6 +92,9 @@
     <ClCompile Include="source\scene\bounding_box.cpp" />
     <ClCompile Include="source\scene\camera.cpp" />
     <ClCompile Include="source\scene\light.cpp" />
+    <ClCompile Include="source\scene\light_directional.cpp" />
+    <ClCompile Include="source\scene\light_position.cpp" />
+    <ClCompile Include="source\scene\light_spot.cpp" />
     <ClCompile Include="source\utility\memory_chunk.cpp" />
     <ClCompile Include="source\graphics\renderer.cpp" />
     <ClCompile Include="source\asset\rgba32_memory.cpp" />
