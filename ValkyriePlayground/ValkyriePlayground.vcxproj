@@ -70,28 +70,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)third_party;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Lib32;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)executable\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)third_party;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Bin32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Lib32;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)executable\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)third_party;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)executable\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VK_SDK_PATH)\Include;$(SolutionDir)Valkyrie\include;$(SolutionDir)third_party;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)executable\$(Configuration);$(VK_SDK_PATH)\Lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)inter\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)executable\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)$(Platform)</TargetName>
