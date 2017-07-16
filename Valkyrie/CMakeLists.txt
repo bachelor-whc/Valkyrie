@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.0)
+project(ValkyrieLib)
+file(
+    GLOB_RECURSE 
+    VALKYRIE_SOURCES 
+    ${PROJECT_SOURCE_DIR}/source/*.cpp
+)
+include_directories(
+    $ENV{VULKAN_SDK}/Include/
+    ${PROJECT_SOURCE_DIR}/include/
+    ${SDL2_SOURCE_DIR}/include/
+    ${tbb_root}/include/
+    ${zlib_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/third_party/json/src
+    ${CMAKE_SOURCE_DIR}/third_party/imgui
+    ${CMAKE_SOURCE_DIR}/third_party/glm
+    ${CMAKE_SOURCE_DIR}/third_party/stb
+)
+add_library(
+    ValkyrieLib 
+    STATIC 
+    ${VALKYRIE_SOURCES}
+    ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui.cpp
+    ${CMAKE_SOURCE_DIR}/third_party/imgui/imgui_draw.cpp
+)
