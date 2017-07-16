@@ -1,3 +1,4 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include "valkyrie/common.h"
 #include "valkyrie/asset/asset_manager.h"

@@ -4,11 +4,15 @@
 using namespace Vulkan;
 
 VkResult CommandBuffer::begin() {
+	m_recorded = false;
 	return vkBeginCommandBuffer(handle, &beginInformation);
 }
 
 VkResult CommandBuffer::end() {
-	return vkEndCommandBuffer(handle);
+	auto result = vkEndCommandBuffer(handle);
+	if(result == VK_SUCCESS)
+		m_recorded = true;
+	return result;
 }
 
 VkResult CommandBuffer::submit(const Queue& queue) {
@@ -17,4 +21,8 @@ VkResult CommandBuffer::submit(const Queue& queue) {
 	submit.commandBufferCount = 1;
 	submit.pCommandBuffers = &handle;
 	return vkQueueSubmit(queue.handle, 1, &submit, VK_NULL_HANDLE);
+}
+
+bool CommandBuffer::recorded() const {
+	return m_recorded;
 }
