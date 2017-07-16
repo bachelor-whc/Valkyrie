@@ -22,6 +22,10 @@ else ()
     link_directories($ENV{VULKAN_SDK}/Lib32/)
 endif ()
 add_executable(ValkyriePlayground ${VALKYRIE_PG_SOURCES})
+if(MSVC)
+    set_target_properties(ValkyriePlayground PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+    set_target_properties(ValkyriePlayground PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
+endif()  
 target_link_libraries(
     ValkyriePlayground
     ValkyrieLib

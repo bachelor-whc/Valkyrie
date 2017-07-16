@@ -21,6 +21,7 @@ execute_process(
 )
 find_package(TBB REQUIRED tbb)
 set(SDL_SHARED_ENABLED_BY_DEFAULT OFF)
+set(OPT_DEF_LIBC ON)
 add_subdirectory(third_party/SDL2)
 add_subdirectory(third_party/googletest)
 add_subdirectory(third_party/zlib)
