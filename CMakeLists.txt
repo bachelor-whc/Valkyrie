@@ -11,6 +11,14 @@ tbb_get(
     SAVE_TO ${CMAKE_SOURCE_DIR}/third_party
     CONFIG_DIR TBB_DIR
 )
+execute_process(
+  COMMAND git submodule init
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+execute_process(
+  COMMAND git submodule update --recursive
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
 find_package(TBB REQUIRED tbb)
 set(SDL_SHARED_ENABLED_BY_DEFAULT OFF)
 add_subdirectory(third_party/SDL2)
