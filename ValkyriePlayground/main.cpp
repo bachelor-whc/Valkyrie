@@ -1,4 +1,3 @@
-#define STB_IMAGE_IMPLEMENTATION
 #include <iostream>
 #include <valkyrie/valkyrie.h>
 #include <glm/glm.hpp>
@@ -7,7 +6,6 @@
 #include <vulkan/vulkan.h>
 #include <cassert>
 #include <imgui.h>
-#include <stb_image.h>
 using namespace Valkyrie;
 
 using ModelViewProjections = std::vector<glm::mat4>;
@@ -16,19 +14,6 @@ using VisibleList = std::vector<int>;
 std::vector<ObjectList> thread_IDs;
 std::vector<ModelViewProjections> thread_MVPs;
 std::vector<VisibleList> thread_visiblelists;
-
-ImageMemoryPointer LoadPNG(const std::string file_path) {
-	FILE* p_png_file = fopen(file_path.c_str(), "rb");
-	int png_w;
-	int png_h;
-	int png_c;
-	void* wang_png_ptr = stbi_load_from_file(p_png_file, &png_w, &png_h, &png_c, STBI_rgb_alpha);
-	fclose(p_png_file);
-	ImageMemoryPointer p_image = std::make_shared<RGBA32Memory>(png_w, png_h);
-	memcpy(p_image->getData(), wang_png_ptr, p_image->getSize());
-	p_image->setFlags(MemoryAccess::READY);
-	return p_image;
-}
 
 void CreateThreadRenderData(std::vector<Vulkan::ThreadCommandPoolPtr>& thread_ptrs, int num_of_threads, int num_of_objects) {
 	thread_ptrs.resize(num_of_threads);
@@ -78,13 +63,13 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	auto& asset_manager = AssetManager::instance();
 	asset_manager.load("duck.lavy");
-	asset_manager.load("duck.lavy");
+	asset_manager.load("DuckCM.png");
 	auto& mesh_ptr = asset_manager.getMesh("LOD3sp");
 	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);
 	Scene::Object duck;
 	auto& camera_ptr = factory.createCamera(60, 1024.0f/768.0f, 0.1f, 1000.0f);
 
-	auto image_ptr = LoadPNG("assets/gltf/test.png");
+	auto image_ptr = asset_manager.getImage("DuckCM.png");
 	Vulkan::Texture texture(image_ptr);
 	VulkanManager::initializeTexture(texture);
 

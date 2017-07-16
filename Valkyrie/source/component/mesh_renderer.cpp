@@ -2,6 +2,7 @@
 using namespace ValkyrieComponent;
 
 MeshRenderer::MeshRenderer(const Valkyrie::MeshPtr& mesh_ptr) :
+	Recorder(),
 	m_mesh_ptr(mesh_ptr) {
 
 }
