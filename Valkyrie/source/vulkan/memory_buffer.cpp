@@ -42,8 +42,8 @@ VkResult MemoryBuffer::allocate(const std::vector<VkBufferUsageFlags>& usages, c
 
 	VkMemoryAllocateInfo memory_allocate = {};
 	memory_allocate.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	memory_allocate.allocationSize = m_size;
 	bool found = PhysicalDevice::setMemoryType(memory_requirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, memory_allocate.memoryTypeIndex);
+	memory_allocate.allocationSize = memory_requirements.size;
 	result = vkAllocateMemory(device, &memory_allocate, nullptr, &memory);
 	result = vkBindBufferMemory(device, handle, memory, 0);
 	return result;

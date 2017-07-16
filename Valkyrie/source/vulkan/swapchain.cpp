@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "valkyrie/vulkan/swapchain.h"
 #include "valkyrie/vulkan/device.h"
 #include "valkyrie/vulkan/physical_device.h"
@@ -99,26 +99,31 @@ SwapChain::SwapChain(const Surface& surface, const Valkyrie::WindowPtr& window_p
 		transform = surface_capabilities.currentTransform;
 	}
 
-	VkSwapchainCreateInfoKHR swapchain_create = {};
-	swapchain_create.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-	swapchain_create.surface = surface.handle;
-	swapchain_create.minImageCount = desired_number_of_swap_chain_images;
-	swapchain_create.imageFormat = surface.format.format;
-	swapchain_create.imageColorSpace = surface.format.colorSpace;
-	swapchain_create.imageExtent.width = swap_chain_extent.width;
-	swapchain_create.imageExtent.height = swap_chain_extent.height;
-	swapchain_create.preTransform = transform;
-	swapchain_create.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	swapchain_create.imageArrayLayers = 1;
-	swapchain_create.presentMode = swapchain_present_mode;
-	swapchain_create.oldSwapchain = VK_NULL_HANDLE;
-	swapchain_create.clipped = VK_TRUE;
-	swapchain_create.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-	swapchain_create.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-	swapchain_create.queueFamilyIndexCount = 0;
-	swapchain_create.pQueueFamilyIndices = nullptr;
+	VkBool32 is_support;
+	vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, Valkyrie::VulkanManager::getGraphicsQueue().index, surface.handle, &is_support);
+	assert(is_support);
+	if (is_support) {
+		VkSwapchainCreateInfoKHR swapchain_create = {};
+		swapchain_create.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+		swapchain_create.surface = surface.handle;
+		swapchain_create.minImageCount = desired_number_of_swap_chain_images;
+		swapchain_create.imageFormat = surface.format.format;
+		swapchain_create.imageColorSpace = surface.format.colorSpace;
+		swapchain_create.imageExtent.width = swap_chain_extent.width;
+		swapchain_create.imageExtent.height = swap_chain_extent.height;
+		swapchain_create.preTransform = transform;
+		swapchain_create.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		swapchain_create.imageArrayLayers = 1;
+		swapchain_create.presentMode = swapchain_present_mode;
+		swapchain_create.oldSwapchain = VK_NULL_HANDLE;
+		swapchain_create.clipped = VK_TRUE;
+		swapchain_create.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		swapchain_create.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		swapchain_create.queueFamilyIndexCount = 0;
+		swapchain_create.pQueueFamilyIndices = nullptr;
 
-	result = vkCreateSwapchainKHR(device, &swapchain_create, nullptr, &handle);
+		result = vkCreateSwapchainKHR(device, &swapchain_create, nullptr, &handle);
+	}
 	assert(result == VK_SUCCESS);
 }
 

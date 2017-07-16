@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <imgui.h>
 #include "valkyrie/utility/sdl_manager.h"
 #include "valkyrie/UI/window.h"
