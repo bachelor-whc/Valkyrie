@@ -118,3 +118,10 @@ add_library(
     ${VALKYRIE_VULKAN_CODE}
     ${THIRD_PARTY_IMGUI_CODE}
 )
+
+set_target_properties(
+    ValkyrieLib
+    PROPERTIES 
+    OUTPUT_NAME "libvalkyrie"
+    DEBUG_POSTFIX "d"
+)
