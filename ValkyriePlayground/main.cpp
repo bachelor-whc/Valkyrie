@@ -78,7 +78,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 	pipeline.descriptorPoolPtr->initializePool(1);
-	pipeline.descriptorPoolPtr->setLayouts[0].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 1);
 	pipeline.descriptorPoolPtr->setLayouts[0].setBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
 	pipeline.descriptorPoolPtr->initializeSets();
 	pipeline.vertexInput.setBindingDescription(0, 32);
