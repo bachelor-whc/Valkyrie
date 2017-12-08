@@ -16,3 +16,4 @@ void MeshRenderer::recordDrawCommand(Vulkan::CommandBuffer& command) {
 	vkCmdBindIndexBuffer(command.handle, buffers[0], m_mesh_ptr->getIndiceBufferOffset(), VK_INDEX_TYPE_UINT32);
 	vkCmdDrawIndexed(command.handle, m_mesh_ptr->getDrawVertexCount(), 1, 0, 0, 0);
 }
+

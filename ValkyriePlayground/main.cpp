@@ -6,6 +6,8 @@
 #include <vulkan/vulkan.h>
 #include <cassert>
 #include <imgui.h>
+#include <regex>
+#include <queue>
 using namespace Valkyrie;
 
 using ModelViewProjections = std::vector<glm::mat4>;
@@ -57,7 +59,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
 	int num_of_threads = Valkyrie::TaskManager::instance().getNumberOfThreads();
-	int num_of_objects = 1024;
+	int num_of_objects = 4096;
 	int num_of_objects_per_thread = num_of_objects / num_of_threads;
 	CreateThreadRenderData(thread_ptrs, num_of_threads, num_of_objects);
 
@@ -79,22 +81,19 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 	pipeline.descriptorPoolPtr->initializePool(1);
 	pipeline.descriptorPoolPtr->setLayouts[0].setBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
-	pipeline.descriptorPoolPtr->initializeSets();
-	pipeline.vertexInput.setBindingDescription(0, 32);
-	pipeline.vertexInput.setAttributeDescription(0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0);
-	pipeline.vertexInput.setAttributeDescription(0, 1, VK_FORMAT_R32G32B32_SFLOAT, 12);
-	pipeline.vertexInput.setAttributeDescription(0, 2, VK_FORMAT_R32G32_SFLOAT, 24);
-	std::string vertex_code = Vulkan::Shader::LoadSPVBinaryCode("shader.vert.spv");
-	std::string fragment_code = Vulkan::Shader::LoadSPVBinaryCode("shader.frag.spv");
-	auto vertex_shader = MAKE_SHARED(Vulkan::Shader)(vertex_code, VK_SHADER_STAGE_VERTEX_BIT);
-	auto fragment_shader = MAKE_SHARED(Vulkan::Shader)(fragment_code, VK_SHADER_STAGE_FRAGMENT_BIT);
-	pipeline.shaderPtrs[Graphics::Pipeline::ShaderStage::VERTEX] = vertex_shader;
-	pipeline.shaderPtrs[Graphics::Pipeline::ShaderStage::FRAGMENT] = fragment_shader;
-	pipeline.module.pushConstantRanges.resize(1);
-	pipeline.module.pushConstantRanges[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-	pipeline.module.pushConstantRanges[0].offset = 0;
-	pipeline.module.pushConstantRanges[0].size = sizeof(glm::mat4);
-
+    pipeline.descriptorPoolPtr->initializeSets(); 
+    {
+        PipelineShadersInitializer ps_initializer;
+        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::POSITION, "inPos");
+        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::NORMAL, "inNormal");
+        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::UV, "inUV");
+        ps_initializer.loadSPVBinaryCode("frag.sr", "frag.sri");
+        ps_initializer.loadSPVBinaryCode("vert.sr", "vert.sri");
+        ps_initializer.initializePipelineShaders(pipeline);
+        ps_initializer.initializePipelinePushConstantRanges(pipeline);
+        ps_initializer.setPipelineVertexInput(pipeline);
+    }
+	
 	auto& renderer = valkyrie.getRenderer();
 	pipeline.initialize(renderer);
 
