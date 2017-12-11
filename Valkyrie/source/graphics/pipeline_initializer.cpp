@@ -175,10 +175,8 @@ void PipelineShadersInitializer::initializePipelinePushConstantRanges(Graphics::
                     if (jvariable["basic_type"].get<std::string>() == "block") {
                         pcr.size = jvariable["block_size"].get<uint32_t>();
                     }
-                    if (jvariable.count("offset") > 0) {
-                        pcr.offset = jvariable["offset"].get<uint32_t>();
-                    }
-                    m_push_constant_ranges[stage].push_back(pcr);
+                    m_push_constant_ranges[stage].resize(1);
+                    m_push_constant_ranges[stage][0] = pcr;
                     break;
                 }
             }

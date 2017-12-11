@@ -10,7 +10,13 @@
 #include <queue>
 using namespace Valkyrie;
 
-using ModelViewProjections = std::vector<glm::mat4>;
+struct ModelViewProjection {
+    glm::mat4 world;
+    glm::mat4 view;
+    glm::mat4 projection;
+};
+
+using ModelViewProjections = std::vector<ModelViewProjection>;
 using ObjectList = std::vector<unsigned int>;
 using VisibleList = std::vector<int>;
 std::vector<ObjectList> thread_IDs;
@@ -59,7 +65,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
 	int num_of_threads = Valkyrie::TaskManager::instance().getNumberOfThreads();
-	int num_of_objects = 4096;
+	int num_of_objects = 512;
 	int num_of_objects_per_thread = num_of_objects / num_of_threads;
 	CreateThreadRenderData(thread_ptrs, num_of_threads, num_of_objects);
 
@@ -77,9 +83,10 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	Graphics::Pipeline pipeline;
 	pipeline.descriptorPoolPtr = MAKE_SHARED(Vulkan::DescriptorPool)();
-	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+	//pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 	pipeline.descriptorPoolPtr->initializePool(1);
+    //pipeline.descriptorPoolPtr->setLayouts[0].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 1);
 	pipeline.descriptorPoolPtr->setLayouts[0].setBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
     pipeline.descriptorPoolPtr->initializeSets(); 
     {
@@ -137,7 +144,9 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 					object.transform.getRotationRef().x = glm::radians<float>(ry);
 					object.transform.getRotationRef().z = glm::radians<float>(ry);
 
-					MVPs[c] = camera_properties.getPerspective() * camera_properties.getView() * object.transform.getWorldMatrix();
+                    MVPs[c].world = object.transform.getWorldMatrix();
+                    MVPs[c].view = camera_properties.getView();
+                    MVPs[c].projection = camera_properties.getPerspective();
 					
 					visiblelist[c] = camera_properties.frustum.checkPosition(object.transform.getTranslteValue()) ? 1 : 0;
 					if (visiblelist[c] == 0)
@@ -154,7 +163,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 						pipeline.module.layout,
 						VK_SHADER_STAGE_VERTEX_BIT,
 						0,
-						sizeof(glm::mat4),
+						sizeof(ModelViewProjection),
 						&MVPs[c]
 					);
 					mesh_renderer.recordDrawCommand(icb);
