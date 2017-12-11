@@ -83,17 +83,19 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	Graphics::Pipeline pipeline;
 	pipeline.descriptorPoolPtr = MAKE_SHARED(Vulkan::DescriptorPool)();
-	//pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+    pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 16);
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 	pipeline.descriptorPoolPtr->initializePool(1);
-    //pipeline.descriptorPoolPtr->setLayouts[0].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 1);
-	pipeline.descriptorPoolPtr->setLayouts[0].setBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+    pipeline.descriptorPoolPtr->setLayouts[0].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+    pipeline.descriptorPoolPtr->setLayouts[0].setBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 16);
+	pipeline.descriptorPoolPtr->setLayouts[0].setBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
     pipeline.descriptorPoolPtr->initializeSets(); 
     {
         PipelineShadersInitializer ps_initializer;
-        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::POSITION, "inPos");
-        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::NORMAL, "inNormal");
-        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::UV, "inUV");
+        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::POSITION, "in_pos");
+        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::NORMAL, "in_normal");
+        ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::UV, "in_uv");
         ps_initializer.loadSPVBinaryCode("frag.sr", "frag.sri");
         ps_initializer.loadSPVBinaryCode("vert.sr", "vert.sri");
         ps_initializer.initializePipelineShaders(pipeline);
@@ -104,7 +106,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto& renderer = valkyrie.getRenderer();
 	pipeline.initialize(renderer);
 
-	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 0, 1);
+	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 0, 2);
 
 	auto ry = 0.0f;
 
