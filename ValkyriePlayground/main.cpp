@@ -65,7 +65,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
 	std::vector<Vulkan::ThreadCommandPoolPtr> thread_ptrs;
 	int num_of_threads = Valkyrie::TaskManager::instance().getNumberOfThreads();
-	int num_of_objects = 512;
+	int num_of_objects = 1024;
 	int num_of_objects_per_thread = num_of_objects / num_of_threads;
 	CreateThreadRenderData(thread_ptrs, num_of_threads, num_of_objects);
 
@@ -76,6 +76,13 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);
 	Scene::Object duck;
 	auto& camera_ptr = factory.createCamera(60, 1024.0f/768.0f, 0.1f, 1000.0f);
+    auto& light_ptr = factory.createLight(Scene::Light::POSITION);
+    auto& position_light_ptr = std::dynamic_pointer_cast<Scene::PositionLight>(light_ptr);
+    position_light_ptr->setColor(glm::vec3(1.0, 0.0, 1.0));
+    position_light_ptr->setIntensity(100000.0f);
+
+    Valkyrie::LightShaderWriter light_shader_writer;
+    light_shader_writer.addLight(position_light_ptr->getID());
 
 	auto image_ptr = asset_manager.getImage("DuckCM.png");
 	Vulkan::Texture texture(image_ptr);
@@ -84,12 +91,13 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	Graphics::Pipeline pipeline;
 	pipeline.descriptorPoolPtr = MAKE_SHARED(Vulkan::DescriptorPool)();
     pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+    pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 16);
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
-	pipeline.descriptorPoolPtr->initializePool(1);
-    pipeline.descriptorPoolPtr->setLayouts[0].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
-    pipeline.descriptorPoolPtr->setLayouts[0].setBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 16);
-	pipeline.descriptorPoolPtr->setLayouts[0].setBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+	pipeline.descriptorPoolPtr->initializePool(2);
+    pipeline.descriptorPoolPtr->setLayouts[1].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+    pipeline.descriptorPoolPtr->setLayouts[1].setBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+	pipeline.descriptorPoolPtr->setLayouts[1].setBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
     pipeline.descriptorPoolPtr->initializeSets(); 
     {
         PipelineShadersInitializer ps_initializer;
@@ -106,7 +114,11 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	auto& renderer = valkyrie.getRenderer();
 	pipeline.initialize(renderer);
 
-	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 0, 2);
+    light_shader_writer.updateLights();
+    pipeline.descriptorPoolPtr->updateDescriptorSet(light_shader_writer.getPositionLightCountBuffer(), 1, 0);
+    pipeline.descriptorPoolPtr->updateDescriptorSet(light_shader_writer.getPositionLightWrites(), light_shader_writer.getPositionLightWritesCount(), 1, 1);
+    //pipeline.descriptorPoolPtr->updateDescriptorSet(light_shader_writer.getDummyPositionLightWrites(), light_shader_writer.getDummyPositionLightWritesCount(), 1, 1);
+	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 1, 2);
 
 	auto ry = 0.0f;
 
@@ -128,11 +140,11 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		inheritance.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
 		inheritance.renderPass = renderer.getRenderPassHandle();
 		inheritance.framebuffer = renderer.getFramebuffer(current);
-		ry += 1.0f;
+		//ry += 1.0f;
 		camera_ptr->transform.getTranslteRef().z = 500.0f + sinf(ry / 100.f) * 500.0f;
 		camera_ptr->update();
 		auto& camera_properties = camera_ptr->getProperties();
-		
+
 		for (int i = 0; i < num_of_threads; ++i) {
 			auto& thread = *thread_ptrs[i];
 			auto& objects = thread_IDs[i];

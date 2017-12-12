@@ -4,6 +4,7 @@
 #include "valkyrie/scene/object.h"
 #include "valkyrie/scene/camera.h"
 #include "valkyrie/component/component_attacher.h"
+#include "valkyrie/scene/light_position.h"
 using namespace Valkyrie;
 using namespace ValkyrieFactory;
 
@@ -62,4 +63,24 @@ Scene::CameraPtr ObjectFactory::createCamera(float fov, float ratio, float _near
 	auto& ptr = processObjectCreationRoutine<Scene::Camera>();
 	m_component_attacher.attachComponent(ptr, MAKE_SHARED(ValkyrieComponent::Camera)(fov, ratio, _near, _far));
 	return ptr;
+}
+
+Scene::LightPtr ObjectFactory::createLight(Valkyrie::Scene::Light::Type type) {
+    Scene::LightPtr ptr = nullptr;
+    switch (type)
+    {
+    case Valkyrie::Scene::Light::POSITION:
+        ptr = processObjectCreationRoutine<Scene::PositionLight>();
+        break;
+    case Valkyrie::Scene::Light::DIRECTIONAL:
+        assert(false);
+        break;
+    case Valkyrie::Scene::Light::SPOTLIGHT:
+        assert(false);
+        break;
+    default:
+        assert(false);
+        break;
+    }
+    return ptr;
 }
