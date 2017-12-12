@@ -76,14 +76,24 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	ValkyrieComponent::MeshRenderer mesh_renderer(mesh_ptr);
 	Scene::Object duck;
 	auto& camera_ptr = factory.createCamera(60, 1024.0f/768.0f, 0.1f, 1000.0f);
-    auto& light_ptr = factory.createLight(Scene::Light::POSITION);
-    auto& position_light_ptr = std::dynamic_pointer_cast<Scene::PositionLight>(light_ptr);
-    position_light_ptr->setColor(glm::vec3(1.0, 0.0, 1.0));
-    position_light_ptr->setIntensity(100000.0f);
 
     Valkyrie::LightShaderWriter light_shader_writer;
-    light_shader_writer.addLight(position_light_ptr->getID());
+    
 
+    auto light_ptr_1 = factory.createLight(Scene::Light::POSITION);
+    auto position_light_ptr_1 = std::dynamic_pointer_cast<Scene::PositionLight>(light_ptr_1);
+    position_light_ptr_1->setColor(glm::vec3(1.0, 0.0, 1.0));
+    position_light_ptr_1->setIntensity(100000.0f);
+    light_shader_writer.addLight(position_light_ptr_1->getID());
+
+    auto light_ptr_2 = factory.createLight(Scene::Light::POSITION);
+    auto position_light_ptr_2 = std::dynamic_pointer_cast<Scene::PositionLight>(light_ptr_2);
+
+    position_light_ptr_2->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    position_light_ptr_2->setColor(glm::vec3(0.0, 0.0, 1.0));
+    position_light_ptr_2->setIntensity(100000.0f);
+    light_shader_writer.addLight(position_light_ptr_2->getID());
+    
 	auto image_ptr = asset_manager.getImage("DuckCM.png");
 	Vulkan::Texture texture(image_ptr);
 	VulkanManager::initializeTexture(texture);
@@ -116,8 +126,7 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
     light_shader_writer.updateLights();
     pipeline.descriptorPoolPtr->updateDescriptorSet(light_shader_writer.getPositionLightCountBuffer(), 1, 0);
-    pipeline.descriptorPoolPtr->updateDescriptorSet(light_shader_writer.getPositionLightWrites(), light_shader_writer.getPositionLightWritesCount(), 1, 1);
-    //pipeline.descriptorPoolPtr->updateDescriptorSet(light_shader_writer.getDummyPositionLightWrites(), light_shader_writer.getDummyPositionLightWritesCount(), 1, 1);
+    pipeline.descriptorPoolPtr->updateDescriptorSet(&light_shader_writer.getPositionLightWrite(), 1, 1, 1);
 	pipeline.descriptorPoolPtr->updateDescriptorSet(texture, 1, 2);
 
 	auto ry = 0.0f;

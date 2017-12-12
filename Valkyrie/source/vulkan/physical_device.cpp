@@ -45,3 +45,15 @@ bool PhysicalDevice::setMemoryType(uint32_t type_bits, VkFlags requirements_mask
 	}
 	return false;
 }
+
+uint32_t Vulkan::PhysicalDevice::getAlignedMemorySize(const uint32_t size, const uint32_t count)
+{
+    return getAlignedMemoryStep(size) * count;
+}
+
+uint32_t Vulkan::PhysicalDevice::getAlignedMemoryStep(const uint32_t size)
+{
+    return size % Vulkan::PhysicalDevice::properties.limits.minUniformBufferOffsetAlignment == 0 ?
+        size :
+        Vulkan::PhysicalDevice::properties.limits.minUniformBufferOffsetAlignment;
+}

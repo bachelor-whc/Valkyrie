@@ -101,9 +101,10 @@ void DescriptorPool::updateDescriptorSet(SetUpdable& update, const uint32_t set_
 void DescriptorPool::updateDescriptorSet(VkWriteDescriptorSet* writes, const uint32_t writes_count, const uint32_t set_index, const uint32_t binding) {
     const auto& device = Valkyrie::VulkanManager::getDevice();
     for (int i = 0; i < writes_count; ++i) {
-        writes[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        writes[i].dstSet = sets[set_index];
-        writes[i].dstBinding = binding;
+        auto& write = writes[i];
+        write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        write.dstSet = sets[set_index];
+        write.dstBinding = binding;
     }
     vkUpdateDescriptorSets(device, writes_count, writes, 0, nullptr);
 }
