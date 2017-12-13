@@ -79,8 +79,6 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 
     Valkyrie::LightShaderWriter light_shader_writer;
     
-
-
     Scene::LightPtr light_ptrs[3] = {
         factory.createLight(Scene::Light::POSITION),
         factory.createLight(Scene::Light::POSITION),
