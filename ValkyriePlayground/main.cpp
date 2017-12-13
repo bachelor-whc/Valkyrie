@@ -80,19 +80,31 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
     Valkyrie::LightShaderWriter light_shader_writer;
     
 
-    auto light_ptr_1 = factory.createLight(Scene::Light::POSITION);
-    auto position_light_ptr_1 = std::dynamic_pointer_cast<Scene::PositionLight>(light_ptr_1);
-    position_light_ptr_1->setColor(glm::vec3(1.0, 0.0, 1.0));
-    position_light_ptr_1->setIntensity(100000.0f);
-    light_shader_writer.addLight(position_light_ptr_1->getID());
 
-    auto light_ptr_2 = factory.createLight(Scene::Light::POSITION);
-    auto position_light_ptr_2 = std::dynamic_pointer_cast<Scene::PositionLight>(light_ptr_2);
+    Scene::LightPtr light_ptrs[3] = {
+        factory.createLight(Scene::Light::POSITION),
+        factory.createLight(Scene::Light::POSITION),
+        factory.createLight(Scene::Light::POSITION)
+    };
+    std::shared_ptr<Scene::PositionLight> position_light_ptrs[3] = {
+        std::dynamic_pointer_cast<Scene::PositionLight>(light_ptrs[0]),
+        std::dynamic_pointer_cast<Scene::PositionLight>(light_ptrs[1]),
+        std::dynamic_pointer_cast<Scene::PositionLight>(light_ptrs[2]),
+    };
 
-    position_light_ptr_2->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-    position_light_ptr_2->setColor(glm::vec3(0.0, 0.0, 1.0));
-    position_light_ptr_2->setIntensity(100000.0f);
-    light_shader_writer.addLight(position_light_ptr_2->getID());
+    position_light_ptrs[0]->setPosition(glm::vec3(187.5, 0.0, 0.0));
+    position_light_ptrs[0]->setColor(glm::vec3(1.0, 0.0, 0.0));
+    position_light_ptrs[0]->setIntensity(50000.0f);
+    position_light_ptrs[1]->setPosition(glm::vec3(0.0, 0.0, 0.0));
+    position_light_ptrs[1]->setColor(glm::vec3(0.0, 1.0, 0.0));
+    position_light_ptrs[1]->setIntensity(50000.0f);
+    position_light_ptrs[2]->setPosition(glm::vec3(-187.5, 0.0, 0.0));
+    position_light_ptrs[2]->setColor(glm::vec3(0.0, 0.0, 1.0));
+    position_light_ptrs[2]->setIntensity(50000.0f);
+
+    light_shader_writer.addLight(position_light_ptrs[0]->getID());
+    light_shader_writer.addLight(position_light_ptrs[1]->getID());
+    light_shader_writer.addLight(position_light_ptrs[2]->getID());
     
 	auto image_ptr = asset_manager.getImage("DuckCM.png");
 	Vulkan::Texture texture(image_ptr);
@@ -149,10 +161,18 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 		inheritance.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
 		inheritance.renderPass = renderer.getRenderPassHandle();
 		inheritance.framebuffer = renderer.getFramebuffer(current);
-		//ry += 1.0f;
+		ry += 1.0f;
 		camera_ptr->transform.getTranslteRef().z = 500.0f + sinf(ry / 100.f) * 500.0f;
 		camera_ptr->update();
 		auto& camera_properties = camera_ptr->getProperties();
+
+        for (int i = 0; i < 3; ++i) {
+            auto sign = i % 2 == 0 ? -1.0f : 1.0f;
+            auto& color = position_light_ptrs[i]->getColor();
+            color[i] = sign * sinf(ry / 100.0f) * 0.5f + 0.5f;
+            position_light_ptrs[i]->setColor(color);
+        }
+        light_shader_writer.updateLights();
 
 		for (int i = 0; i < num_of_threads; ++i) {
 			auto& thread = *thread_ptrs[i];

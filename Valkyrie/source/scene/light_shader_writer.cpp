@@ -14,7 +14,7 @@ struct ShPositionLight {
 LightShaderWriter::LightShaderWriter() : 
     m_position_lights(),
     m_position_lights_buffer() {
-    const auto position_light_buffer_size = Vulkan::PhysicalDevice::getAlignedMemorySize(sizeof(ShPositionLight), MAX_POSITION_LIGHT);
+    const auto position_light_buffer_size = sizeof(ShPositionLight) * MAX_POSITION_LIGHT;
     m_position_lights_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, position_light_buffer_size);
     m_position_light_count_buffer.allocate({ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT }, sizeof(uint32_t));
 
@@ -58,7 +58,7 @@ void LightShaderWriter::removeLight(unsigned int ID) {
 }
 
 void LightShaderWriter::updateLights() {
-    const auto step = Vulkan::PhysicalDevice::getAlignedMemoryStep(sizeof(ShPositionLight));
+    const auto step = sizeof(ShPositionLight);
     auto& object_manager = ObjectManager::instance();
     int size = m_position_lights.size();
     for (int i = 0; i < size; ++i) {
