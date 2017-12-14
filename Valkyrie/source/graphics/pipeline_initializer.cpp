@@ -40,7 +40,40 @@ void PipelineShadersInitializer::initializeShaders(const std::string& filepath, 
         auto code = Vulkan::Shader::LoadSPVBinaryCode(filename);
         pipeline.shaderPtrs[val_stage] = MAKE_SHARED(Vulkan::Shader)(code, (VkShaderStageFlagBits)stage);
     }
-};
+}
+
+void Valkyrie::PipelineShadersInitializer::initializePool(Graphics::Pipeline& pipeline) {
+    if (m_json.count("descriptor_pool") == 0) {
+        throw std::exception("lack of descriptor information.");
+    }
+    if(pipeline.descriptorPoolPtr == nullptr)
+        pipeline.descriptorPoolPtr = MAKE_SHARED(Vulkan::DescriptorPool)();
+    auto& json = m_json["descriptor_pool"];
+    auto& descriptors = json["descriptors"].get<std::vector<uint32_t>>();
+    for (int i = VK_DESCRIPTOR_TYPE_BEGIN_RANGE; i <= VK_DESCRIPTOR_TYPE_END_RANGE; ++i) {
+        auto count = descriptors[i - VK_DESCRIPTOR_TYPE_BEGIN_RANGE];
+        if (count == 0)
+            continue;
+        pipeline.descriptorPoolPtr->addPoolSize((VkDescriptorType)i, descriptors[i - VK_DESCRIPTOR_TYPE_BEGIN_RANGE]);
+    }
+
+    pipeline.descriptorPoolPtr->initializePool(json["sets_count"].get<uint32_t>());
+}
+
+void Valkyrie::PipelineShadersInitializer::initializeBindings(Graphics::Pipeline& pipeline) {
+    if (m_json.count("bindings") == 0) {
+        throw std::exception("lack of binding informations.");
+    }
+    auto& json = m_json["bindings"];
+    for (auto& kv : json.get<JSON::object_t>()) {
+        auto& binding_desc = kv.second;
+        auto&& binding = binding_desc["binding"].get<uint32_t>();
+        auto&& set = binding_desc["set"].get<uint32_t>();
+        auto&& type = binding_desc["type"].get<uint32_t>();
+        pipeline.descriptorPoolPtr->setLayouts[set].setBinding(binding, (VkDescriptorType)type, VK_SHADER_STAGE_ALL, 1);
+    }
+    pipeline.descriptorPoolPtr->initializeSets();
+}
 
 void PipelineShadersInitializer::setShaderVariableName(const VertexShaderVariableType variable, const std::string& name) {
     assert(name.length() > 0);
@@ -58,7 +91,7 @@ std::string PipelineShadersInitializer::getShaderVariableName(const VertexShader
 
 void PipelineShadersInitializer::setPipelineVertexInput(Graphics::Pipeline& pipeline, std::vector<uint32_t>&& default_attr_sizes) {
     if (m_json.count("variables") == 0 || m_json["variables"].count("attributes") == 0) {
-        throw std::exception("lack of attributes informations");
+        throw std::exception("lack of attributes informations.");
     }
 
     static auto loaction_comparer = [](VkVertexInputAttributeDescription& lhs, VkVertexInputAttributeDescription& rhs) {
@@ -117,11 +150,11 @@ void PipelineShadersInitializer::setPipelineVertexInput(Graphics::Pipeline& pipe
 }
 
 void PipelineShadersInitializer::initializePipelinePushConstantRanges(Graphics::Pipeline& pipeline) {
-    if (m_json.count("variables") == 0 || m_json["variables"].count("push_constant") == 0) {
+    if (m_json.count("variables") == 0 || m_json["variables"].count("push_constants") == 0) {
         return;
     }
 
-    for (auto& kv : m_json["variables"]["push_constant"].get<JSON::object_t>()) {
+    for (auto& kv : m_json["variables"]["push_constants"].get<JSON::object_t>()) {
         auto& pc_json = kv.second;
         VkPushConstantRange pcr = {};
         pcr.size = pc_json["block_size"].get<uint32_t>();

@@ -109,22 +109,14 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	VulkanManager::initializeTexture(texture);
 
 	Graphics::Pipeline pipeline;
-	pipeline.descriptorPoolPtr = MAKE_SHARED(Vulkan::DescriptorPool)();
-    pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
-    pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
-	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
-	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
-	pipeline.descriptorPoolPtr->initializePool(2);
-    pipeline.descriptorPoolPtr->setLayouts[1].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL, 1);
-    pipeline.descriptorPoolPtr->setLayouts[1].setBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL, 1);
-	pipeline.descriptorPoolPtr->setLayouts[1].setBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_ALL, 1);
-    pipeline.descriptorPoolPtr->initializeSets(); 
     {
         PipelineShadersInitializer ps_initializer;
+        ps_initializer.initializeShaders("shader.sd", pipeline);
+        ps_initializer.initializePool(pipeline);
+        ps_initializer.initializeBindings(pipeline);
         ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::POSITION, "in_pos");
         ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::NORMAL, "in_normal");
         ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::UV, "in_uv");
-        ps_initializer.initializeShaders("shader.sd", pipeline);
         ps_initializer.initializePipelinePushConstantRanges(pipeline);
         ps_initializer.setPipelineVertexInput(pipeline);
     }
