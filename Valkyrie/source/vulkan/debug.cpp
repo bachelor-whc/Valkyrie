@@ -14,7 +14,7 @@ VkBool32 Vulkan::DebugCallback(
 	const char* p_message,
 	void* p_user_data) {
 	std::string message(p_message);
-	std::cout << message << std::endl;
+	std::cerr << message << std::endl;
 	return false;
 }
 

@@ -115,18 +115,16 @@ int CALLBACK WinMain(HINSTANCE instance_handle, HINSTANCE, LPSTR command_line, i
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
 	pipeline.descriptorPoolPtr->addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 	pipeline.descriptorPoolPtr->initializePool(2);
-    pipeline.descriptorPoolPtr->setLayouts[1].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
-    pipeline.descriptorPoolPtr->setLayouts[1].setBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
-	pipeline.descriptorPoolPtr->setLayouts[1].setBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1);
+    pipeline.descriptorPoolPtr->setLayouts[1].setBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL, 1);
+    pipeline.descriptorPoolPtr->setLayouts[1].setBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL, 1);
+	pipeline.descriptorPoolPtr->setLayouts[1].setBinding(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_ALL, 1);
     pipeline.descriptorPoolPtr->initializeSets(); 
     {
         PipelineShadersInitializer ps_initializer;
         ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::POSITION, "in_pos");
         ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::NORMAL, "in_normal");
         ps_initializer.setShaderVariableName(PipelineShadersInitializer::VertexShaderVariableType::UV, "in_uv");
-        ps_initializer.loadSPVBinaryCode("frag.sr", "frag.sri");
-        ps_initializer.loadSPVBinaryCode("vert.sr", "vert.sri");
-        ps_initializer.initializePipelineShaders(pipeline);
+        ps_initializer.initializeShaders("shader.sd", pipeline);
         ps_initializer.initializePipelinePushConstantRanges(pipeline);
         ps_initializer.setPipelineVertexInput(pipeline);
     }
