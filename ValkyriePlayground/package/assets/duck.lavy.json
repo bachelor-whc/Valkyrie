@@ -1,0 +1,1 @@
+{"meshes": {"LOD3sp": {"textures": ["DuckCM.png"], "bounding_box": {"min": [9.929369926452637, -61.32819747924805, -69.29850006103516], "max": [163.97000122070312, 53.92519760131836, 96.17990112304688]}, "vertices": {"byteLength": 73536, "byteOffset": 0}, "indices": {"byteLength": 50544, "byteOffset": 73536}}}}

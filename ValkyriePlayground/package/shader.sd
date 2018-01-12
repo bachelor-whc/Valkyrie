@@ -1,0 +1,101 @@
+{
+    "bindings": {
+        "Lights": {
+            "binding": 1,
+            "set": 1,
+            "type": 6
+        },
+        "Scene": {
+            "binding": 0,
+            "set": 1,
+            "type": 6
+        },
+        "sampler_color": {
+            "binding": 2,
+            "set": 1,
+            "type": 1
+        }
+    },
+    "brief": {
+        "attributes_count": 3,
+        "uniform_blocks_count": 3,
+        "uniform_variables_count": 9
+    },
+    "descriptor_pool": {
+        "descriptors": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            3,
+            0,
+            0,
+            0,
+            0
+        ],
+        "sets_count": 2
+    },
+    "spvs": {
+        "spv.frag.sr": 16,
+        "spv.vert.sr": 1
+    },
+    "variables": {
+        "attributes": {
+            "in_normal": {
+                "basic_type": "float",
+                "location": 1,
+                "type": 106,
+                "vector_size": 3
+            },
+            "in_pos": {
+                "basic_type": "float",
+                "location": 0,
+                "type": 106,
+                "vector_size": 3
+            },
+            "in_uv": {
+                "basic_type": "float",
+                "location": 2,
+                "type": 103,
+                "vector_size": 2
+            }
+        },
+        "push_constants": {
+            "MVP": {
+                "basic_type": "block",
+                "block_size": 192,
+                "stage": 1
+            }
+        },
+        "uniform_blocks": {
+            "Lights": {
+                "basic_type": "block",
+                "binding": 1,
+                "block_size": 768,
+                "offset": 64,
+                "set": 1
+            },
+            "Scene": {
+                "basic_type": "block",
+                "binding": 0,
+                "block_size": 4,
+                "offset": 128,
+                "set": 1
+            }
+        },
+        "uniform_variables": {
+            "sampler_color": {
+                "basic_type": "sampler2D",
+                "binding": 2,
+                "sampler": {
+                    "combined": true,
+                    "dim": 2,
+                    "type": 1
+                },
+                "set": 1
+            }
+        }
+    }
+}
